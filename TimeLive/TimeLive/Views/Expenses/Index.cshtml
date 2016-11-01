@@ -1,0 +1,336 @@
+﻿@using System.Globalization
+@using Newtonsoft.Json
+@model TimeLive.Models.ExpensesModel
+@{
+    var selectRows = Model.SelectRows.OrderBy(x => x.regdate).ToArray();
+    var dayDictionary = selectRows.Select(x => x.regdate).Distinct().ToDictionary(day => day, day => false);
+    //var qty = selectRows.Sum(x => x.qty);
+    //var total = selectRows.Sum(x => x.);
+    var vat = selectRows.Sum(x => x.amount_excl_Vat);
+    var total = selectRows.Sum(x => x.vat_amount + x.amount_excl_Vat);
+
+    //var totalUsed = selectRows.Sum(x => x.usedtime);
+    //var totalInvoiced = selectRows.Sum(x => x.invoicedtime);
+    //var totalAbsence = selectRows.Where(x => x.projectid == "1019").Sum(x => x.usedtime);
+}
+@*@section sidebar
+{
+    <div class="sidebarExpense" style="display: none;">
+        <form action="@Url.Action("Filter")" method="POST">
+            @Html.AntiForgeryToken()
+            <h4>Customer</h4>
+            <select id="selectionCompanyDropDown" class="form-control"></select>
+            <input type="hidden" name="companyId" id="selectionCompany" value="@Model.Selections.CustomerId" />
+            <br /><br />
+            <h4>From</h4>
+            <input type="text" id="selectionFrom" class="form-control date-picker" name="selectionFrom" value="@(Model.Selections.From?.ToString("yyyy-MM-dd") ?? "")" />
+            <br /><br />
+            <h4>To</h4>
+            <input type="text" id="selectionTo" class="form-control date-picker" name="selectionTo" value="@(Model.Selections.To?.ToString("yyyy-MM-dd") ?? "")" />
+            <br /><br />
+            @if (Model.Selections.reimburse == 1)
+            {
+                <input type="checkbox" class="reimChk" checked /><label> Reimburse</label>
+            }
+            else
+            {
+                <input type="checkbox" class="reimChk" /><label> Reimburse</label>
+            }
+            <input type="hidden" name="pReimburse" class="pReimburse" value="@(Model.Selections.reimburse)" /><br />
+            <button type="submit" id="selectionsApply" class="btn btn-block btn-success">Apply</button>
+        </form>
+        <br /><br />
+        <div class="tHours">
+            <table>
+                <tr>
+                    <th id="tableTitle"><u>Information</u></th>
+                </tr>
+                <tr>
+                    <td>Alla belopp skall anges i SEK. Är det utländsk valuta, ange totalbeloppet, valutakod samt växelkurs i interna kommentaren
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+}*@
+@*@section siteLeft
+{
+    <div class="hSiteLeft">
+        <a href="#"><img id="toggleMenu" src="~/img/btnTime_All2.png" /></a>
+        <a href="#"><img id="QlikView" src="~/img/btnTime_QV2.png" title="Go to QlikView" /></a>
+        <a href="#"><img id="quickToday" src="~/img/btnTime_Dayy.png" title="Go to QlikView" /></a>
+        <a href="#"><img id="quickCWeek" src="~/img/btnTime_Week.png" /></a>
+        <a href="#"><img id="quickCMonth" src="~/img/btnTime_Month2.png" /></a>
+    </div>
+}*@
+<br />
+<div class="container">
+    <div class="row row-header">
+        <div class="col col-dropdown1 col-header">
+            Customer
+        </div>
+        <div class="col col-dropdown col-header">
+            Project
+        </div>
+        <div class="col col-dropdown col-header">
+            Type
+        </div>
+        <div class="col col-date1 col-header">
+            Date
+        </div>
+        <div class="col amount-head col-header">
+            Qty
+        </div>
+        <div class="col amount-head col-header">
+            Total
+        </div>
+        <div class="col amount-head col-header">
+            VAT
+        </div>
+        <div class="col col-text col-header">
+            External comment
+        </div>
+    </div>
+</div>
+
+@foreach (var row in selectRows)
+{
+    <div class="timerow">
+        @using (Html.BeginForm("Update", "Expenses", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="q_ex_guuid" class="q_ex_guuid" value="@row.q_ex_guuid" />
+            @*<input type="hidden" name="valutakurs" value="@row.valutakurs" />*@
+            @*<input type="hidden" name="reimburse" value="@row.ReimbursedStatus" />*@
+            <div class="row">
+                <div class="col col-dropdown">
+                    <input type="hidden" class="companyId" name="companyId" value="@row.companyid" />
+                    <select class="form-control nopadding companyDropDown"></select>
+                </div>
+                <div class="col col-dropdown">
+                    <input type="hidden" class="projectId" value="@row.projectid" />
+                    <select name="projectId" class="form-control projectDropDown"></select>
+                </div>
+                <div class="col col-type">
+                    @*@Html.EnumDropDownListFor(model => model.Types, row.artnr, htmlAttributes: new { @class = "form-control", @value = row.artnr })*@
+                    <input type="hidden" class="inputType" name="inputType" value="@row.artnr" />
+                    <select name="artnr" class="form-control typeDropDown" value="@row.artnr">
+                        <option value="100">Milersättning</option>
+                        <option value="200">Boende</option>
+                        <option value="300">Transporter</option>
+                        <option value="400">Representation avdragsgill</option>
+                        <option value="500">Mtrl kontoret</option>
+                        <option value="505">Mtrl konsult</option>
+                        <option value="510">Frukt etc</option>
+                        <option value="515">Internet</option>
+                        <option value="520">Porto</option>
+                        <option value="530">Trängselskatt</option>
+                        <option value="590">Övrigt</option>
+                    </select>
+                </div>
+                <div class="col date">
+                    <input type="text" class="form-control date-picker" name="regDate" value="@row.regdate.ToString("yyyy-MM-dd")" />
+                </div>
+                <div class="col amount">
+                    <input type="text" class="form-control qty amount-ints" name="qty" value="@row.qty" />
+                </div>
+                <div class="col amount">
+                    <input type="text" class="form-control amount" name="amount_excl_Vat" value="@row.amount_excl_Vat.ToString("0.00").Replace(",",".")" />
+                </div>
+                <div class="col amount">
+                    <input type="text" class="form-control amount" name="vat_amount" value="@row.vat_amount.Value.ToString("0.00").Replace(",",".")" />
+                </div>
+                <div class="col col-text">
+                    <input type="text" class="form-control comment" name="externComment" value="@row.comment_external" />
+                </div>
+                <input type="checkbox" class="reimChk" @(row.reimburse == 1 ? "checked" : "") />
+                <input type="hidden" name="reimburse" class="reimburse" value="@row.reimburse" />
+            </div>
+            <div class="row toggle" style="display: none;">
+                <div class="col col-full">
+                    <input type="text" class="form-control comment" name="internComment" value="@row.comment_internal" />
+                </div>
+                <div class="col">
+                    <div class="btn-group btn-group-sm">
+                        <button type="submit" class="btn btn-primary" title="Save">
+                            <span class="glyphicon glyphicon-floppy-disk"></span>
+                        </button>
+                        <button type="button" class="btn btn-danger" title="Delete">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+<br />
+<div class="timerow">
+    @using (@Html.BeginForm("Insert", "Expenses", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <div class="row">
+            <div class="col col-dropdown">
+                <input type="hidden" class="companyId" />
+                <select name="companyId" class="form-control companyDropDown">
+                    <option value="">Select Customer</option>
+                </select>
+            </div>
+            <div class="col col-dropdown">
+                <select name="projectId" class="form-control projectDropDown"></select>
+            </div>
+            <div class="col col-type">
+                @*@Html.EnumDropDownListFor(model => model.Types, htmlAttributes: new { @class = "form-control"})*@
+                <select name="artnr" class="form-control">
+                    <option value="100">Milersättning</option>
+                    <option value="200">Boende</option>
+                    <option value="300">Transporter</option>
+                    <option value="400">Representation avdragsgill</option>
+                    <option value="500">Mtrl kontoret</option>
+                    <option value="505">Mtrl konsult</option>
+                    <option value="510">Frukt etc</option>
+                    <option value="515">Internet</option>
+                    <option value="520">Porto</option>
+                    <option value="530">Trängselskatt</option>
+                    <option value="590">Övrigt</option>
+                </select>
+                @*@Html.EnumDropDownListFor(model => model.Types, "Select a type", new { @class = "form-control" })*@
+            </div>
+            <div class="col date">
+                <input type="text" class="form-control date-picker" name="regDate" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+            </div>
+            <div class="col amount">
+                <input type="text" class="form-control amount-ints qty" name="qty" value="0" />
+            </div>
+            <div class="col amount">
+                <input type="text" class="form-control amount" name="amount_excl_Vat" value="0" />
+            </div>
+            <div class="col amount">
+                <input type="text" class="form-control amount" name="vat_amount" value="0" />
+            </div>
+            <div class="col col-text">
+                <input type="text" class="form-control comment" name="externComment" />
+            </div>
+            <input type="checkbox" class="reimChk" />
+            <input type="hidden" name="reimburse" class="reimburse" value="0" />
+        </div>
+        <div class="row">
+            <div class="col col-full">
+                <input type="text" class="form-control comment" name="internComment" placeholder="Internal comment" />
+            </div>
+            <div class="btn-group btn-group-sm">
+                <button type="submit" class="btn btn-primary" title="Save"><span class="glyphicon glyphicon-floppy-disk"></span></button>
+            </div>
+        </div>
+
+    }
+</div>
+
+<script src="~/Scripts/funktions.js"></script>
+
+<script type="text/javascript">
+
+        var customers = @Html.Raw(JsonConvert.SerializeObject(Model.Customers));
+
+        var projects = @Html.Raw(JsonConvert.SerializeObject(Model.Projects));
+
+        @*var types = @Html.Raw(JsonConvert.SerializeObject(Model.Types))*@
+
+        document.addEventListener("DOMContentLoaded", function() {
+
+            function updateProjectDropDown(projectDropDown, companyId, projectId, clear) {
+                clear = typeof clear !== "undefined" ? clear : true;
+                if(clear) $(projectDropDown).html('');
+
+                $(projects.filter(function(x) { return x.CustomerCode === companyId })).each(function(i, v) {
+                    $(projectDropDown).append('<option value="' + v.Id + '" class="' +v.Status + '"' +  (v.Id===projectId ? ' selected' : '') + '>' + v.Description + '</option>');
+                });
+            }
+
+            function updateProject(dropDown) {
+                var row = $(dropDown).parent().parent();
+                var companyId = $(dropDown).val();
+                var projectId = $(row).find('.projectId').val();
+                var projectDropDown = $(row).find('.projectDropDown');
+
+                updateProjectDropDown(projectDropDown, companyId, projectId);
+            }
+
+
+            function updateProject(dropDown) {
+                var row = $(dropDown).parent().parent();
+                var companyId = $(dropDown).val();
+                var projectId = $(row).find('.projectId').val();
+                var projectDropDown = $(row).find('.projectDropDown');
+
+                updateProjectDropDown(projectDropDown, companyId, projectId);
+            }
+
+            //Selected company changed
+            $('.companyDropDown').change(function() {
+                $(this).parent().parent().find('.companyId').val($(this).val());
+                updateProject(this);
+            });
+
+
+            //Selected project change
+            $('.projectDropDown').change(function() {
+                $(this).parent().find('.projectId').val($(this).val());
+            });
+
+            //Deleting
+            $('.btn-danger').click(function() {
+                var row = $(this).parents('.timerow');
+                //__RequestVerificationToken
+                var guiid = row.find('.q_ex_guuid').val();
+                var token = row.find('input[name=__RequestVerificationToken]').val();
+                $.post('@Url.Action("Delete")', { '__RequestVerificationToken': token, 'q_ex_guuid': guiid },
+                    function(data) {
+                        if (data.Result) {
+                            row.hide(150);
+                        } else {
+                            //Todo: Display error message
+                        }
+                    }, 'json');
+            });
+
+
+            function populateCustomerDropDown(companyDropDown, companyId) {
+                $(customers).each(function(i, val) {
+                    $(companyDropDown).append('<option value="'+val.Code +'"'+ (val.Code === companyId ? ' selected' : '') +'>' + val.Name +'</option>');
+                });
+            }
+
+            $('.timerow').each(function(k,v) {
+                var companyId = $(v).find('.companyId').val();
+                var companyDropDown = $(v).find('.companyDropDown');
+                var projectDropDown = $(v).find('.projectDropDown');
+                populateCustomerDropDown(companyDropDown,companyId);
+                updateProject(companyDropDown);                
+            });
+
+            /* Selections */
+            function updateSelectionDropDowns() {
+                var customerDropDown = $('#selectionCompanyDropDown');
+                var customerId = $('#selectionCompany').val();
+
+                console.log(customerId);
+
+                customerDropDown.append('<option value="">All</option>');
+                populateCustomerDropDown(customerDropDown, customerId);
+            }
+
+            //Init
+            updateSelectionDropDowns();
+
+            $('#selectionCompanyDropDown').change(function() {
+                $('#selectionCompany').val($(this).val());
+                updateProjectDropDown($('#selectionProjectDropDown'), $(this).val());
+                $('#selectionProjectDropDown').prepend('<option value="" selected>All</option>');
+                updateSubProjectDropDown($('#selectionSubProjectDropDown'));
+                $('#selectionSubProjectDropDown').prepend('<option value="" selected>All</option>');
+            });
+
+        });
+</script>

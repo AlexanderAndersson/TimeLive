@@ -1,0 +1,128 @@
+﻿@using System.Globalization
+@using Newtonsoft.Json
+@model TimeLive.Models.DistanceModel
+@{
+    var selectRows = Model.SelectRows.OrderBy(x => x.regdate).ToArray();
+    //var dayDictionary = selectRows.Select(x => x.regdate).Distinct().ToDictionary(day => day, day => false);
+
+}
+@*@section sidebar
+{
+    <div class="sidebarDistance" style="display: none;">
+        <form action="@Url.Action("Filter")" method="POST">
+            @Html.AntiForgeryToken()
+            <h4>From</h4>
+            <input type="text" id="selectionFrom" class="form-control date-picker" name="selectionFrom" value="@(Model.Selections.From?.ToString("yyyy-MM-dd") ?? "")" />
+            <br /><br />
+            <h4>To</h4>
+            <input type="text" id="selectionTo" class="form-control date-picker" name="selectionTo" value="@(Model.Selections.To?.ToString("yyyy-MM-dd") ?? "")" />
+            <br /><br /><br />
+            <button type="submit" id="selectionsApply" class="btn btn-block btn-success">Apply</button>
+        </form>
+    </div>
+}
+@section siteLeft
+{
+    <div class="hSiteLeft">
+        <a href="#"><img id="toggleMenu" src="~/img/btnTime_All2.png" title="Show filter" /></a>
+        <a href="#"><img id="QlikView" src="~/img/btnTime_QV2.png" title="Go to QlikView" /></a>
+        <a href="#"><img id="quickToday" src="~/img/btnTime_Dayy.png" title="Show today" /></a>
+        <a href="#"><img id="quickCWeek" src="~/img/btnTime_Week.png" title="Show this week" /></a>
+        <a href="#"><img id="quickCMonth" src="~/img/btnTime_Month2.png" title="Show this month" /></a>
+        <a href="#"><img id="quickLMonth" src="~/img/btnTime_PrevMonth.png" title="Show last month" /></a>
+    </div>
+}*@
+<br />
+<div class="container">
+    <div class="row row-header">
+        <div class="col amount-distance col-header">
+            <br /> Date
+        </div>
+        <div class="col amount-distance col-header">
+            Starting <br /> distance (km)
+        </div>
+        <div class="col amount-distance col-header">
+            Work <br /> distance (km)
+        </div>
+        <div class="col amount-distance col-header">
+            Privated <br /> distance (km)
+        </div>
+        <div class="col amount-distance col-header">
+            Ending <br /> distance (km)
+        </div>
+    </div>
+</div>
+
+@foreach (var row in selectRows)
+{
+    <div class="timerow">
+        @using (Html.BeginForm("Update", "Distance", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="id" class="id" value="@row.id" />
+            <div class="row">
+                <div class="col date">
+                    <input type="text" class="form-control date" name="regDate" value="@row.regdate" />
+                </div>
+                <div class="col distance">
+                    <input type="text" class="form-control amount-ints" name="startingDistance" value="@row.startingdistance" />
+                </div>
+                <div class="col distance">
+                    <input type="text" class="form-control amount-ints" name="workDistance" value="@row.workdistance" />
+                </div>
+                <div class="col distance">
+                    <input type="text" class="form-control amount-ints" name="privateDistance" value="@row.privatedistance" />
+                </div>
+                <div class="col distance">
+                    <input type="text" class="form-control amount-ints" name="endingDistance" value="@row.endingdistance" />
+                </div>
+            </div>
+            <div class="row toggle" style="display: none;">
+                <div class="col col-full">
+                    <input type="text" class="form-control comment" name="internComment" value="@row.comment" />
+                </div>
+                    @*<div class="col">
+                        <div class="btn-group btn-group-sm">
+                            <button type="submit" class="btn btn-primary" title="Save"><span class="glyphicon glyphicon-floppy-disk"></span></button>
+                            <button type="button" class="btn btn-danger" title="Delete"><span class="glyphicon glyphicon-remove"></span></button>
+                        </div>
+                    </div>*@
+                </div>
+                }
+            </div>
+}
+<br />
+<div class="timerow">
+    @using (@Html.BeginForm("Insert", "Distance", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <div class="row">
+            <div class="col date">
+                <input type="text" class="form-control date-picker" name="regDate" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+            </div>
+            <div class="col distance">
+                <input type="text" class="form-control amount-ints" name="startingDistance" value="0" />
+            </div>
+            <div class="col distance">
+                <input type="text" class="form-control amount-ints" name="workDistance" value="0" />
+            </div>
+            <div class="col distance">
+                <input type="text" class="form-control amount-ints" name="privateDistance" value="0" />
+            </div>
+            <div class="col distance">
+                <input type="text" class="form-control amount-ints" name="endingDistance" value="0" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-full">
+                <input type="text" class="form-control comment" name="comment" placeholder="Comment" />
+            </div>
+            <div class="btn-group btn-group-sm">
+                <button type="submit" class="btn btn-primary" title="Save"><span class="glyphicon glyphicon-floppy-disk"></span></button>
+            </div>
+        </div>
+
+    }
+</div>
+
+<script src="~/Scripts/funktions.js"></script>

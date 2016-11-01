@@ -1,0 +1,436 @@
+﻿@using System.Globalization
+@using Newtonsoft.Json
+@model TimeLive.Models.TimeModel
+@{
+    var selectRows = Model.SelectRows.OrderBy(x => x.regdate).ToArray();
+    var dayDictionary = selectRows.Select(x => x.regdate).Distinct().ToDictionary(day => day, day => false);
+    var totalUsed = selectRows.Sum(x => x.usedtime);
+    var totalInvoiced = selectRows.Sum(x => x.invoicedtime);
+    var totalAbsence = selectRows.Where(x => x.projectid == "1019").Sum(x => x.usedtime);
+}
+@*@section sidebar
+{
+    <div class="sidebar" style="display: none;">
+        <form action="@Url.Action("Filter")" method="POST">
+            @Html.AntiForgeryToken()
+            <h4>Customer</h4>
+            <select id="selectionCompanyDropDown" class="form-control"></select>
+            <input type="hidden" name="companyId" id="selectionCompany" value="@Model.Selections.CustomerId" />
+            <br /><br />
+            <h4>Project</h4>
+            <select id="selectionProjectDropDown" class="form-control"><option value="">All</option></select>
+            <input type="hidden" id="selectionProject" name="projectId" value="@Model.Selections.ProjectId" />
+            <br /><br />
+            <h4>Sub-project</h4>
+            <select name="subProjectId" id="selectionSubProjectDropDown" class="form-control"><option value="">All</option></select>
+            <input type="hidden" id="selectionSubProject" name="subProjectId" value="@Model.Selections.SubProjectId" />
+            <br /><br />
+            <h4>From</h4>
+            <input type="text" id="selectionFrom" class="form-control date-picker" name="selectionFrom" value="@(Model.Selections.From?.ToString("yyyy-MM-dd") ?? "")" />
+            <br /><br />
+            <h4>To</h4>
+            <input type="text" id="selectionTo" class="form-control date-picker" name="selectionTo" value="@(Model.Selections.To?.ToString("yyyy-MM-dd") ?? "")" />
+            <br /><br />
+            @if (Model.Selections.Delayed == 1)
+            {
+                <input type="checkbox" class="delayChk" checked/><label> Delayed</label>
+            }
+            else
+            {
+                <input type="checkbox" class="delayChk"/><label> Delayed</label>
+            }
+            <input type="hidden" name="pDealyinvoice" class="pDealyinvoice" value="@(Model.Selections.Delayed)" /><br />
+            <button type="submit" id="selectionsApply" class="btn btn-block btn-success">Apply</button>
+        </form>
+    <br/><br/>
+    <div class="tHours">
+        <table>
+            <tr>
+                <th id="tableTitle"><u>Total hours</u></th>
+            </tr>
+            <tr>
+                <td><b>Invoiced</b></td>
+                <td>@totalInvoiced.ToString("N1").Replace(",", ".")h</td>
+            </tr>
+            <tr>
+                <td><b>Used</b></td>
+                <td>@totalUsed.ToString("N1").Replace(",", ".")h</td>
+            </tr>
+            <tr>
+                <td><b>Inv/Used</b></td>
+                <td>@(totalUsed != 0 ? (totalInvoiced / totalUsed).ToString("P0") : "0%")</td>
+            </tr>
+            <tr>
+                <td><b>Absence</b></td>
+                <td>@totalAbsence.ToString("N1").Replace(",", ".")h</td>
+            </tr>
+        </table>
+    </div>
+    </div>
+}
+@section siteLeft
+{
+    <div class="hSiteLeft">
+        <a href="#"><img id="toggleMenu" src="~/img/btnTime_All2.png" title="Show filter"/></a>
+        <a href="#"><img id="QlikView" src="~/img/btnTime_QV2.png" title="Go to QlikView" /></a>
+        <a href="#"><img id="quickToday" src="~/img/btnTime_Dayy.png" title="Show today" /></a>
+        <a href="#"><img id="quickCWeek" src="~/img/btnTime_Week.png" title="Show this week" /></a>
+        <a href="#"><img id="quickCMonth" src="~/img/btnTime_Month2.png" title="Show this month" /></a>
+        <a href="#"><img id="quickLMonth" src="~/img/btnTime_PrevMonth.png" title="Show last month" /></a>
+    </div>
+}*@
+
+<div class="row">
+    <div id="month"></div>
+</div>
+
+<div class="row">
+    <div id="week"></div>
+</div>
+
+
+<br />
+    <div class="container">
+        <div class="row row-header">
+            <div class="col col-dropdown col-header">
+                Customer
+            </div>
+            <div class="col col-dropdown col-header">
+                Project
+            </div>
+            <div class="col col-dropdown col-header">
+                Sub-project
+            </div>
+            <div class="col col-date1 col-header">
+                Date
+            </div>
+            <div class="col amount-head col-header">
+                Inv
+            </div>
+            <div class="col amount-head col-header">
+                Used
+            </div>
+            <div class="col col-text col-header">
+                External comment
+            </div>
+        </div>
+    </div>
+
+    @foreach (var row in selectRows)
+    {
+        <div class="timerow">
+            @using (Html.BeginForm("Update", "Time", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="q_hrp_guiid" class="q_hrp_guiid" value="@row.q_hrp_guiid" />
+                <input type="hidden" value="@row.RowStatus" />
+                <input type="hidden" value="@row.InvoiceStatus" />
+                @*<input type="hidden" name="dealyinvoice" value="@row.dealyinvoice" />*@
+                <input type="hidden" name="subprojectid_prio" value="@row.subprojectid_prio" />
+                <div class="row">
+                    <div class="col col-dropdown">
+                        <input type="hidden" class="companyId" name="pCompanyId" value="@row.companyid" />
+                        <select class="form-control nopadding companyDropDown"></select>
+                    </div>
+                    <div class="col nopadding col-dropdown">
+                        <input type="hidden" class="projectId" name="pProjectId" value="@row.projectid" />
+                        <select class="form-control nopadding projectDropDown"></select>
+                    </div>
+                    <div class="col col-dropdown">
+                        <input type="hidden" class="subProjectId" name="pSubProjectId" value="@row.subprojectid" />
+                        <select class="form-control subProjectDropDown"></select>
+                    </div>
+                    <div class="col date">
+                        <input type="text" class="form-control date-picker" name="pRegDate" value="@row.regdate.ToString("yyyy-MM-dd")" />
+                    </div>
+                    <div class="col amount">
+                        <input type="text" class="form-control amount hours" name="pInvoicedTime" value="@row.invoicedtime.ToString("0.00").Replace(",", ".")" />
+                    </div>
+                    <div class="col amount">
+                        <input type="text" class="form-control amount hours" name="pUsedTime" value="@row.usedtime.ToString("0.00").Replace(",", ".")" />
+                    </div>
+                    <div class="col externCom">
+                        <input type="text" class="form-control comment" name="pExternComment" value="@row.externtcomment" />
+                    </div>
+                    <input type="checkbox" class="delayChk" @(row.dealyinvoice == 1 ? "checked" : "") />
+                    <input type="hidden" name="pDealyinvoice" class="pDealyinvoice" value="@row.dealyinvoice" />
+                </div>
+                <div class="row toggle" style="display: none;">
+                    <div class="col col-full">
+                        <input type="text" class="form-control comment" name="pInternComment" value="@row.interncomment" />
+                    </div>
+                    <div class="btn-group btn-group-sm">
+                        <button type="submit" id="btnSave" class="btn btn-primary" title="Save">
+                            <span class="glyphicon glyphicon-floppy-disk"></span>
+                        </button>
+                        <button type="button" class="btn btn-danger" title="Delete">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </button>
+                        @*<button type="button" class="btn btn-warning" data-toggle="modal" data-id="@row.q_hrp_guiid" data-target="#confirm-delete">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </button>*@
+                        <a data-toggle="modal" data-id="@row.q_hrp_guiid" title="Add this item" class="myModal btn btn-warning" href="#confirm-delete">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </a>
+                    </div>
+                </div>
+            }
+
+            <!--MODAL-->
+            @*@using (Html.BeginForm("Update", "Time", FormMethod.Post))
+                {*@
+            <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure you want to delete:</p><b><input type="text" name="bookId" id="bookId" value="" /></b>
+                        </div>
+                        <div class="modal-footer" style="background-color: rgb(241,241,241)">
+                            <button type="button" class="btn btn-success" data-dismiss="modal">Cancel</button>
+                            <button type="button" data-id="@row.q_hrp_guiid" class="btn btn-danger" id="modalDelete" title="Delete">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @*}*@
+        </div>
+    }
+<br />
+
+
+@*@section scripts{
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#calendar').fullCalendar({
+                theme: true,
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+
+                defaultView: 'agendaDay',
+                editable: true,
+                allDaySlot: false,
+                selectable: true,
+                slotMinutes: 15,
+                events: "/home/getevents/"
+            });
+        });
+    </script>
+
+}*@
+
+<div class="timerow">
+    @using (Html.BeginForm("Insert", "Time", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <div class="row">
+            <div class="col col-dropdown">
+                <input type="hidden" class="pCompanyId" />
+                <select name="pCompanyId" class="form-control companyDropDown">
+                    <option value="">Select Customer</option>
+                </select>
+            </div>
+            <div class="col col-dropdown">
+                <select name="pProjectId" class="form-control projectDropDown"></select>
+            </div>
+            <div class="col col-dropdown">
+                <select name="pSubProjectId" class="form-control subProjectDropDown"></select>
+            </div>
+            <div class="col date">
+                <input type="text" class="form-control date-picker" name="pRegDate" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+            </div>
+            <div class="col amount">
+                <input type="text" class="form-control hours amount" name="pInvoicedTime" value="0.00" />
+            </div>
+            <div class="col amount">
+                <input type="text" class="form-control hours amount" name="pUsedTime" value="0.00" />
+            </div>
+            <div class="col externCom">
+                <input type="text" class="form-control comment" name="pExternComment" />
+            </div>
+            <input type="checkbox" class="delayChk" />
+            <input type="hidden" name="pDealyinvoice" class="pDealyinvoice" value="0" />
+        </div>
+            <div class="row">
+                <div class="col col-full">
+                    <input type="text" class="form-control comment" name="pInternComment" placeholder="Internal comment" />
+                </div>
+                <div class="btn-group btn-group-sm">
+                    <button type="submit" class="btn btn-primary" title="Save">
+                        <span class="glyphicon glyphicon-floppy-disk"></span>
+                    </button>
+                </div>
+            </div>
+    }
+</div>
+<br />
+    <script src="~/Scripts/funktions.js"></script>
+
+    <script type="text/javascript">
+
+        var globalId;
+        var globalToken;
+
+        $(document).on("click", ".myModal", function () {
+            globalId = $(this).data('id');
+            $(".modal-body #bookId").val( globalId );
+        });
+
+        //Deleting
+        $('#modalDelete').click(function() {
+            var row = $(this).parents('.timerow');
+            //__RequestVerificationToken
+            var guiid = globalId;
+            alert(guiid);
+            var token = row.find('input[name=__RequestVerificationToken]').val();
+            alert(token);
+            $.post('@Url.Action("Delete")', { '__RequestVerificationToken': token, 'q_hrp_guiid': guiid },
+                function(data) {
+                    alert(guiid)
+                    if (data.Result) {
+                        guiid.hide(150);
+                    } else {
+                        //Todo: Display error message
+                    }
+                }, 'json');
+        });
+
+        //Delete function
+        $('.btn-danger').click(function() {
+            var row = $(this).parents('.timerow');
+            //__RequestVerificationToken
+            var guiid = row.find('.q_hrp_guiid').val();
+            var token = row.find('input[name=__RequestVerificationToken]').val();
+            $.post('@Url.Action("Delete")', { '__RequestVerificationToken': token, 'q_hrp_guiid': guiid },
+                function(data) {
+                    if (data.Result) {
+                        row.hide(150); //Gör den "utgråad" istället
+                    } else {
+                        //Todo: Display error message
+                    }
+                }, 'json');
+        });
+
+        var customers = @Html.Raw(JsonConvert.SerializeObject(Model.Customers));
+
+        var projects = @Html.Raw(JsonConvert.SerializeObject(Model.Projects));
+
+        var subProjects = @Html.Raw(JsonConvert.SerializeObject(Model.SubProjects));
+
+        document.addEventListener("DOMContentLoaded", function() {
+
+            function updateProjectDropDown(projectDropDown, companyId, projectId, clear) {
+                clear = typeof clear !== "undefined" ? clear : true;
+                if(clear) $(projectDropDown).html('');
+
+                $(projects.filter(function(x) { return x.CustomerCode === companyId })).each(function(i, v) {
+                    $(projectDropDown).append('<option value="' + v.Id + '" class="' +v.Status + '"' +  (v.Id===projectId ? ' selected' : '') + '>' + v.Description + '</option>');
+                });
+            }
+            function updateSubProjectDropDown(subProjectDropDown, projectId, subProjectId, clear) {
+                clear = typeof clear !== "undefined" ? clear : true;
+                if(clear) $(subProjectDropDown).html('');
+
+                $(subProjects.filter(function(x) { return x.ProjectId === projectId })).each(function(i, v) {
+                    $(subProjectDropDown).append('<option value="' + v.Id + '" class="' +v.Status + '"' + (v.Id===subProjectId ? ' selected' : '') + '>' + v.Description + '</option>');
+                });
+            }
+
+            function updateProject(dropDown) {
+                var row = $(dropDown).parent().parent();
+                var companyId = $(dropDown).val();
+                var projectId = $(row).find('.projectId').val();
+                var projectDropDown = $(row).find('.projectDropDown');
+
+                updateProjectDropDown(projectDropDown, companyId, projectId);
+            }
+
+            function updateSubProject(dropDown) {
+                var row = $(dropDown).parent().parent();
+                var projectId = $(dropDown).val();
+                var subProjectId = $(row).find('.subProjectId').val();
+                var subProjectDropDown = $(row).find('.subProjectDropDown');
+                updateSubProjectDropDown(subProjectDropDown, projectId, subProjectId);
+                subProjectDropDown.prepend('<option value=""></option>');
+            }
+
+            //Selected company changed
+            $('.companyDropDown').change(function() {
+                $(this).parent().parent().find('.companyId').val($(this).val());
+                updateProject(this);
+                updateSubProject($(this).parents('.row').find('.projectDropDown'));
+            });
+            //Selected project change
+            $('.projectDropDown').change(function() {
+                $(this).parent().find('.projectId').val($(this).val());
+                updateSubProject(this);
+            });
+            //Selected sub project change
+            $('.subProjectDropDown').change(function() {
+                $(this).parent().find('.subProjectId').val($(this).val());
+            });
+
+            function populateCustomerDropDown(companyDropDown, companyId) {
+                $(customers).each(function(i, val) {
+                    $(companyDropDown).append('<option value="'+val.Code +'"'+ (val.Code === companyId ? ' selected' : '') +'>' + val.Name +'</option>');
+                });
+            }
+            $('.timerow').each(function(k,v) {
+                var companyId = $(v).find('.companyId').val();
+                var companyDropDown = $(v).find('.companyDropDown');
+                var projectDropDown = $(v).find('.projectDropDown');
+                populateCustomerDropDown(companyDropDown,companyId);
+                updateProject(companyDropDown);
+                updateSubProject(projectDropDown);
+            });
+
+            /* Selections */
+            function updateSelectionDropDowns() {
+                var customerDropDown = $('#selectionCompanyDropDown');
+                var customerId = $('#selectionCompany').val();
+                var projectId = $('#selectionProject').val();
+                var subProjectId = $('#selectionSubProject').val();
+
+                console.log(customerId);
+                console.log(projectId);
+                console.log(subProjectId);
+
+                customerDropDown.append('<option value="">All</option>');
+                populateCustomerDropDown(customerDropDown, customerId);
+                updateProjectDropDown($('#selectionProjectDropDown'), customerId, projectId, false);
+                updateSubProjectDropDown($('#selectionSubProjectDropDown'), projectId, subProjectId, false);
+            }
+
+            //Init
+            updateSelectionDropDowns();
+
+            $('#selectionSubProjectDropDown').change(function() {
+                $('#selectionSubProject').val($(this).val());
+            });
+            $('#selectionProjectDropDown').change(function() {
+                $('#selectionProject').val($(this).val());
+                updateSubProjectDropDown($('#selectionSubProjectDropDown'), $(this).val());
+                $('#selectionSubProjectDropDown').prepend('<option value="" selected>All</option>');
+            });
+            $('#selectionCompanyDropDown').change(function() {
+                $('#selectionCompany').val($(this).val());
+                updateProjectDropDown($('#selectionProjectDropDown'), $(this).val());
+                $('#selectionProjectDropDown').prepend('<option value="" selected>All</option>');
+                updateSubProjectDropDown($('#selectionSubProjectDropDown'));
+                $('#selectionSubProjectDropDown').prepend('<option value="" selected>All</option>');
+            });
+
+
+
+            //$('#selectionsApply').click(function() {
+            //    Todo: Fetch time rows and render.
+            //});
+        });
+    </script>

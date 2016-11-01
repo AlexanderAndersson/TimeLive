@@ -1,0 +1,286 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+    font-family: Arial;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-left: 20px !important;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+
+/*textarea {
+    max-width: 280px;
+}*/
+
+.col {
+    float: left;
+    position: relative;
+}
+
+.nopadding {
+   padding: 0 !important;
+   margin: 0 !important;
+}
+
+.col-dropdown {
+    width: 227px;
+}
+
+.col-type {
+    width: 214px;
+}
+
+.date {
+    width: 100px;
+}
+
+.col-date1 {
+    width: 90px;
+    margin-right: 15px;
+}
+
+.amount {
+    text-align: right;
+    width: 61px;
+}
+
+.col-header {
+    font-weight: bold;
+    font-size: large;
+}
+
+.col-full {
+    width: 280px;
+}
+
+.amount-head {
+    width:50px;
+}
+
+.col-numberof {
+    width: 55px;
+}
+
+.col-dropdown1 {
+    width: 220px;
+}
+
+btn-primary{
+    margin-left: 1000px;
+}
+
+div {
+    display:block;
+}
+
+.externCom {
+    width: 250px;
+}
+
+.col-text{
+    width: 205px;
+}
+
+.amount-distance {
+    width: 120px;
+    margin-right: 20px; 
+}
+
+.distance {
+    width: 130px;
+    margin-left: 20px;
+}
+
+.closed {
+    color: #F00;
+}
+
+.qty { text-align: center;}
+ 
+
+.modal.loading .modal-content:before {
+    content: 'Loading...';
+    text-align: center;
+    line-height: 155px;
+    font-size: 20px;
+    background: rgba(0, 0, 0, .8);
+    position: absolute;
+    top: 55px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    color: #EEE;
+    z-index: 1000;
+}
+
+/*.sidebar {
+    position: fixed;
+    padding-top: 20px;
+    padding-right: 20px;
+    padding-left: 20px;
+    margin-left: 55px;
+    margin-top: 10px;
+    height: 690px;
+    width: 280px;
+    background-color: #005066;
+    background-color: #302b2b;
+    background-color: #313638;
+    color: white;
+    z-index: 1000;
+    border: solid 2px orange;
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 15px;
+}
+
+.sidebarDistance {
+    position: fixed;
+    padding-top: 20px;
+    padding-right: 20px;
+    padding-left: 20px;
+    margin-left: 55px;
+    margin-top: 10px;
+    height: 270px;
+    width: 280px;
+    background-color: #005066;
+    background-color: #302b2b;
+    background-color: #313638;
+    color: white;
+    z-index: 1000;
+    border: solid 2px orange;
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 15px;
+}
+
+.sidebarExpense {
+    position: fixed;
+    padding-top: 20px;
+    padding-right: 20px;
+    padding-left: 20px;
+    margin-left: 55px;
+    margin-top: 10px;
+    height: 570px;
+    width: 280px;
+    background-color: #005066;
+    background-color: #302b2b;
+    background-color: #313638;
+    color: white;
+    z-index: 1000;
+    border: solid 2px orange;
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 15px;
+}*/
+
+.hSiteLeft
+{
+    position: fixed;
+	width: 55px;
+	/*background-color: #005066;*/+
+    background-color: #222;
+	height: 100%;
+	top: 0;
+    padding-right: 20px;
+    z-index: 1000;
+    padding-left: 7px;
+    padding-top: 65px;
+}
+
+.hSiteLeft img {
+    padding-bottom: 10px;
+}
+
+#QlikView {
+    padding-bottom: 20px;
+}
+
+.tHours {
+    font-size: large;
+    padding-left: 26px;
+}
+
+
+/*#hActionBar 
+{
+	position: fixed;
+	width: 40px;
+	height: 140px;
+	margin: 120px 0px 0px 5px;
+}*/
+
+
+#tableTitle {
+    padding-bottom: 5px;
+    font-size: x-large;
+}
+
+.navbar-left img {
+    height: 46px;
+    margin-top: 7px;
+    padding-right: 50px;
+}
+
+.navbar-left {
+    min-height: 60px
+}
+
+#navbarr {
+    padding-left: 0px;
+    margin-left: 20px
+}
+
+.btn-logos img {
+    width: 105px;
+    margin-top: 7px;
+    margin-right: 4px;
+}
+
+.hej {
+    border: solid 1px #9f9f9f;
+    border-radius: 7px;
+}
+
+.timerow {
+    margin-bottom: 13px;
+}
+
+.glyphicon:before {
+ visibility: visible;
+}
+.glyphicon.glyphicons-unchecked:checked:before {
+   content: "\e006";
+}
+input[type=checkbox].glyphicon{
+    visibility: hidden;    
+}
+
+/*.Active {
+    border: solid 1px orange;
+}
+
+.Inactive {
+    border: solid 1px red;
+}*/
+
+#month {
+    width: 400px;
+    position: fixed;
+    right: 100px;
+    top: 200px;
+}
+
+#week {
+    width: 400px;
+    position: fixed;
+    right: 100px;
+    top: 580px;
+}
+
+.fc-highlight{
+    background-color: green;
+}
