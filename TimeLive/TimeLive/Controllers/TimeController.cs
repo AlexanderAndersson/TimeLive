@@ -46,6 +46,13 @@ namespace TimeLive.Controllers
             return View(model);
         }
 
+        public JsonResult GetKalender()
+        {
+            var selections = Session["selection"] as TimeSelection ?? TimeSelection.ThisWeek;
+            
+            return Json(selections, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Insert(string pCompanyId, int pProjectId, string pSubProjectId, DateTime pRegDate, double pInvoicedTime, double pUsedTime, string pExternComment, string pInternComment, int pDealyinvoice)

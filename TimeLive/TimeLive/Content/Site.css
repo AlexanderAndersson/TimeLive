@@ -181,7 +181,7 @@ div {
 {
     position: fixed;
 	width: 55px;
-	/*background-color: #005066;*/+
+	/*background-color: #005066;*/
     background-color: #222;
 	height: 100%;
 	top: 0;
@@ -268,19 +268,23 @@ input[type=checkbox].glyphicon{
 }*/
 
 #month {
-    width: 400px;
+    width: 300px;
     position: fixed;
     right: 100px;
     top: 200px;
 }
 
 #week {
-    width: 400px;
+    width: 300px;
     position: fixed;
     right: 100px;
     top: 580px;
 }
 
-.fc-highlight{
-    background-color: green;
+.fc-center h2 {
+   font-size: 18px !important;
+}
+
+.fc-toolbar button {
+    background-color: red
 }

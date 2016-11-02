@@ -80,9 +80,31 @@
     </div>
 }*@
 
-<div class="row">
-    <div id="month"></div>
+<div style="display: none;">
+    <form action="@Url.Action("Filter")" method="POST">
+        @Html.AntiForgeryToken()
+        <select id="selectionCompanyDropDown" class="form-control"></select>
+        <input type="hidden" name="companyId" id="selectionCompany" value="@Model.Selections.CustomerId" />
+        <select id="selectionProjectDropDown" class="form-control"><option value="">All</option></select>
+        <input type="hidden" id="selectionProject" name="projectId" value="@Model.Selections.ProjectId" />
+        <select name="subProjectId" id="selectionSubProjectDropDown" class="form-control"><option value="">All</option></select>
+        <input type="hidden" id="selectionSubProject" name="subProjectId" value="@Model.Selections.SubProjectId" />
+        <input type="text" id="selectionFrom" class="form-control date-picker" name="selectionFrom" value="@(Model.Selections.From?.ToString("yyyy-MM-dd") ?? "")" />
+        <input type="text" id="selectionTo" class="form-control date-picker" name="selectionTo" value="@(Model.Selections.To?.ToString("yyyy-MM-dd") ?? "")" />
+        <button type="submit" id="selectionsApply" class="btn btn-block btn-success">Apply</button>
+    </form>
 </div>
+
+
+<br />
+<a href="#" id="btnInit" class="btn btn-success">Initialise database!</a>
+
+<div id="month"></div>
+
+
+@*<div class="row">
+    <div id="month"></div>
+</div>*@
 
 <div class="row">
     <div id="week"></div>

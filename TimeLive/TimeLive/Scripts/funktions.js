@@ -1,17 +1,20 @@
 ﻿/// <reference path="moment.js" />
 /// <reference path="moment.js" />
 
-
 $(document).ready(function () {
     $('#month').fullCalendar({
         theme: true,
         header: {
-            left: 'today',
-            center: 'title',
-            right: 'prev next'
+            editable: false,
+            left: '',
+            center: 'prev title next',
+            right: ''
+        },
+        themeButtonIcons: {
+           
         },
         defaultView: 'month',
-        editable: true,
+        editable: false,
         allDaySlot: true,
         selectable: true,
         firstDay: 1,
@@ -19,22 +22,61 @@ $(document).ready(function () {
         weekNumbers: true,
         weekends: false,
         height: "auto",
+        navLinks: true,
+        navLinkWeekClick: function (date) {
+            $('#week').fullCalendar('gotoDate', date);
+            $('#week').fullCalendar('changeView', 'agendaWeek');
+        },
+        navLinkDayClick: function (date) {
+            $('#week').fullCalendar('gotoDate', date);
+            $('#week').fullCalendar('changeView', 'agendaWeek');
+        },
 
-    });
+    });//Month
     $('#week').fullCalendar({
         theme: true,
         header: false,
         defaultView: 'basicWeek',
-        editable: true,
+        editable: false,
         allDaySlot: false,
         selectable: true,
         firstDay: 1,
         fixedWeekCount: false,
         weekNumbers: true,
         weekends: false,
+        //height: "auto",
+        columnFormat: 'ddd',
+        contentHeight: 300,
+        //businessHours: true,
+        //businessHours: { // specify an array instead
+
+        //dow: [ 1, 2, 3, 4, 5 ], // Monday, Tuesday, Wednesday
+        //start: '01:00', // 8am
+        //end: '09:00', // 6pm
+        //},
+        //minTime: '01:00',
+        //maxTime: '09:00',
+
+
+    });//Week
+});//document.ready
+
+
+$('#btnInit').click(function () {
+    $.ajax({
+        type: 'POST',
+        url: "/Time/GetKalender",
+        success: function (response) {
+            if (response == 'True') {
+                $('#calendar').fullCalendar('refetchEvents');
+                alert('Database populated! ');
+            }
+            else {
+                alert('Error, could not populate database!');
+            }
+        }
     });
 });
-
 
 //Increase/Decrease numerics with arrow keys
 $('.amount').keydown(function (event) {
