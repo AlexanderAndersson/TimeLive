@@ -46,11 +46,56 @@ namespace TimeLive.Controllers
             return View(model);
         }
 
-        public JsonResult GetKalender()
+        public ActionResult GetEvents(string hej)
         {
-            var selections = Session["selection"] as TimeSelection ?? TimeSelection.ThisWeek;
+            //var fromDate = ConvertFromUnixTimestamp(start);
+            //var toDate = ConvertFromUnixTimestamp(end);
+
+            //Get the events
+            //You may get from the repository also
+
+            var eventList = GetEventss();
             
-            return Json(selections, JsonRequestBehavior.AllowGet);
+            var rows = eventList.ToArray();
+
+            return Json(rows, JsonRequestBehavior.AllowGet);
+
+        }
+
+        private List<Events> GetEventss()
+        {            
+
+            List<Events> eventList = new List<Events>();
+                        
+            var dateNow = DateTime.Now;
+            var date1 = new DateTime(dateNow.Year, dateNow.Month, dateNow.Day, 15, 00, 0);
+            var date2 = new DateTime(dateNow.Year, dateNow.Month, dateNow.Day, 13, 00, 0);
+            var date3 = new DateTime(dateNow.Year, dateNow.Month, dateNow.Day, 13, 30, 0);
+
+            Events newEvent = new Events
+            {
+                title = "Event 1",
+                start = date2.ToString(),
+                end = date3.ToString(),
+            };
+
+            eventList.Add(newEvent);
+
+            newEvent = new Events
+            {
+                title = "Event 2",
+                start = date1.ToString(),
+            };
+
+            eventList.Add(newEvent);
+
+            return eventList;
+        }
+
+        private static DateTime ConvertFromUnixTimestamp(double timestamp)
+        {
+            var origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            return origin.AddSeconds(timestamp);
         }
 
         [HttpPost]

@@ -3,6 +3,15 @@ using System.Collections.Generic;
 
 namespace TimeLive.Models
 {
+
+    public class Events
+    {
+        public string title { get; set; }
+        public string start { get; set; }
+        public string end { get; set; }
+    }
+
+
     public class TimeModel
     {
         public IEnumerable<q_SelectRowsTime_Result> SelectRows { get; set; }
@@ -20,6 +29,9 @@ namespace TimeLive.Models
         public DateTime? From { get; set; }
         public DateTime? To { get; set; }
         public int? Delayed { get; set; }
+        public string title { get; set; }
+        public string start { get; set; }
+        public string end { get; set; }
 
         public static TimeSelection ThisWeek
         {

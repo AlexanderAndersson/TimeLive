@@ -26,55 +26,74 @@ $(document).ready(function () {
         navLinkWeekClick: function (date) {
             $('#week').fullCalendar('gotoDate', date);
             $('#week').fullCalendar('changeView', 'agendaWeek');
+            $('#selectionFrom').val(date.format('YYYY-MM-DD'));
+            $('#selectionTo').val(date.isoWeekday(7).format('YYYY-MM-DD'));
+            $('#selectionsApply').click();
         },
         navLinkDayClick: function (date) {
             $('#week').fullCalendar('gotoDate', date);
             $('#week').fullCalendar('changeView', 'agendaWeek');
+            $('#selectionFrom').val(date.format('YYYY-MM-DD'));
+            $('#selectionTo').val(date.format('YYYY-MM-DD'));
+            $('#selectionsApply').click();
         },
+        
 
     });//Month
-    $('#week').fullCalendar({
-        theme: true,
-        header: false,
-        defaultView: 'basicWeek',
-        editable: false,
-        allDaySlot: false,
-        selectable: true,
-        firstDay: 1,
-        fixedWeekCount: false,
-        weekNumbers: true,
-        weekends: false,
-        //height: "auto",
-        columnFormat: 'ddd',
-        contentHeight: 300,
-        //businessHours: true,
-        //businessHours: { // specify an array instead
 
-        //dow: [ 1, 2, 3, 4, 5 ], // Monday, Tuesday, Wednesday
-        //start: '01:00', // 8am
-        //end: '09:00', // 6pm
-        //},
-        //minTime: '01:00',
-        //maxTime: '09:00',
+    //$('#week').fullCalendar({
+    //    theme: true,
+    //    header: false,
+    //    defaultView: 'agendaWeek',
+    //    editable: false,
+    //    allDaySlot: false,
+    //    selectable: true,
+    //    firstDay: 1,
+    //    fixedWeekCount: false,
+    //    weekNumbers: true,
+    //    weekends: false,
+    //    height: "auto",
+    //    columnFormat: 'ddd',
+    //    contentHeight: 300,
+    //    events: "/time/getevents/",
+    //    slotDuration: "00:60:01",
+
+    //    businessHours: true,
+    //businessHours: { // specify an array instead
+
+    //    dow: [ 1, 2, 3, 4, 5 ], // Monday, Tuesday, Wednesday
+    //    start: '01:00',
+    //    end: '09:00', 
+    //},
+    //    minTime: '00:00',
+    //    maxTime: '12:00',
 
 
-    });//Week
+    //});//Week
 });//document.ready
 
+
+//$(document).ready(function () {
+//    $.ajax({
+//        type: 'POST',
+//        url: "/time/getevents/",
+//        success: function (response) {
+
+//            $('#week').fullCalendar('refetchEvents');
+//            alert('Database populated! ');
+//        }
+//    });
+//});
 
 $('#btnInit').click(function () {
     $.ajax({
         type: 'POST',
-        url: "/Time/GetKalender",
-        success: function (response) {
-            if (response == 'True') {
-                $('#calendar').fullCalendar('refetchEvents');
+        url: "/time/getevents/",
+       
+        success: function () {          
+                $('#week').fullCalendar('refetchEvents');
                 alert('Database populated! ');
-            }
-            else {
-                alert('Error, could not populate database!');
-            }
-        }
+        }         
     });
 });
 
@@ -209,7 +228,7 @@ $('#quickToday').click(function () {
     $('#selectionsApply').click();
 });
 
-$('#quickCWeek').click(function () {
+$('#quickCWeek').click(function (date) {
     var startOfWeek = moment().isoWeekday(1);
     $('#selectionFrom').val(startOfWeek.format('YYYY-MM-DD'));
     $('#selectionTo').val(moment().isoWeekday(7).format('YYYY-MM-DD'));
