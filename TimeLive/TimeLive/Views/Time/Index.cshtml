@@ -192,62 +192,7 @@
                         </a>
                     </div>
                 </div>
-
-                @*@if (true)
-                    {
-                        <script>hello();</script>
-                    }*@
-                <script>
-                    $(document).ready(function () {
-                        $('#week').fullCalendar({
-                            theme: true,
-                            header: false,
-                            defaultView: 'agendaWeek',
-                            editable: false,
-                            allDaySlot: false,
-                            selectable: true,
-                            firstDay: 1,
-                            fixedWeekCount: false,
-                            weekNumbers: true,
-                            weekends: false,
-                            //height: "auto",
-                            columnFormat: 'ddd',
-                            contentHeight: 300,
-                            slotDuration: "00:60:01",
-                            events: [
-                                {
-                                    title: '@row.usedtime',
-                                    start: '@row.regdate',
-                                },
-                            ],
-
-                            businessHours: true,
-                            businessHours: { // specify an array instead
-
-                            dow: [ 1, 2, 3, 4, 5 ], // Monday, Tuesday, Wednesday
-                            start: '01:00',
-                            end: '09:00', 
-                            },
-                            minTime: '00:00',
-                            maxTime: '12:00',
-                        });//Week
-                    });
-
-
-                    //$.ajax({
-                    //    type: 'POST',
-                    //    url: "/time/getevents",
-
-                    //    success: function (start, title) {
-                    //        $('#week').fullCalendar('refetchEvents');
-                    //        alert('Database populated!');
-                    //    }
-                    //});
-                </script>
-
             }
-
-
 
             <!--MODAL-->
             @*@using (Html.BeginForm("Update", "Time", FormMethod.Post))

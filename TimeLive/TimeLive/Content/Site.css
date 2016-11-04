@@ -288,3 +288,13 @@ input[type=checkbox].glyphicon{
 .fc-toolbar button {
     background-color: red
 }
+
+.fc-time:after {
+    content: "h";
+}
+
+
+/*Makes the time on events hidden*/
+/*.fc-content .fc-time { 
+   display : none;
+}*/

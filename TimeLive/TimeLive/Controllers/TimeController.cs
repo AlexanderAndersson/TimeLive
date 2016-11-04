@@ -10,10 +10,11 @@ namespace TimeLive.Controllers
     public class TimeController : Controller
     {
         private static readonly OptEntities TimeLiveDB = new OptEntities();
-
         private static IEnumerable<Customer> customers;
         private static IEnumerable<Project> projects;
         private static IEnumerable<SubProject> subProjects;
+
+        //public static readonly TimeModel hej = new TimeModel();
 
         private static DateTime lastUpdate = DateTime.FromFileTime(0);
         private static readonly TimeSpan updateFrequency = TimeSpan.FromMinutes(5);
@@ -46,56 +47,39 @@ namespace TimeLive.Controllers
             return View(model);
         }
 
-        public ActionResult GetEvents(string hej)
+        public ActionResult GetEvents()
         {
-            //var fromDate = ConvertFromUnixTimestamp(start);
-            //var toDate = ConvertFromUnixTimestamp(end);
-
-            //Get the events
-            //You may get from the repository also
-
-            var eventList = GetEventss();
-            
-            var rows = eventList.ToArray();
+            var eventList = GetEventss();            
+            var rows = eventList;
 
             return Json(rows, JsonRequestBehavior.AllowGet);
-
         }
 
         private List<Events> GetEventss()
-        {            
+        {
+            var selectRows = from c in TimeLiveDB.q_SelectRowsTime(null, ((Classes.UserClass.User)Session["User"]).Username,
+                             null, null, null, null,
+                             null, null, null, null,
+                             null, null, null, null).ToArray()
+                             where c.regdate == DateTime.Today
+                             select c;
 
             List<Events> eventList = new List<Events>();
-                        
-            var dateNow = DateTime.Now;
-            var date1 = new DateTime(dateNow.Year, dateNow.Month, dateNow.Day, 15, 00, 0);
-            var date2 = new DateTime(dateNow.Year, dateNow.Month, dateNow.Day, 13, 00, 0);
-            var date3 = new DateTime(dateNow.Year, dateNow.Month, dateNow.Day, 13, 30, 0);
 
-            Events newEvent = new Events
+            foreach (var row in selectRows)
             {
-                title = "Event 1",
-                start = date2.ToString(),
-                end = date3.ToString(),
-            };
 
-            eventList.Add(newEvent);
+                Events newEvent = new Events
+                {
+                    title = row.invoicedtime.ToString("0.00" + "h"), //Hur många timmar man har rapporterat
+                    start = row.regdate.AddHours(1).ToString(), //Gör så att tiden för det datumet man rapporterar för startar 01:00
+                    end = row.regdate.AddHours(1).AddHours((double)row.invoicedtime).ToString(), //Gör så att end datumet sluter x 
+                };
 
-            newEvent = new Events
-            {
-                title = "Event 2",
-                start = date1.ToString(),
-            };
-
-            eventList.Add(newEvent);
+                eventList.Add(newEvent);
+            }
 
             return eventList;
-        }
-
-        private static DateTime ConvertFromUnixTimestamp(double timestamp)
-        {
-            var origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-            return origin.AddSeconds(timestamp);
         }
 
         [HttpPost]

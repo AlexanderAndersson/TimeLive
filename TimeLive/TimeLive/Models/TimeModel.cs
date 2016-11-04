@@ -9,8 +9,19 @@ namespace TimeLive.Models
         public string title { get; set; }
         public string start { get; set; }
         public string end { get; set; }
+
+        public string lastEnd { get; set; }
     }
 
+
+    public class EventModel
+    {
+        public int ID { get; set; }
+        public string Title { get; set; }
+        public DateTime StartDateTime { get; set; }
+        public DateTime EndDateTime { get; set; }
+        public bool IsAllDay { get; set; }
+    }
 
     public class TimeModel
     {
