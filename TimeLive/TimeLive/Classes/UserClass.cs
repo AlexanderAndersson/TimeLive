@@ -24,7 +24,7 @@ namespace TimeLive.Classes
             userStrings[1] = "joha";
             newUser.Domain = userStrings[0];
             newUser.Username = userStrings[1];
-            newUser.FullName = GetFullName(newUser.Domain, newUser.Username);
+            //newUser.FullName = GetFullName(newUser.Domain, newUser.Username);
             return newUser;
         }
         private static string GetFullName(string domain, string username)

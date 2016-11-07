@@ -289,9 +289,9 @@ input[type=checkbox].glyphicon{
     background-color: red
 }
 
-.fc-time:after {
+/*.fc-time:after {
     content: "h";
-}
+}*/
 
 
 /*Makes the time on events hidden*/

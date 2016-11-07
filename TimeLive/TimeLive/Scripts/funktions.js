@@ -10,9 +10,6 @@ $(document).ready(function () {
             center: 'prev title next',
             right: ''
         },
-        themeButtonIcons: {
-           
-        },
         defaultView: 'month',
         editable: false,
         allDaySlot: true,
@@ -29,23 +26,22 @@ $(document).ready(function () {
             $('#selectionFrom').val(date.format('YYYY-MM-DD'));
             $('#selectionTo').val(date.isoWeekday(7).format('YYYY-MM-DD'));
             $('#selectionsApply').click();
-        },
+        },//navLinkWeekClick
         navLinkDayClick: function (date) {
             $('#week').fullCalendar('gotoDate', date);
             $('#week').fullCalendar('changeView', 'agenda');
             $('#selectionFrom').val(date.format('YYYY-MM-DD'));
             $('#selectionTo').val(date.format('YYYY-MM-DD'));
             $('#selectionsApply').click();
-        },
+        },//navLinkDayClick
         
-
     });//Month
 
     $('#week').fullCalendar({
         theme: true,
         header: false,
         defaultView: 'agendaWeek',
-        editable: false,
+        editable: true,
         allDaySlot: false,
         selectable: true,
         firstDay: 1,
@@ -58,46 +54,30 @@ $(document).ready(function () {
         timeFormat: 'h:mm',
         events: "/time/getevents/",
         slotDuration: "00:60:01",
-
         businessHours: false,
-        //businessHours: { // specify an array instead
-
-        //dow: [ 1, 2, 3, 4, 5 ], // Monday, Tuesday, Wednesday
-        ////start: '01:00',
-        ////end: '09:00', 
-        //},
+        businessHours: { // specify an array instead
+            dow: [ 1, 2, 3, 4, 5 ], // Monday, Tuesday, Wednesday
+            start: '01:00',
+            end: '09:00', 
+        },
         slotLabelFormat: 'H(:mm)',
         minTime: "00:00:00",
-        maxTime: '09:00:00',
-
+        maxTime: '10:00:00',
 
     });//Week
 });//document.ready
 
 
-$(document).ready(function () {
-    $.ajax({
-        type: 'POST',
-        url: "/time/getevents/",
-        success: function (response) {
-
-            $('#week').fullCalendar('refetchEvents');
-            //alert('Database populated! ');
-        }
-    });
-});
-
-$('#btnInit').click(function () {
-    $.ajax({
-        type: 'POST',
-        url: "/time/getevents/",
-       
-        success: function () {          
-                $('#week').fullCalendar('refetchEvents');
-                //alert('Database populated! ');
-        }         
-    });
-});
+//$(document).ready(function () {
+//    $.ajax({
+//        type: 'POST',
+//        url: "/time/getevents/",
+//        success: function (response) {
+//            $('#week').fullCalendar('refetchEvents');
+//            //alert('Database populated! ');
+//        }
+//    });
+//});
 
 //Increase/Decrease numerics with arrow keys
 $('.amount').keydown(function (event) {
