@@ -104,10 +104,14 @@ namespace TimeLive.Controllers
             object tdFrom = TempData["From"];
             object tdTo = TempData["To"];
 
+
+            //If tempdata is null make the from and to dates this week
             if (tdFrom == null && tdTo == null)
             {
                 From = DateTime.Today;
-                To = DateTime.Today.AddDays(6);
+                int delta = DayOfWeek.Monday - From.DayOfWeek;
+                From = From.AddDays(delta);
+                To = From.AddDays(6);
             }
             else
             {
@@ -142,9 +146,9 @@ namespace TimeLive.Controllers
                     {
                         Events newEvent = new Events //This is always the first event on each day
                         {
-                            title = row.invoicedtime.ToString("0.00" + "h").Replace(",","."), //Title equals to how many hours you been reporting
+                            title = row.usedtime.ToString("0.00" + "h").Replace(",","."), //Title equals to how many hours you been reporting
                             start = row.regdate.AddHours(1).ToString(), //Start-time begins at 01:00 if LastEnd hour = 00:00:00
-                            end = row.regdate.AddHours(1).AddHours((double)row.invoicedtime).ToString(), //End-time equals to 01:00 + invoicedtime
+                            end = row.regdate.AddHours(1).AddHours((double)row.usedtime).ToString(), //End-time equals to 01:00 + invoicedtime
                         };
 
                         LastEnd = row.regdate.AddHours(1).AddHours((double)row.invoicedtime); //LastEnd equals to 01:00
@@ -155,12 +159,12 @@ namespace TimeLive.Controllers
                     {
                         Events newEvent = new Events //This is always the event after the first event on the same day if there is one
                         {
-                            title = row.invoicedtime.ToString("0.00" + "h").Replace(",", "."), //Title equals to how many hours you been reporting
+                            title = row.usedtime.ToString("0.00" + "h").Replace(",", "."), //Title equals to how many hours you been reporting
                             start = LastEnd.ToString(), //Start-time begins when the latest report ended
-                            end = row.regdate.AddHours(LastEnd.Hour).AddMinutes(LastEnd.Minute).AddHours((double)row.invoicedtime).ToString(), //End-time equals to LastEnd + invoicedtime
+                            end = row.regdate.AddHours(LastEnd.Hour).AddMinutes(LastEnd.Minute).AddHours((double)row.usedtime).ToString(), //End-time equals to LastEnd + invoicedtime
                         };
 
-                        LastEnd = row.regdate.AddHours(LastEnd.Hour).AddHours((double)row.invoicedtime);
+                        LastEnd = row.regdate.AddHours(LastEnd.Hour).AddHours((double)row.usedtime);
 
                         eventList.Add(newEvent);
                     }
