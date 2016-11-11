@@ -50,51 +50,20 @@ namespace TimeLive.Controllers
             return View(model);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Filter(DateTime selectionFrom, DateTime selectionTo, string companyId, int? projectId, string subProjectId, int? pDealyinvoice)
+        public ActionResult GetEvents()
         {
+            var eventList = NewEvents();
+            //var rows = eventList;
 
-            TempData["From"] = selectionFrom;
-            TempData["To"] = selectionTo;
+            return Json(eventList, JsonRequestBehavior.AllowGet);
+        }
 
-            Session["User"] = Session["User"] ?? Classes.UserClass.GetUserByIdentity(WindowsIdentity.GetCurrent());
-            //Session["User"] = Session["User"] as AdUser ?? new AdUser { Domain = "OPTIVASYS", FullName = "Rasmus Jansson", Username = "raja" };
-            if (DateTime.Now - lastUpdate >= updateFrequency) UpdateStatics();
-            if (pDealyinvoice == 0)
-                pDealyinvoice = null;
+        public ActionResult GetReports()
+        {
+            var eventList = NewEvents();
+            var rows = eventList;
 
-            subProjectId = string.IsNullOrEmpty(subProjectId) ? null : subProjectId;
-            companyId = string.IsNullOrEmpty(companyId) ? null : companyId;
-
-            var selections = new TimeSelection
-            {
-                CustomerId = companyId,
-                From = selectionFrom,
-                To = selectionTo,
-                Delayed = pDealyinvoice,
-                ProjectId = projectId,
-                SubProjectId = subProjectId
-            };
-
-            Session["selection"] = selections;
-
-            var model = new TimeModel
-            {
-                SelectRows = TimeLiveDB.q_SelectRowsTime(
-                    null, ((Classes.UserClass.User)Session["User"]).Username,
-                    selections.ProjectId, null, selections.SubProjectId, null,
-                    selections.CustomerId, null, null, selections.From,
-                    selections.To, selections.Delayed, null, null),
-
-                Selections = selections,
-                Projects = projects,
-                SubProjects = subProjects,
-                Customers = customers
-            };
-
-            ViewBag.User = ((Classes.UserClass.User)Session["User"]).FullName;
-            return View("Index", model);
+            return Json(new { reports = rows }, JsonRequestBehavior.AllowGet);
         }
 
         private List<Events> NewEvents()
@@ -146,12 +115,12 @@ namespace TimeLive.Controllers
                     {
                         Events newEvent = new Events //This is always the first event on each day
                         {
-                            title = row.usedtime.ToString("0.00" + "h").Replace(",","."), //Title equals to how many hours you been reporting
+                            title = row.usedtime.ToString("0.0" + "h").Replace(",","."), //Title equals to how many hours you been reporting
                             start = row.regdate.AddHours(1).ToString(), //Start-time begins at 01:00 if LastEnd hour = 00:00:00
                             end = row.regdate.AddHours(1).AddHours((double)row.usedtime).ToString(), //End-time equals to 01:00 + invoicedtime
                         };
 
-                        LastEnd = row.regdate.AddHours(1).AddHours((double)row.invoicedtime); //LastEnd equals to 01:00
+                        LastEnd = row.regdate.AddHours(1).AddHours((double)row.usedtime); //LastEnd equals to 01:00
 
                         eventList.Add(newEvent); //Add event
                     }
@@ -159,7 +128,7 @@ namespace TimeLive.Controllers
                     {
                         Events newEvent = new Events //This is always the event after the first event on the same day if there is one
                         {
-                            title = row.usedtime.ToString("0.00" + "h").Replace(",", "."), //Title equals to how many hours you been reporting
+                            title = row.usedtime.ToString("0.0" + "h").Replace(",", "."), //Title equals to how many hours you been reporting
                             start = LastEnd.ToString(), //Start-time begins when the latest report ended
                             end = row.regdate.AddHours(LastEnd.Hour).AddMinutes(LastEnd.Minute).AddHours((double)row.usedtime).ToString(), //End-time equals to LastEnd + invoicedtime
                         };
@@ -174,14 +143,6 @@ namespace TimeLive.Controllers
 
 
             return eventList;
-        }
-
-        public ActionResult GetEvents()
-        {
-            var eventList = NewEvents();
-            //var rows = eventList;
-
-            return Json(eventList, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -219,6 +180,53 @@ namespace TimeLive.Controllers
         {
             TimeLiveDB.q_DeleteRowTime(q_hrp_guiid);
             return Json(new { Result = true });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Filter(DateTime selectionFrom, DateTime selectionTo, string companyId, int? projectId, string subProjectId, int? pDealyinvoice)
+        {
+
+            TempData["From"] = selectionFrom;
+            TempData["To"] = selectionTo;
+
+            Session["User"] = Session["User"] ?? Classes.UserClass.GetUserByIdentity(WindowsIdentity.GetCurrent());
+            //Session["User"] = Session["User"] as AdUser ?? new AdUser { Domain = "OPTIVASYS", FullName = "Rasmus Jansson", Username = "raja" };
+            if (DateTime.Now - lastUpdate >= updateFrequency) UpdateStatics();
+            if (pDealyinvoice == 0)
+                pDealyinvoice = null;
+
+            subProjectId = string.IsNullOrEmpty(subProjectId) ? null : subProjectId;
+            companyId = string.IsNullOrEmpty(companyId) ? null : companyId;
+
+            var selections = new TimeSelection
+            {
+                CustomerId = companyId,
+                From = selectionFrom,
+                To = selectionTo,
+                Delayed = pDealyinvoice,
+                ProjectId = projectId,
+                SubProjectId = subProjectId
+            };
+
+            Session["selection"] = selections;
+
+            var model = new TimeModel
+            {
+                SelectRows = TimeLiveDB.q_SelectRowsTime(
+                    null, ((Classes.UserClass.User)Session["User"]).Username,
+                    selections.ProjectId, null, selections.SubProjectId, null,
+                    selections.CustomerId, null, null, selections.From,
+                    selections.To, selections.Delayed, null, null),
+
+                Selections = selections,
+                Projects = projects,
+                SubProjects = subProjects,
+                Customers = customers
+            };
+
+            ViewBag.User = ((Classes.UserClass.User)Session["User"]).FullName;
+            return View("Index", model);
         }
 
         private static void UpdateStatics()

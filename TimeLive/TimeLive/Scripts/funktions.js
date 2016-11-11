@@ -1,7 +1,7 @@
 ﻿/// <reference path="moment.js" />
 /// <reference path="moment.js" />
-
 $(document).ready(function (date) {
+
     $('#month').fullCalendar({
         theme: true,
         header: {
@@ -23,7 +23,7 @@ $(document).ready(function (date) {
         navLinks: true,
         navLinkWeekClick: function (date) {
             $('#week').fullCalendar('gotoDate', date);
-            $('#week').fullCalendar('changeView', 'agendaWeek');
+            //$('#week').fullCalendar('changeView', 'agendaWeek');
             $('#selectionFrom').val(date.format('YYYY-MM-DD'));
             $('#selectionTo').val(date.isoWeekday(7).format('YYYY-MM-DD'));
             $('#selectionsApply').click();
@@ -34,13 +34,14 @@ $(document).ready(function (date) {
             $('#selectionFrom').val(date.format('YYYY-MM-DD'));
             $('#selectionTo').val(date.format('YYYY-MM-DD'));
             $('#selectionsApply').click();
-        },//navLinkDayClick        
+        },//navLinkDayClick 
     });//Month
 
     $('#week').fullCalendar({
         theme: true,
         header: false,
         defaultView: 'agendaWeek',
+        //defaultDate: "2016-11-05",
         weekNumberCalculation: 'ISO',
         editable: false,
         allDaySlot: false,
@@ -76,7 +77,6 @@ $(document).ready(function (date) {
 
 
 
-
 //$(document).ready(function () {
 //    $.ajax({
 //        type: 'POST',
@@ -87,6 +87,7 @@ $(document).ready(function (date) {
 //        }
 //    });
 //});
+
 
 //Increase/Decrease numerics with arrow keys
 $('.amount').keydown(function (event) {
