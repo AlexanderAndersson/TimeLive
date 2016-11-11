@@ -1,16 +1,17 @@
 ﻿/// <reference path="moment.js" />
 /// <reference path="moment.js" />
 
-$(document).ready(function () {
+$(document).ready(function (date) {
     $('#month').fullCalendar({
         theme: true,
         header: {
             editable: false,
-            left: '',
-            center: 'prev title next',
-            right: ''
-        },
+            left: 'month',
+            center: 'title',
+            right: 'prev next'
+        },//header
         defaultView: 'month',
+        weekNumberCalculation: 'ISO',
         editable: false,
         allDaySlot: true,
         selectable: true,
@@ -33,15 +34,15 @@ $(document).ready(function () {
             $('#selectionFrom').val(date.format('YYYY-MM-DD'));
             $('#selectionTo').val(date.format('YYYY-MM-DD'));
             $('#selectionsApply').click();
-        },//navLinkDayClick
-        
+        },//navLinkDayClick        
     });//Month
 
     $('#week').fullCalendar({
         theme: true,
         header: false,
         defaultView: 'agendaWeek',
-        editable: true,
+        weekNumberCalculation: 'ISO',
+        editable: false,
         allDaySlot: false,
         selectable: true,
         firstDay: 1,
@@ -53,19 +54,27 @@ $(document).ready(function () {
         displayEventTime: false,
         timeFormat: 'h:mm',
         events: "/time/getevents/",
-        slotDuration: "00:60:01",
-        businessHours: false,
-        businessHours: { // specify an array instead
-            dow: [ 1, 2, 3, 4, 5 ], // Monday, Tuesday, Wednesday
+        slotDuration: "00:60:00",
+        businessHours: true,
+        businessHours: {
+            dow: [ 1, 2, 3, 4, 5 ], // Monday, Tuesday, Wednesday....
             start: '01:00',
             end: '09:00', 
-        },
+        },//businessHours
         slotLabelFormat: 'H(:mm)',
-        minTime: "00:00:00",
-        maxTime: '10:00:00',
-
+        minTime: "01:00:00",
+        maxTime: '09:00:00',
     });//Week
+
+    $(".fc-month-button").click(function () {
+        var startOfMonth = moment().startOf('month');
+        $('#selectionFrom').val(startOfMonth.format('YYYY-MM-DD'));
+        $('#selectionTo').val(moment().endOf('month').format('YYYY-MM-DD'));
+        $('#selectionsApply').click();
+    });//click
 });//document.ready
+
+
 
 
 //$(document).ready(function () {

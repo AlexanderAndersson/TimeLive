@@ -293,6 +293,10 @@ input[type=checkbox].glyphicon{
     content: "h";
 }
 
+/*.ui-widget-content a {
+    color: red;
+}*/
+
 
 /*Makes the time on events hidden*/
 /*.fc-content .fc-time { 
