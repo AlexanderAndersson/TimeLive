@@ -68,7 +68,17 @@ namespace TimeLive.Controllers
 
         private List<Events> NewEvents()
         {
-            //DateTime value2 = new DateTime(2016, 11, 08, 00, 00, 00);
+            List<string> color = new List<string>();
+            color.Add("#006600");
+            color.Add("#006666");
+            color.Add("#330066");
+            color.Add("#CC6600");
+            color.Add("#004C99");
+            color.Add("#660066");
+            color.Add("#006666");
+            color.Add("#660000");
+
+            int count = 0;
 
             object tdFrom = TempData["From"];
             object tdTo = TempData["To"];
@@ -96,31 +106,43 @@ namespace TimeLive.Controllers
 
             List<Events> eventList = new List<Events>();
 
-            TimeSpan ts = new TimeSpan(00, 00, 00);
-
-            //LastEnd = LastEnd.Date + ts;
-
             if (selectRows.Count() > 0)
             {
          
                 foreach (var row in selectRows)
                 {
-                    //Checks if the latest date is the same as the latest report. If not, LastEnd == 00:00:00
+                    if (row.regdate == LastEnd.Date)
+                    {
+                        count++;
+
+                        if (count == 8)
+                        {
+                            count = 0;
+                        }
+                    }
+                    else
+                    {
+                        count = 0;   
+                    }
+
+                    //Checks if the latest date is the same as the latest report. If not, LastEnd = 00:00:00
                     if (row.regdate != LastEnd.Date)
                     {
-                        LastEnd = LastEnd.Date + ts;
+                        LastEnd = LastEnd.Date/* + ts*/;
                     }
+
 
                     if (LastEnd.Hour == 0)
                     {
                         Events newEvent = new Events //This is always the first event on each day
                         {
-                            title = row.usedtime.ToString("0.0" + "h").Replace(",","."), //Title equals to how many hours you been reporting
+                            title = row.usedtime.ToString("0.0" + "h").Replace(",", "."), //Title equals to how many hours you been reporting
                             start = row.regdate.AddHours(1).ToString(), //Start-time begins at 01:00 if LastEnd hour = 00:00:00
                             end = row.regdate.AddHours(1).AddHours((double)row.usedtime).ToString(), //End-time equals to 01:00 + invoicedtime
+                            backgroundColor = color[count],
                         };
 
-                        LastEnd = row.regdate.AddHours(1).AddHours((double)row.usedtime); //LastEnd equals to 01:00
+                        LastEnd = row.regdate.AddHours(1).AddMinutes(LastEnd.Minute).AddHours((double)row.usedtime); //LastEnd equals to 01:00
 
                         eventList.Add(newEvent); //Add event
                     }
@@ -131,17 +153,15 @@ namespace TimeLive.Controllers
                             title = row.usedtime.ToString("0.0" + "h").Replace(",", "."), //Title equals to how many hours you been reporting
                             start = LastEnd.ToString(), //Start-time begins when the latest report ended
                             end = row.regdate.AddHours(LastEnd.Hour).AddMinutes(LastEnd.Minute).AddHours((double)row.usedtime).ToString(), //End-time equals to LastEnd + invoicedtime
+                            backgroundColor = color[count],
                         };
 
-                        LastEnd = row.regdate.AddHours(LastEnd.Hour).AddHours((double)row.usedtime);
+                        LastEnd = row.regdate.AddHours(LastEnd.Hour).AddMinutes(LastEnd.Minute).AddHours((double)row.usedtime);
 
                         eventList.Add(newEvent);
                     }
                 }
-
             }
-
-
             return eventList;
         }
 

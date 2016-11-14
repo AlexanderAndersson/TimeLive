@@ -297,6 +297,29 @@ input[type=checkbox].glyphicon{
     color: red;
 }*/
 
+.fc-event {
+    border-radius: 0px !important;
+}
+
+/*.fc-month-view .fc-event-container{
+    display: none;
+}*/
+
+.activeDay {
+    background-color:#b6ff00 !important;
+}
+
+.ui-widget-content a { /*Marked color*/
+    color:#ff0000 !important;
+}
+
+.fc-title { /*Event-title color is white*/
+    color:#ffffff !important;
+}
+
+.fc-week-number a { /*Week-numbers color is black*/
+    color: #000000 !important;
+}
 
 /*Makes the time on events hidden*/
 /*.fc-content .fc-time { 
