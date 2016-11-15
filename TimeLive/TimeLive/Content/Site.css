@@ -297,7 +297,7 @@ input[type=checkbox].glyphicon{
     color: red;
 }*/
 
-.fc-event {
+.fc-event { /*Events have straight corners*/
     border-radius: 0px !important;
 }
 
@@ -306,22 +306,27 @@ input[type=checkbox].glyphicon{
 }*/
 
 .activeDay {
-    background-color:#b6ff00 !important;
+    background-color: #b6ff00 !important;
 }
 
-.ui-widget-content a { /*Marked color*/
-    color:#ff0000 !important;
-}
+/*.ui-widget-content a { All date-numbers have red color
+    color: #ff0000
+}*/
 
 .fc-title { /*Event-title color is white*/
-    color:#ffffff !important;
+    color: #ffffff !important;
 }
 
 .fc-week-number a { /*Week-numbers color is black*/
     color: #000000 !important;
 }
 
-/*Makes the time on events hidden*/
-/*.fc-content .fc-time { 
-   display : none;
-}*/
+#month .fc-day-number {
+  color: red !important;
+}
+
+
+.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight { /*Highlight (today)*/
+    border: 1px solid #a6c9e2;
+    background: none;
+}

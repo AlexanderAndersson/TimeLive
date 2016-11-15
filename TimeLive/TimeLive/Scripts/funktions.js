@@ -2,6 +2,12 @@
 /// <reference path="moment.js" />
 $(document).ready(function (date) {
 
+    //var lazyDays = [2, 5, 9];
+
+    //for (i = 0; i < lazyDays.length; i++) {
+    //    $("#calender a:nth-child(" + lazyDays[i] + ")").css("color", "red");
+    //}
+
     $('#month').fullCalendar({
         theme: true,
         header: {
@@ -16,15 +22,6 @@ $(document).ready(function (date) {
         //events: "/time/getevents/",
         editable: false,
         allDaySlot: true,
-        dayRender: function (date, cell) {
-            //var today = moment()
-            //alert(moment())
-            //alert(date)
-            if (date === moment()) {
-                alert(today + " hej")
-                cell.css("background-color", "red");
-            }
-        },
         selectable: true,
         firstDay: 1,
         fixedWeekCount: false,
@@ -50,18 +47,9 @@ $(document).ready(function (date) {
             $('#selectionTo').val(date.format('YYYY-MM-DD'));
             $('#selectionsApply').click();
         },//navLinkDayClick 
-
-        //dayClick: function (date, allDay, jsEvent, view) {
-        //    $(".fc-highlight").removeClass("fc-highlight");
-        //    $(this).addClass('fc-highlight');
-        //}
     });//Month
 
     $('#week').fullCalendar({
-        //viewDestroy: function (view, element) {},
-        //viewRender: function (view, element, date) {
-        //    $('#week').fullCalendar('gotoDate', date);
-        //},
         theme: true,
         header: false,
         editable: true,
@@ -73,19 +61,6 @@ $(document).ready(function (date) {
         selectable: true,
         firstDay: 1,
         fixedWeekCount: false,
-        
-        eventRender: function (event, element) {
-            var dataToFind = moment(event.end).format('YYYY-MM-DD');
-            //alert(dataToFind)
-            if (dataToFind == "YYYY-MM-DD:09:00") {
-                //alert(dataToFind)
-                $("td[data-date='" + dataToFind + "']").addClass('activeDay');
-            }
-            $("td[data-date='" + dataToFind + "']").addClass('activeDay');
-            //var dataToFind = moment(event.start).format('YYYY-MM-DD');
-            //$("td[data-date='" + dataToFind + "']").addClass('activeDay');
-        },
-
         weekNumbers: true,
         weekends: false,
         height: "auto",
@@ -94,6 +69,8 @@ $(document).ready(function (date) {
         timeFormat: 'h:mm',
         events: "/time/getevents/",
         slotDuration: "00:60:00",
+        
+        eventBorderColor: "none",
         businessHours: true,
         businessHours: {
             dow: [ 1, 2, 3, 4, 5 ], // Monday, Tuesday, Wednesday....
@@ -103,6 +80,11 @@ $(document).ready(function (date) {
         slotLabelFormat: 'H(:mm)',
         minTime: "01:00:00",
         maxTime: '09:00:00',
+        eventRender: function (event, element, view) {
+            var hej = event.start.format("YYYY-MM-DD hh:mm");
+            var då = event.end.format("YYYY-MM-DD hh:mm");
+            alert(hej + " - " + då)
+        }
     });//Week
 
     $(".fc-month-button").click(function (date) {
@@ -115,6 +97,9 @@ $(document).ready(function (date) {
     });//click
 });//document.ready
 
+
+//$(".fc-highlight").removeClass("fc-highlight");
+//$(this).addClass('fc-highlight');
 
 
 //$(document).ready(function () {
