@@ -50,25 +50,33 @@ namespace TimeLive.Controllers
             return View(model);
         }
 
-        public ActionResult GetEvents()
+        public ActionResult GetMonthEvents()
         {
-            var eventList = NewEvents();
+            var eventList = MonthEvents();
             //var rows = eventList;
 
             return Json(eventList, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult GetReports()
+        public ActionResult GetWeekEvents()
         {
-            var eventList = NewEvents();
-            var rows = eventList;
+            var eventList = WeekEvents();
+            //var rows = eventList;
 
-            return Json(new { reports = rows }, JsonRequestBehavior.AllowGet);
+            return Json(eventList, JsonRequestBehavior.AllowGet);
         }
 
-        private List<Events> NewEvents()
+        //public ActionResult GetReports()
+        //{
+        //    var eventList = NewEvents();
+        //    var rows = eventList;
+
+        //    return Json(new { reports = rows }, JsonRequestBehavior.AllowGet);
+        //}
+
+        private List<Events> WeekEvents()
         {
-            List<string> color = new List<string>();
+            List<string> color = new List<string>(); //A list of colors
             color.Add("#006600");
             color.Add("#006666");
             color.Add("#330066");
@@ -80,22 +88,32 @@ namespace TimeLive.Controllers
 
             int count = 0;
 
-            object tdFrom = TempData["From"];
-            object tdTo = TempData["To"];
+            object tdFrom = Session["From"];
+            object tdTo = Session["To"];
 
 
             //If tempdata is null make the from and to dates this week
             if (tdFrom == null && tdTo == null)
             {
-                From = DateTime.Today;
-                int delta = DayOfWeek.Monday - From.DayOfWeek;
-                From = From.AddDays(delta);
-                To = From.AddDays(6);
+                DateTime date = DateTime.Today;
+                var firstDayOfMonth = new DateTime(date.Year, date.Month, 1);
+                var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
+                From = firstDayOfMonth;
+                To = lastDayOfMonth;
+                //From = DateTime.Today;
+                //int delta = DayOfWeek.Monday - From.DayOfWeek;
+                //From = From.AddDays(delta);
+                //To = From.AddDays(6);
             }
             else
             {
                 From = DateTime.Parse(tdFrom.ToString());
                 To = DateTime.Parse(tdTo.ToString());
+                DateTime date = DateTime.Parse(tdFrom.ToString());
+                var firstDayOfMonth = new DateTime(date.Year, date.Month, 1);
+                //var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
+                //From = firstDayOfMonth;
+                //To = lastDayOfMonth;             
             }
 
             var selectRows = from c in TimeLiveDB.q_SelectRowsTime(null, ((Classes.UserClass.User)Session["User"]).Username,
@@ -165,6 +183,88 @@ namespace TimeLive.Controllers
             return eventList;
         }
 
+        private List<Events> MonthEvents()
+        {
+            object tdFrom = Session["From"];
+            object tdTo = Session["To"];
+
+
+            //If tempdata is null make the from and to dates this week
+            if (tdFrom == null && tdTo == null)
+            {
+                DateTime date = DateTime.Today;
+                var firstDayOfMonth = new DateTime(date.Year, date.Month, 1);
+                var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
+                From = firstDayOfMonth;
+                To = lastDayOfMonth;
+                //From = DateTime.Today;
+                //int delta = DayOfWeek.Monday - From.DayOfWeek;
+                //From = From.AddDays(delta);
+                //To = From.AddDays(6);
+            }
+            else
+            {
+                //From = DateTime.Parse(tdFrom.ToString());
+                //To = DateTime.Parse(tdTo.ToString());
+                DateTime date = DateTime.Parse(tdFrom.ToString());
+                var firstDayOfMonth = new DateTime(date.Year, date.Month, 1);
+                var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
+                From = firstDayOfMonth;
+                To = lastDayOfMonth;
+            }
+
+            var selectRows = from c in TimeLiveDB.q_SelectRowsTime(null, ((Classes.UserClass.User)Session["User"]).Username,
+                             null, null, null, null,
+                             null, null, null, From,
+                             To, null, null, null).ToArray().OrderBy((x => x.regdate))
+                             select c;
+
+            List<Events> eventList = new List<Events>();
+
+            if (selectRows.Count() > 0)
+            {
+
+                foreach (var row in selectRows)
+                {
+
+                    //Checks if the latest date is the same as the latest report. If not, LastEnd = 00:00:00
+                    if (row.regdate != LastEnd.Date)
+                    {
+                        LastEnd = LastEnd.Date/* + ts*/;
+                    }
+
+
+                    if (LastEnd.Hour == 0)
+                    {
+                        Events newEvent = new Events //This is always the first event on each day
+                        {
+                            title = row.usedtime.ToString("0.0" + "h").Replace(",", "."), //Title equals to how many hours you been reporting
+                            start = row.regdate.AddHours(1).ToString(), //Start-time begins at 01:00 if LastEnd hour = 00:00:00
+                            end = row.regdate.AddHours(1).AddHours((double)row.usedtime).ToString(), //End-time equals to 01:00 + invoicedtime
+                        };
+
+                        LastEnd = row.regdate.AddHours(1).AddMinutes(LastEnd.Minute).AddHours((double)row.usedtime); //LastEnd equals to 01:00
+
+                        eventList.Add(newEvent); //Add event
+                    }
+                    else
+                    {
+                        Events newEvent = new Events //This is always the event after the first event on the same day if there is one
+                        {
+                            title = row.usedtime.ToString("0.0" + "h").Replace(",", "."), //Title equals to how many hours you been reporting
+                            start = LastEnd.ToString(), //Start-time begins when the latest report ended
+                            end = row.regdate.AddHours(LastEnd.Hour).AddMinutes(LastEnd.Minute).AddHours((double)row.usedtime).ToString(), //End-time equals to LastEnd + invoicedtime
+                        };
+
+                        LastEnd = row.regdate.AddHours(LastEnd.Hour).AddMinutes(LastEnd.Minute).AddHours((double)row.usedtime);
+
+                        eventList.Add(newEvent);
+                    }
+                }
+            }
+            return eventList;
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Insert(string pCompanyId, int pProjectId, string pSubProjectId, DateTime pRegDate, double pInvoicedTime, double pUsedTime, string pExternComment, string pInternComment, int pDealyinvoice)
@@ -207,8 +307,8 @@ namespace TimeLive.Controllers
         public ActionResult Filter(DateTime selectionFrom, DateTime selectionTo, string companyId, int? projectId, string subProjectId, int? pDealyinvoice)
         {
 
-            TempData["From"] = selectionFrom;
-            TempData["To"] = selectionTo;
+            Session["From"] = selectionFrom;
+            Session["To"] = selectionTo;
 
             Session["User"] = Session["User"] ?? Classes.UserClass.GetUserByIdentity(WindowsIdentity.GetCurrent());
             //Session["User"] = Session["User"] as AdUser ?? new AdUser { Domain = "OPTIVASYS", FullName = "Rasmus Jansson", Username = "raja" };

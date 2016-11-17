@@ -4,7 +4,7 @@
  * (c) 2016 Adam Shaw
  */
 
-alert("hello")
+//alert("hello")
 
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {

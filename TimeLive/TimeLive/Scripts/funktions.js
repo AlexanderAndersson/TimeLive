@@ -2,11 +2,41 @@
 /// <reference path="moment.js" />
 $(document).ready(function (date) {
 
-    //var lazyDays = [2, 5, 9];
+    if (localStorage.View === undefined) {
+        localStorage.View = "agendaWeek";
+    };
 
-    //for (i = 0; i < lazyDays.length; i++) {
-    //    $("#calender a:nth-child(" + lazyDays[i] + ")").css("color", "red");
-    //}
+    $('#week').fullCalendar({
+        theme: true,
+        header: false,
+        editable: true,
+        defaultView: localStorage.View,
+        defaultDate: localStorage.date,
+        weekNumberCalculation: 'ISO',
+        editable: false,
+        allDaySlot: false,
+        selectable: true,
+        firstDay: 1,
+        fixedWeekCount: false,
+        weekNumbers: true,
+        weekends: false,
+        height: "auto",
+        columnFormat: 'ddd',
+        displayEventTime: false,
+        timeFormat: 'h:mm',
+        events: "/Time/GetWeekEvents/",
+        slotDuration: "00:60:00",
+        eventBorderColor: "none",
+        businessHours: true,
+        businessHours: {
+            dow: [1, 2, 3, 4, 5], // Monday, Tuesday, Wednesday....
+            start: '01:00',
+            end: '09:00',
+        },//businessHours
+        slotLabelFormat: 'H(:mm)',
+        minTime: "01:00:00",
+        maxTime: '09:00:00',
+    });//Week
 
     $('#month').fullCalendar({
         theme: true,
@@ -19,7 +49,7 @@ $(document).ready(function (date) {
         defaultView: 'month',
         defaultDate: localStorage.date,
         weekNumberCalculation: 'ISO',
-        //events: "/time/getevents/",
+        events: "/Time/GetMonthEvents/",
         editable: false,
         allDaySlot: true,
         selectable: true,
@@ -47,54 +77,37 @@ $(document).ready(function (date) {
             $('#selectionTo').val(date.format('YYYY-MM-DD'));
             $('#selectionsApply').click();
         },//navLinkDayClick 
+        eventRender: function (event, element, view) {
+            var start = event.start.format("YYYY-MM-DD hh:mm");
+            var end = event.end.format("YYYY-MM-DD hh:mm");
+            var eventStart = event.start.format("hh:mm");
+            var eventEnd = event.end.format("hh:mm");
+            if (eventEnd >= "09:00" || eventEnd >= "09:00") {
+                alert(start + " - " + end)
+                //element.css("background", "green")
+                //event.css("background-color", "yellow");
+                var dateEnd = event.end.format("YYYY-MM-DD");
+                $('#month').find('.fc-day-top[data-date=' + dateEnd + ']').css('background-color', 'green', "!important");
+            }
+            else {
+                var dateStart = event.start.format("YYYY-MM-DD");
+                $('#month').find('.fc-day-top[data-date=' + dateStart + ']').css('background-color', 'red');
+                //element.css("background", "red")
+            }
+        }
     });//Month
 
-    $('#week').fullCalendar({
-        theme: true,
-        header: false,
-        editable: true,
-        defaultView: localStorage.View,
-        defaultDate: localStorage.date,
-        weekNumberCalculation: 'ISO',
-        editable: false,
-        allDaySlot: false,
-        selectable: true,
-        firstDay: 1,
-        fixedWeekCount: false,
-        weekNumbers: true,
-        weekends: false,
-        height: "auto",
-        columnFormat: 'ddd',
-        displayEventTime: false,
-        timeFormat: 'h:mm',
-        events: "/time/getevents/",
-        slotDuration: "00:60:00",
-        
-        eventBorderColor: "none",
-        businessHours: true,
-        businessHours: {
-            dow: [ 1, 2, 3, 4, 5 ], // Monday, Tuesday, Wednesday....
-            start: '01:00',
-            end: '09:00', 
-        },//businessHours
-        slotLabelFormat: 'H(:mm)',
-        minTime: "01:00:00",
-        maxTime: '09:00:00',
-        eventRender: function (event, element, view) {
-            var hej = event.start.format("YYYY-MM-DD hh:mm");
-            var då = event.end.format("YYYY-MM-DD hh:mm");
-            alert(hej + " - " + då)
-        }
-    });//Week
-
     $(".fc-month-button").click(function (date) {
-        $('#selectionFrom').val(date.format('YYYY-MM-DD'));
-        $('#selectionTo').val(date.endOf('month').format('YYYY-MM-DD'));
-        //var startOfMonth = moment().startOf('month');
-        //$('#selectionFrom').val(startOfMonth.format('YYYY-MM-DD'));
-        //$('#selectionTo').val(moment().endOf('month').format('YYYY-MM-DD'));
+        //$('#selectionFrom').val(date.format('YYYY-MM-DD'));
+        //$('#selectionTo').val(date.endOf('month').format('YYYY-MM-DD'));
+        var startOfMonth = moment().startOf('month');
+        $('#selectionFrom').val(startOfMonth.format('YYYY-MM-DD'));
+        $('#selectionTo').val(moment().endOf('month').format('YYYY-MM-DD'));
         $('#selectionsApply').click();
     });//click
+
+
+
 });//document.ready
 
 

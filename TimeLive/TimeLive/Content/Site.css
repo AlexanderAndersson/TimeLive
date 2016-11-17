@@ -301,9 +301,9 @@ input[type=checkbox].glyphicon{
     border-radius: 0px !important;
 }
 
-/*.fc-month-view .fc-event-container{
+.fc-month-view .fc-event-container{
     display: none;
-}*/
+}
 
 .activeDay {
     background-color: #b6ff00 !important;
@@ -321,12 +321,29 @@ input[type=checkbox].glyphicon{
     color: #000000 !important;
 }
 
-#month .fc-day-number {
+/*#month .fc-day-top {
+    background-color: red;
+}*/
+
+
+/*#month .fc-day-number {
   color: red !important;
+}*/
+
+/*#month .fc th, .fc td {
+    background: red;
+}*/
+
+/*#month .ui-widget-content {
+    background: red;
 }
 
+#month .fc-basic-view td.fc-week-number {
+    background: white;
+}*/
 
-.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight { /*Highlight (today)*/
+
+/*#week > .ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight { Highlight (today)
     border: 1px solid #a6c9e2;
     background: none;
-}
+}*/
