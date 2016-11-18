@@ -66,17 +66,9 @@ namespace TimeLive.Controllers
             return Json(eventList, JsonRequestBehavior.AllowGet);
         }
 
-        //public ActionResult GetReports()
-        //{
-        //    var eventList = NewEvents();
-        //    var rows = eventList;
-
-        //    return Json(new { reports = rows }, JsonRequestBehavior.AllowGet);
-        //}
-
         private List<Events> WeekEvents()
         {
-            List<string> color = new List<string>(); //A list of colors
+            List<string> color = new List<string>(); //List of colors
             color.Add("#006600");
             color.Add("#006666");
             color.Add("#330066");
@@ -92,7 +84,7 @@ namespace TimeLive.Controllers
             object tdTo = Session["To"];
 
 
-            //If tempdata is null make the from and to dates this week
+            //If session is null make the from and to dates this week
             if (tdFrom == null && tdTo == null)
             {
                 DateTime date = DateTime.Today;
@@ -100,45 +92,36 @@ namespace TimeLive.Controllers
                 var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
                 From = firstDayOfMonth;
                 To = lastDayOfMonth;
-                //From = DateTime.Today;
-                //int delta = DayOfWeek.Monday - From.DayOfWeek;
-                //From = From.AddDays(delta);
-                //To = From.AddDays(6);
             }
             else
             {
-                From = DateTime.Parse(tdFrom.ToString());
-                To = DateTime.Parse(tdTo.ToString());
-                DateTime date = DateTime.Parse(tdFrom.ToString());
-                var firstDayOfMonth = new DateTime(date.Year, date.Month, 1);
-                //var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
-                //From = firstDayOfMonth;
-                //To = lastDayOfMonth;             
+                From = DateTime.Parse(tdFrom.ToString()); //From equals to Session["From"]
+                To = DateTime.Parse(tdTo.ToString()); //To equals to Session["To"]
             }
 
             var selectRows = from c in TimeLiveDB.q_SelectRowsTime(null, ((Classes.UserClass.User)Session["User"]).Username,
                              null, null, null, null,
                              null, null, null, From,
-                             To, null, null, null).ToArray().OrderBy((x => x.regdate))
+                             To, null, null, null).ToArray().OrderBy((x => x.regdate)) //Order by date (last to latest)
                              select c;
 
-            List<Events> eventList = new List<Events>();
+            List<Events> eventList = new List<Events>(); //Creates new list with events
 
-            if (selectRows.Count() > 0)
+            if (selectRows.Count() > 0) //if there are rows in selectedRows run this code
             {
          
                 foreach (var row in selectRows)
                 {
-                    if (row.regdate == LastEnd.Date)
+                    if (row.regdate == LastEnd.Date) //if the regdate is the same as last ended event
                     {
-                        count++;
+                        count++; //add 1 to count
 
-                        if (count == 8)
+                        if (count == 8) //if count is 8 make count 0 again
                         {
                             count = 0;
                         }
                     }
-                    else
+                    else //if regdate is not same as the last ended event, make count 0
                     {
                         count = 0;   
                     }
@@ -146,38 +129,43 @@ namespace TimeLive.Controllers
                     //Checks if the latest date is the same as the latest report. If not, LastEnd = 00:00:00
                     if (row.regdate != LastEnd.Date)
                     {
-                        LastEnd = LastEnd.Date/* + ts*/;
+                        LastEnd = LastEnd.Date;
                     }
-
-
-                    if (LastEnd.Hour == 0)
+                    if (row.usedtime == 0) //if usedtime is 0, don't show event
                     {
-                        Events newEvent = new Events //This is always the first event on each day
-                        {
-                            title = row.usedtime.ToString("0.0" + "h").Replace(",", "."), //Title equals to how many hours you been reporting
-                            start = row.regdate.AddHours(1).ToString(), //Start-time begins at 01:00 if LastEnd hour = 00:00:00
-                            end = row.regdate.AddHours(1).AddHours((double)row.usedtime).ToString(), //End-time equals to 01:00 + invoicedtime
-                            backgroundColor = color[count],
-                        };
 
-                        LastEnd = row.regdate.AddHours(1).AddMinutes(LastEnd.Minute).AddHours((double)row.usedtime); //LastEnd equals to 01:00
-
-                        eventList.Add(newEvent); //Add event
                     }
                     else
                     {
-                        Events newEvent = new Events //This is always the event after the first event on the same day if there is one
+                        if (LastEnd.Hour == 0)
                         {
-                            title = row.usedtime.ToString("0.0" + "h").Replace(",", "."), //Title equals to how many hours you been reporting
-                            start = LastEnd.ToString(), //Start-time begins when the latest report ended
-                            end = row.regdate.AddHours(LastEnd.Hour).AddMinutes(LastEnd.Minute).AddHours((double)row.usedtime).ToString(), //End-time equals to LastEnd + invoicedtime
-                            backgroundColor = color[count],
-                        };
+                            Events newEvent = new Events //This is always the first event on each day
+                            {
+                                title = row.usedtime.ToString("0.0" + "h").Replace(",", "."), //Title equals to how many hours you been reporting
+                                start = row.regdate.AddHours(1).ToString(), //Start-time begins at 01:00 if LastEnd hour = 00:00:00
+                                end = row.regdate.AddHours(1).AddHours((double)row.usedtime).ToString(), //End-time equals to 01:00 + invoicedtime
+                                backgroundColor = color[count], //Adding a color to the event
+                            };
 
-                        LastEnd = row.regdate.AddHours(LastEnd.Hour).AddMinutes(LastEnd.Minute).AddHours((double)row.usedtime);
+                            LastEnd = row.regdate.AddHours(1).AddMinutes(LastEnd.Minute).AddHours((double)row.usedtime); //LastEnd equals to 01:00
 
-                        eventList.Add(newEvent);
-                    }
+                            eventList.Add(newEvent); //Add event
+                        }
+                        else
+                        {
+                            Events newEvent = new Events //This is always the event after the first event on the same day if there is one
+                            {
+                                title = row.usedtime.ToString("0.0" + "h").Replace(",", "."), //Title equals to how many hours you been reporting
+                                start = LastEnd.ToString(), //Start-time begins when the latest report ended
+                                end = row.regdate.AddHours(LastEnd.Hour).AddMinutes(LastEnd.Minute).AddHours((double)row.usedtime).ToString(), //End-time equals to LastEnd + invoicedtime
+                                backgroundColor = color[count], //Adding a color to the event
+                            };
+
+                            LastEnd = row.regdate.AddHours(LastEnd.Hour).AddMinutes(LastEnd.Minute).AddHours((double)row.usedtime); //LastEnd equals to latest events end
+
+                            eventList.Add(newEvent); //Add event
+                        }
+                    }             
                 }
             }
             return eventList;
@@ -189,7 +177,7 @@ namespace TimeLive.Controllers
             object tdTo = Session["To"];
 
 
-            //If tempdata is null make the from and to dates this week
+            //If session is null make the from and to dates this month
             if (tdFrom == null && tdTo == null)
             {
                 DateTime date = DateTime.Today;
@@ -197,31 +185,54 @@ namespace TimeLive.Controllers
                 var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
                 From = firstDayOfMonth;
                 To = lastDayOfMonth;
-                //From = DateTime.Today;
-                //int delta = DayOfWeek.Monday - From.DayOfWeek;
-                //From = From.AddDays(delta);
-                //To = From.AddDays(6);
+
+                //Im doing the code underneath becuase I want to show all events that can be displayed on the calander
+                //Even if that day(s) is from prev och next month
+
+                //Lazy coding for checking if the first day of the month are either Tuesday, Wednesday, Thursday or Friday
+                if (firstDayOfMonth.DayOfWeek == DayOfWeek.Tuesday) { var from = firstDayOfMonth.AddDays(-1); From = from; }
+                if (firstDayOfMonth.DayOfWeek == DayOfWeek.Wednesday) { var from = firstDayOfMonth.AddDays(-2); From = from; }
+                if (firstDayOfMonth.DayOfWeek == DayOfWeek.Thursday) { var from = firstDayOfMonth.AddDays(-3); From = from; }
+                if (firstDayOfMonth.DayOfWeek == DayOfWeek.Friday) { var from = firstDayOfMonth.AddDays(-4); From = from; }
+
+                //Lazy coding for checking if the last day of the month are either Monday, Tuesday, Wednesday or Thursday
+                if (lastDayOfMonth.DayOfWeek == DayOfWeek.Monday) { var to = firstDayOfMonth.AddMonths(1).AddDays(4); To = to; }
+                if (lastDayOfMonth.DayOfWeek == DayOfWeek.Tuesday) { var to = firstDayOfMonth.AddMonths(1).AddDays(3); To = to; }
+                if (lastDayOfMonth.DayOfWeek == DayOfWeek.Wednesday) { var to = firstDayOfMonth.AddMonths(1).AddDays(2); To = to; }
+                if (lastDayOfMonth.DayOfWeek == DayOfWeek.Thursday) { var to = firstDayOfMonth.AddMonths(1).AddDays(1); To = to; }
             }
             else
             {
-                //From = DateTime.Parse(tdFrom.ToString());
-                //To = DateTime.Parse(tdTo.ToString());
                 DateTime date = DateTime.Parse(tdFrom.ToString());
                 var firstDayOfMonth = new DateTime(date.Year, date.Month, 1);
                 var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
                 From = firstDayOfMonth;
                 To = lastDayOfMonth;
+
+                //Same thing here as the one over this
+
+                //Lazy coding for checking if the first day of the month are either Tuesday, Wednesday, Thursday or Friday
+                if (firstDayOfMonth.DayOfWeek == DayOfWeek.Tuesday) { var from = firstDayOfMonth.AddDays(-1); From = from; }
+                if (firstDayOfMonth.DayOfWeek == DayOfWeek.Wednesday) { var from = firstDayOfMonth.AddDays(-2); From = from; }
+                if (firstDayOfMonth.DayOfWeek == DayOfWeek.Thursday) { var from = firstDayOfMonth.AddDays(-3); From = from; }
+                if (firstDayOfMonth.DayOfWeek == DayOfWeek.Friday) { var from = firstDayOfMonth.AddDays(-4); From = from; }
+
+                //Lazy coding for checking if the last day of the month are either Monday, Tuesday, Wednesday or Thursday
+                if (lastDayOfMonth.DayOfWeek == DayOfWeek.Monday) {var to = firstDayOfMonth.AddMonths(1).AddDays(4); To = to; }
+                if (lastDayOfMonth.DayOfWeek == DayOfWeek.Tuesday) { var to = firstDayOfMonth.AddMonths(1).AddDays(3); To = to; }
+                if (lastDayOfMonth.DayOfWeek == DayOfWeek.Wednesday) { var to = firstDayOfMonth.AddMonths(1).AddDays(2); To = to; }
+                if (lastDayOfMonth.DayOfWeek == DayOfWeek.Thursday) { var to = firstDayOfMonth.AddMonths(1).AddDays(1); To = to; }           
             }
 
             var selectRows = from c in TimeLiveDB.q_SelectRowsTime(null, ((Classes.UserClass.User)Session["User"]).Username,
                              null, null, null, null,
                              null, null, null, From,
-                             To, null, null, null).ToArray().OrderBy((x => x.regdate))
+                             To, null, null, null).ToArray().OrderBy((x => x.regdate)) //Order by date (last to latest)
                              select c;
 
-            List<Events> eventList = new List<Events>();
+            List<Events> eventList = new List<Events>(); //Creates new list with events
 
-            if (selectRows.Count() > 0)
+            if (selectRows.Count() > 0) //if there are rows in selectedRows run this code
             {
 
                 foreach (var row in selectRows)
@@ -230,36 +241,42 @@ namespace TimeLive.Controllers
                     //Checks if the latest date is the same as the latest report. If not, LastEnd = 00:00:00
                     if (row.regdate != LastEnd.Date)
                     {
-                        LastEnd = LastEnd.Date/* + ts*/;
+                        LastEnd = LastEnd.Date;
                     }
 
-
-                    if (LastEnd.Hour == 0)
+                    if (row.usedtime == 0) //if usedtime is 0, don't show event
                     {
-                        Events newEvent = new Events //This is always the first event on each day
-                        {
-                            title = row.usedtime.ToString("0.0" + "h").Replace(",", "."), //Title equals to how many hours you been reporting
-                            start = row.regdate.AddHours(1).ToString(), //Start-time begins at 01:00 if LastEnd hour = 00:00:00
-                            end = row.regdate.AddHours(1).AddHours((double)row.usedtime).ToString(), //End-time equals to 01:00 + invoicedtime
-                        };
 
-                        LastEnd = row.regdate.AddHours(1).AddMinutes(LastEnd.Minute).AddHours((double)row.usedtime); //LastEnd equals to 01:00
-
-                        eventList.Add(newEvent); //Add event
                     }
                     else
                     {
-                        Events newEvent = new Events //This is always the event after the first event on the same day if there is one
+                        if (LastEnd.Hour == 0)
                         {
-                            title = row.usedtime.ToString("0.0" + "h").Replace(",", "."), //Title equals to how many hours you been reporting
-                            start = LastEnd.ToString(), //Start-time begins when the latest report ended
-                            end = row.regdate.AddHours(LastEnd.Hour).AddMinutes(LastEnd.Minute).AddHours((double)row.usedtime).ToString(), //End-time equals to LastEnd + invoicedtime
-                        };
+                            Events newEvent = new Events //This is always the first event on each day
+                            {
+                                title = row.usedtime.ToString("0.0" + "h").Replace(",", "."), //Title equals to how many hours you been reporting
+                                start = row.regdate.AddHours(1).ToString(), //Start-time begins at 01:00 if LastEnd hour = 00:00:00
+                                end = row.regdate.AddHours(1).AddHours((double)row.usedtime).ToString(), //End-time equals to 01:00 + invoicedtime
+                            };
 
-                        LastEnd = row.regdate.AddHours(LastEnd.Hour).AddMinutes(LastEnd.Minute).AddHours((double)row.usedtime);
+                            LastEnd = row.regdate.AddHours(1).AddMinutes(LastEnd.Minute).AddHours((double)row.usedtime); //LastEnd equals to 01:00
 
-                        eventList.Add(newEvent);
-                    }
+                            eventList.Add(newEvent); //Add event
+                        }
+                        else
+                        {
+                            Events newEvent = new Events //This is always the event(s) after the first event on the same day if there is one
+                            {
+                                title = row.usedtime.ToString("0.0" + "h").Replace(",", "."), //Title equals to how many hours you been reporting
+                                start = LastEnd.ToString(), //Start-time begins when the latest report ended
+                                end = row.regdate.AddHours(LastEnd.Hour).AddMinutes(LastEnd.Minute).AddHours((double)row.usedtime).ToString(), //End-time equals to LastEnd + invoicedtime
+                            };
+
+                            LastEnd = row.regdate.AddHours(LastEnd.Hour).AddMinutes(LastEnd.Minute).AddHours((double)row.usedtime);
+
+                            eventList.Add(newEvent);
+                        }
+                    }                 
                 }
             }
             return eventList;

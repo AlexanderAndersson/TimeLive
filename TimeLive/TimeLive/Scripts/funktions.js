@@ -11,7 +11,7 @@ $(document).ready(function (date) {
         header: false,
         editable: true,
         defaultView: localStorage.View,
-        defaultDate: localStorage.date,
+        defaultDate: localStorage.Date,
         weekNumberCalculation: 'ISO',
         editable: false,
         allDaySlot: false,
@@ -47,9 +47,14 @@ $(document).ready(function (date) {
             right: 'prev next'
         },//header
         defaultView: 'month',
-        defaultDate: localStorage.date,
+        defaultDate: localStorage.Date,
         weekNumberCalculation: 'ISO',
-        events: "/Time/GetMonthEvents/",
+        events: {
+                url: "/Time/GetMonthEvents/",
+                success: function (data) {
+                    alert("adads");
+                },
+        },
         editable: false,
         allDaySlot: true,
         selectable: true,
@@ -63,7 +68,7 @@ $(document).ready(function (date) {
             $('#week').fullCalendar('gotoDate', date);
             $('#week').fullCalendar('changeView', 'agendaWeek');
             localStorage.View = "agendaWeek";
-            localStorage.date = date;
+            localStorage.Date = date;
             $('#selectionFrom').val(date.format('YYYY-MM-DD'));
             $('#selectionTo').val(date.isoWeekday(7).format('YYYY-MM-DD'));
             $('#selectionsApply').click();
@@ -72,27 +77,26 @@ $(document).ready(function (date) {
             $('#week').fullCalendar('gotoDate', date);
             $('#week').fullCalendar('changeView', 'agenda');
             localStorage.View = "agenda";
-            localStorage.date = date;
+            localStorage.Date = date;
             $('#selectionFrom').val(date.format('YYYY-MM-DD'));
             $('#selectionTo').val(date.format('YYYY-MM-DD'));
             $('#selectionsApply').click();
         },//navLinkDayClick 
         eventRender: function (event, element, view) {
-            var start = event.start.format("YYYY-MM-DD hh:mm");
-            var end = event.end.format("YYYY-MM-DD hh:mm");
-            var eventStart = event.start.format("hh:mm");
-            var eventEnd = event.end.format("hh:mm");
-            if (eventEnd >= "09:00" || eventEnd >= "09:00") {
-                alert(start + " - " + end)
-                //element.css("background", "green")
-                //event.css("background-color", "yellow");
+            //alert(view.start.format("YYYY-MM-DD HH:mm") + " " + view.end.format("YYYY-MM-DD HH:mm"))
+            //var start2 = event.start.format("YYYY-MM-DD");
+            //var start = event.start.format("YYYY-MM-DD HH:mm");
+            //var end = event.end.format("YYYY-MM-DD HH:mm");
+            alert(view)
+            var eventStart = event.start.format("HH:mm");
+            var eventEnd = event.end.format("HH:mm");
+            if (eventEnd >= "09:00" || eventStart >= "09:00") {     
                 var dateEnd = event.end.format("YYYY-MM-DD");
                 $('#month').find('.fc-day-top[data-date=' + dateEnd + ']').css('background-color', 'green', "!important");
             }
             else {
                 var dateStart = event.start.format("YYYY-MM-DD");
                 $('#month').find('.fc-day-top[data-date=' + dateStart + ']').css('background-color', 'red');
-                //element.css("background", "red")
             }
         }
     });//Month
@@ -106,25 +110,19 @@ $(document).ready(function (date) {
         $('#selectionsApply').click();
     });//click
 
+    //$('.fc-prev-button').click(function () {
+    //    $.ajax({
+    //        type: 'POST',
+    //        url: "/Time/GetMonthEvents/",
+    //        success: function (response) {
+    //            $('#week').fullCalendar('refetchEvents');
+    //            alert('Database populated! ');
+    //        }
+    //    });
+    //});
 
 
 });//document.ready
-
-
-//$(".fc-highlight").removeClass("fc-highlight");
-//$(this).addClass('fc-highlight');
-
-
-//$(document).ready(function () {
-//    $.ajax({
-//        type: 'POST',
-//        url: "/time/getevents/",
-//        success: function (response) {
-//            $('#week').fullCalendar('refetchEvents');
-//            //alert('Database populated! ');
-//        }
-//    });
-//});
 
 
 //Increase/Decrease numerics with arrow keys
@@ -133,16 +131,16 @@ $('.amount').keydown(function (event) {
     if (event.which === 38)//up
     {
         if (currentNumber % 1 == 0 || currentNumber % 1 == 0.5)
-            $(this).val(Math.max(0, currentNumber + 0.5).toFixed(2));
+            $(this).val(Math.max(0, currentNumber + 0.50).toFixed(2)); //Plus 0.50
         else
-            $(this).val(Math.max(0, Math.ceil(currentNumber * 2)) / 2)
+            $(this).val(Math.max(0, Math.ceil(currentNumber * 2)) / 2) //Rounds up to nearest 0.50 number
     }       
     else if (event.which === 40)//down
     {
         if (currentNumber % 1 == 0 || currentNumber % 1 == 0.5)
-            $(this).val(Math.max(0, currentNumber - 0.5).toFixed(2));
+            $(this).val(Math.max(0, currentNumber - 0.50).toFixed(2)); //Minus 0.50
         else
-            $(this).val(Math.floor(currentNumber * 2) / 2);
+            $(this).val(Math.floor(currentNumber * 2) / 2); //Rounds down to nearest 0.50 number
     }
 });
 
@@ -152,21 +150,21 @@ $('.amount-ints').keydown(function (event) {
     if (event.which === 38)//up
     {
         if (currentNumber % 1 == 0)
-            $(this).val(Math.max(0, currentNumber + 1).toFixed(0));
+            $(this).val(Math.max(0, currentNumber + 1).toFixed(0)); //Plus 1
         else
-            $(this).val(Math.max(0, Math.ceil(currentNumber)))
+            $(this).val(Math.max(0, Math.ceil(currentNumber))) //Rounds up to nearest int
     }
     else if (event.which === 40)//down
     {
         if (currentNumber % 1 == 0)
-            $(this).val(Math.max(0, currentNumber - 1).toFixed(0));
+            $(this).val(Math.max(0, currentNumber - 1).toFixed(0)); //Minus 1
         else
-            $(this).val(Math.floor(currentNumber));
+            $(this).val(Math.floor(currentNumber)); //Rounds down to nearest int
     }
 });
 
 
-//if invoice or used are more than 24, make backgound-color "red" otherwise "green"
+//if invoice or used are more than 8, make backgound-color "red" otherwise "green"
 $('.hours').keydown(function () {
     var currentNumber = Number($(this).val());
     var field = $(this);
