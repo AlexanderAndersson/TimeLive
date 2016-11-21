@@ -301,9 +301,9 @@ input[type=checkbox].glyphicon{
     border-radius: 0px !important;
 }
 
-.fc-month-view .fc-event-container{
+/*.fc-month-view .fc-event-container{ ********************************
     display: none;
-}
+}*/
 
 .activeDay {
     background-color: #b6ff00 !important;
@@ -313,9 +313,7 @@ input[type=checkbox].glyphicon{
     color: #ff0000
 }*/
 
-.fc-title { /*Event-title color is white*/
-    color: #ffffff !important;
-}
+
 
 .fc-week-number a { /*Week-numbers color is black*/
     color: #000000 !important;

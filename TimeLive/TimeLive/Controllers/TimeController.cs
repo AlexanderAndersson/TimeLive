@@ -50,9 +50,9 @@ namespace TimeLive.Controllers
             return View(model);
         }
 
-        public ActionResult GetMonthEvents()
+        public ActionResult GetMonthEvents(Events hej)
         {
-            var eventList = MonthEvents();
+            var eventList = MonthEvents(hej);
             //var rows = eventList;
 
             return Json(eventList, JsonRequestBehavior.AllowGet);
@@ -68,6 +68,8 @@ namespace TimeLive.Controllers
 
         private List<Events> WeekEvents()
         {
+            #region WeekEvents
+
             List<string> color = new List<string>(); //List of colors
             color.Add("#006600");
             color.Add("#006666");
@@ -145,6 +147,8 @@ namespace TimeLive.Controllers
                                 start = row.regdate.AddHours(1).ToString(), //Start-time begins at 01:00 if LastEnd hour = 00:00:00
                                 end = row.regdate.AddHours(1).AddHours((double)row.usedtime).ToString(), //End-time equals to 01:00 + invoicedtime
                                 backgroundColor = color[count], //Adding a color to the event
+                                borderColor = color[count],
+                                textColor = "#FFFFFF",
                             };
 
                             LastEnd = row.regdate.AddHours(1).AddMinutes(LastEnd.Minute).AddHours((double)row.usedtime); //LastEnd equals to 01:00
@@ -159,6 +163,8 @@ namespace TimeLive.Controllers
                                 start = LastEnd.ToString(), //Start-time begins when the latest report ended
                                 end = row.regdate.AddHours(LastEnd.Hour).AddMinutes(LastEnd.Minute).AddHours((double)row.usedtime).ToString(), //End-time equals to LastEnd + invoicedtime
                                 backgroundColor = color[count], //Adding a color to the event
+                                borderColor = color[count],
+                                textColor = "#FFFFFF",
                             };
 
                             LastEnd = row.regdate.AddHours(LastEnd.Hour).AddMinutes(LastEnd.Minute).AddHours((double)row.usedtime); //LastEnd equals to latest events end
@@ -169,59 +175,65 @@ namespace TimeLive.Controllers
                 }
             }
             return eventList;
+
+            #endregion
         }
 
-        private List<Events> MonthEvents()
+        private List<Events> MonthEvents(Events hej)
         {
+            #region MonthEvents
+   
             object tdFrom = Session["From"];
             object tdTo = Session["To"];
-
 
             //If session is null make the from and to dates this month
             if (tdFrom == null && tdTo == null)
             {
-                DateTime date = DateTime.Today;
+                //DateTime date = DateTime.Today;
+                DateTime date = DateTime.Parse(hej.start.ToString());
                 var firstDayOfMonth = new DateTime(date.Year, date.Month, 1);
                 var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
                 From = firstDayOfMonth;
                 To = lastDayOfMonth;
 
-                //Im doing the code underneath becuase I want to show all events that can be displayed on the calander
-                //Even if that day(s) is from prev och next month
+                ////Im doing the code underneath becuase I want to show all events that can be displayed on the calander
+                ////Even if that day(s) is from prev och next month
 
-                //Lazy coding for checking if the first day of the month are either Tuesday, Wednesday, Thursday or Friday
-                if (firstDayOfMonth.DayOfWeek == DayOfWeek.Tuesday) { var from = firstDayOfMonth.AddDays(-1); From = from; }
-                if (firstDayOfMonth.DayOfWeek == DayOfWeek.Wednesday) { var from = firstDayOfMonth.AddDays(-2); From = from; }
-                if (firstDayOfMonth.DayOfWeek == DayOfWeek.Thursday) { var from = firstDayOfMonth.AddDays(-3); From = from; }
-                if (firstDayOfMonth.DayOfWeek == DayOfWeek.Friday) { var from = firstDayOfMonth.AddDays(-4); From = from; }
+                ////Lazy coding for checking if the first day of the month are either Tuesday, Wednesday, Thursday or Friday
+                //if (firstDayOfMonth.DayOfWeek == DayOfWeek.Tuesday) { var from = firstDayOfMonth.AddDays(-1); From = from; }
+                //if (firstDayOfMonth.DayOfWeek == DayOfWeek.Wednesday) { var from = firstDayOfMonth.AddDays(-2); From = from; }
+                //if (firstDayOfMonth.DayOfWeek == DayOfWeek.Thursday) { var from = firstDayOfMonth.AddDays(-3); From = from; }
+                //if (firstDayOfMonth.DayOfWeek == DayOfWeek.Friday) { var from = firstDayOfMonth.AddDays(-4); From = from; }
 
-                //Lazy coding for checking if the last day of the month are either Monday, Tuesday, Wednesday or Thursday
-                if (lastDayOfMonth.DayOfWeek == DayOfWeek.Monday) { var to = firstDayOfMonth.AddMonths(1).AddDays(4); To = to; }
-                if (lastDayOfMonth.DayOfWeek == DayOfWeek.Tuesday) { var to = firstDayOfMonth.AddMonths(1).AddDays(3); To = to; }
-                if (lastDayOfMonth.DayOfWeek == DayOfWeek.Wednesday) { var to = firstDayOfMonth.AddMonths(1).AddDays(2); To = to; }
-                if (lastDayOfMonth.DayOfWeek == DayOfWeek.Thursday) { var to = firstDayOfMonth.AddMonths(1).AddDays(1); To = to; }
+                ////Lazy coding for checking if the last day of the month are either Monday, Tuesday, Wednesday or Thursday
+                //if (lastDayOfMonth.DayOfWeek == DayOfWeek.Monday) { var to = firstDayOfMonth.AddMonths(1).AddDays(4); To = to; }
+                //if (lastDayOfMonth.DayOfWeek == DayOfWeek.Tuesday) { var to = firstDayOfMonth.AddMonths(1).AddDays(3); To = to; }
+                //if (lastDayOfMonth.DayOfWeek == DayOfWeek.Wednesday) { var to = firstDayOfMonth.AddMonths(1).AddDays(2); To = to; }
+                //if (lastDayOfMonth.DayOfWeek == DayOfWeek.Thursday) { var to = firstDayOfMonth.AddMonths(1).AddDays(1); To = to; }
             }
             else
             {
-                DateTime date = DateTime.Parse(tdFrom.ToString());
-                var firstDayOfMonth = new DateTime(date.Year, date.Month, 1);
-                var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
-                From = firstDayOfMonth;
-                To = lastDayOfMonth;
+                //DateTime date = DateTime.Parse(tdFrom.ToString());
+                DateTime start = DateTime.Parse(hej.start.ToString());
+                DateTime end = DateTime.Parse(hej.end.ToString());
+                //var firstDayOfMonth = new DateTime(date.Year, date.Month, 1);
+                //var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
+                From = start;
+                To = end;
 
-                //Same thing here as the one over this
+                ////Same thing here as the one over this
 
-                //Lazy coding for checking if the first day of the month are either Tuesday, Wednesday, Thursday or Friday
-                if (firstDayOfMonth.DayOfWeek == DayOfWeek.Tuesday) { var from = firstDayOfMonth.AddDays(-1); From = from; }
-                if (firstDayOfMonth.DayOfWeek == DayOfWeek.Wednesday) { var from = firstDayOfMonth.AddDays(-2); From = from; }
-                if (firstDayOfMonth.DayOfWeek == DayOfWeek.Thursday) { var from = firstDayOfMonth.AddDays(-3); From = from; }
-                if (firstDayOfMonth.DayOfWeek == DayOfWeek.Friday) { var from = firstDayOfMonth.AddDays(-4); From = from; }
+                ////Lazy coding for checking if the first day of the month are either Tuesday, Wednesday, Thursday or Friday
+                //if (firstDayOfMonth.DayOfWeek == DayOfWeek.Tuesday) { var from = firstDayOfMonth.AddDays(-1); From = from; }
+                //if (firstDayOfMonth.DayOfWeek == DayOfWeek.Wednesday) { var from = firstDayOfMonth.AddDays(-2); From = from; }
+                //if (firstDayOfMonth.DayOfWeek == DayOfWeek.Thursday) { var from = firstDayOfMonth.AddDays(-3); From = from; }
+                //if (firstDayOfMonth.DayOfWeek == DayOfWeek.Friday) { var from = firstDayOfMonth.AddDays(-4); From = from; }
 
-                //Lazy coding for checking if the last day of the month are either Monday, Tuesday, Wednesday or Thursday
-                if (lastDayOfMonth.DayOfWeek == DayOfWeek.Monday) {var to = firstDayOfMonth.AddMonths(1).AddDays(4); To = to; }
-                if (lastDayOfMonth.DayOfWeek == DayOfWeek.Tuesday) { var to = firstDayOfMonth.AddMonths(1).AddDays(3); To = to; }
-                if (lastDayOfMonth.DayOfWeek == DayOfWeek.Wednesday) { var to = firstDayOfMonth.AddMonths(1).AddDays(2); To = to; }
-                if (lastDayOfMonth.DayOfWeek == DayOfWeek.Thursday) { var to = firstDayOfMonth.AddMonths(1).AddDays(1); To = to; }           
+                ////Lazy coding for checking if the last day of the month are either Monday, Tuesday, Wednesday or Thursday
+                //if (lastDayOfMonth.DayOfWeek == DayOfWeek.Monday) {var to = firstDayOfMonth.AddMonths(1).AddDays(4); To = to; }
+                //if (lastDayOfMonth.DayOfWeek == DayOfWeek.Tuesday) { var to = firstDayOfMonth.AddMonths(1).AddDays(3); To = to; }
+                //if (lastDayOfMonth.DayOfWeek == DayOfWeek.Wednesday) { var to = firstDayOfMonth.AddMonths(1).AddDays(2); To = to; }
+                //if (lastDayOfMonth.DayOfWeek == DayOfWeek.Thursday) { var to = firstDayOfMonth.AddMonths(1).AddDays(1); To = to; }           
             }
 
             var selectRows = from c in TimeLiveDB.q_SelectRowsTime(null, ((Classes.UserClass.User)Session["User"]).Username,
@@ -280,6 +292,8 @@ namespace TimeLive.Controllers
                 }
             }
             return eventList;
+
+            #endregion
         }
 
         [HttpPost]

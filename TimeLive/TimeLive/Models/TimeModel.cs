@@ -10,6 +10,8 @@ namespace TimeLive.Models
         public string start { get; set; }
         public string end { get; set; }
         public string backgroundColor { get; set; }
+        public string borderColor { get; set; }
+        public string textColor { get; set; }
     }
 
     public class TimeModel
