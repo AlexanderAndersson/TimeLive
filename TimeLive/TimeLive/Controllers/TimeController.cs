@@ -50,14 +50,6 @@ namespace TimeLive.Controllers
             return View(model);
         }
 
-        public ActionResult GetMonthEvents(Events hej)
-        {
-            var eventList = MonthEvents(hej);
-            //var rows = eventList;
-
-            return Json(eventList, JsonRequestBehavior.AllowGet);
-        }
-
         public ActionResult GetWeekEvents()
         {
             var eventList = WeekEvents();
@@ -179,62 +171,24 @@ namespace TimeLive.Controllers
             #endregion
         }
 
-        private List<Events> MonthEvents(Events hej)
+        public ActionResult GetMonthEvents(Events pEvent)
+        {
+            var eventList = MonthEvents(pEvent);
+            //var rows = eventList;
+
+            return Json(eventList, JsonRequestBehavior.AllowGet);
+        }
+
+        private List<Events> MonthEvents(Events pEvent)
         {
             #region MonthEvents
-   
-            object tdFrom = Session["From"];
-            object tdTo = Session["To"];
 
-            //If session is null make the from and to dates this month
-            if (tdFrom == null && tdTo == null)
-            {
-                //DateTime date = DateTime.Today;
-                DateTime date = DateTime.Parse(hej.start.ToString());
-                var firstDayOfMonth = new DateTime(date.Year, date.Month, 1);
-                var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
-                From = firstDayOfMonth;
-                To = lastDayOfMonth;
+            //date stuff was here
 
-                ////Im doing the code underneath becuase I want to show all events that can be displayed on the calander
-                ////Even if that day(s) is from prev och next month
-
-                ////Lazy coding for checking if the first day of the month are either Tuesday, Wednesday, Thursday or Friday
-                //if (firstDayOfMonth.DayOfWeek == DayOfWeek.Tuesday) { var from = firstDayOfMonth.AddDays(-1); From = from; }
-                //if (firstDayOfMonth.DayOfWeek == DayOfWeek.Wednesday) { var from = firstDayOfMonth.AddDays(-2); From = from; }
-                //if (firstDayOfMonth.DayOfWeek == DayOfWeek.Thursday) { var from = firstDayOfMonth.AddDays(-3); From = from; }
-                //if (firstDayOfMonth.DayOfWeek == DayOfWeek.Friday) { var from = firstDayOfMonth.AddDays(-4); From = from; }
-
-                ////Lazy coding for checking if the last day of the month are either Monday, Tuesday, Wednesday or Thursday
-                //if (lastDayOfMonth.DayOfWeek == DayOfWeek.Monday) { var to = firstDayOfMonth.AddMonths(1).AddDays(4); To = to; }
-                //if (lastDayOfMonth.DayOfWeek == DayOfWeek.Tuesday) { var to = firstDayOfMonth.AddMonths(1).AddDays(3); To = to; }
-                //if (lastDayOfMonth.DayOfWeek == DayOfWeek.Wednesday) { var to = firstDayOfMonth.AddMonths(1).AddDays(2); To = to; }
-                //if (lastDayOfMonth.DayOfWeek == DayOfWeek.Thursday) { var to = firstDayOfMonth.AddMonths(1).AddDays(1); To = to; }
-            }
-            else
-            {
-                //DateTime date = DateTime.Parse(tdFrom.ToString());
-                DateTime start = DateTime.Parse(hej.start.ToString());
-                DateTime end = DateTime.Parse(hej.end.ToString());
-                //var firstDayOfMonth = new DateTime(date.Year, date.Month, 1);
-                //var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
-                From = start;
-                To = end;
-
-                ////Same thing here as the one over this
-
-                ////Lazy coding for checking if the first day of the month are either Tuesday, Wednesday, Thursday or Friday
-                //if (firstDayOfMonth.DayOfWeek == DayOfWeek.Tuesday) { var from = firstDayOfMonth.AddDays(-1); From = from; }
-                //if (firstDayOfMonth.DayOfWeek == DayOfWeek.Wednesday) { var from = firstDayOfMonth.AddDays(-2); From = from; }
-                //if (firstDayOfMonth.DayOfWeek == DayOfWeek.Thursday) { var from = firstDayOfMonth.AddDays(-3); From = from; }
-                //if (firstDayOfMonth.DayOfWeek == DayOfWeek.Friday) { var from = firstDayOfMonth.AddDays(-4); From = from; }
-
-                ////Lazy coding for checking if the last day of the month are either Monday, Tuesday, Wednesday or Thursday
-                //if (lastDayOfMonth.DayOfWeek == DayOfWeek.Monday) {var to = firstDayOfMonth.AddMonths(1).AddDays(4); To = to; }
-                //if (lastDayOfMonth.DayOfWeek == DayOfWeek.Tuesday) { var to = firstDayOfMonth.AddMonths(1).AddDays(3); To = to; }
-                //if (lastDayOfMonth.DayOfWeek == DayOfWeek.Wednesday) { var to = firstDayOfMonth.AddMonths(1).AddDays(2); To = to; }
-                //if (lastDayOfMonth.DayOfWeek == DayOfWeek.Thursday) { var to = firstDayOfMonth.AddMonths(1).AddDays(1); To = to; }           
-            }
+            DateTime start = DateTime.Parse(pEvent.start);
+            DateTime end = DateTime.Parse(pEvent.end);
+            From = start;
+            To = end;
 
             var selectRows = from c in TimeLiveDB.q_SelectRowsTime(null, ((Classes.UserClass.User)Session["User"]).Username,
                              null, null, null, null,
@@ -246,20 +200,15 @@ namespace TimeLive.Controllers
 
             if (selectRows.Count() > 0) //if there are rows in selectedRows run this code
             {
-
                 foreach (var row in selectRows)
                 {
-
                     //Checks if the latest date is the same as the latest report. If not, LastEnd = 00:00:00
                     if (row.regdate != LastEnd.Date)
                     {
                         LastEnd = LastEnd.Date;
                     }
+                    if (row.usedtime == 0) { /*if usedtime is 0, don't show event*/ } 
 
-                    if (row.usedtime == 0) //if usedtime is 0, don't show event
-                    {
-
-                    }
                     else
                     {
                         if (LastEnd.Hour == 0)

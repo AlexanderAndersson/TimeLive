@@ -51,25 +51,30 @@ $(document).ready(function (date) {
         defaultView: 'month',
         defaultDate: localStorage.Date,
         weekNumberCalculation: 'ISO',
-        //events: "/Time/GetMonthEvents/",
-        //viewRender: function (view, element) {
-        //    var model = new Object();
-        //    model.start = view.start;
-        //    model.end = view.end;
-        //    alert(model)
-        //    localStorage.Model = model
-        //    alert(localStorage.Model)
-        //},
-        //events: {
-        //    type: 'POST',
-        //    url: "/Time/GetMonthEvents/",
-        //    dataType: "json",
-        //    contentType: "application/json; charset=utf-8",
-        //    data: JSON.stringify({ hej: localStorage.Model }),
-        //    success: function () {
-        //        alert("refetch?");
-        //    }
-        //},
+        events: "/Time/GetMonthEvents/",
+        eventRender: function (event) {
+            var eventStart = event.start.format("HH:mm");
+            var eventEnd = event.end.format("HH:mm");
+            if (eventEnd >= "09:00" || eventStart >= "09:00") { //if there is atleast 8 hours reported that day, the color is green   
+                var dateEnd = event.end.format("YYYY-MM-DD");
+                $('#month').find('.fc-day-top[data-date=' + dateEnd + ']').css('background', 'green', "!important");
+            }
+            else { //if there is less than 8 hours reported that day, the color is red  
+                var dateStart = event.start.format("YYYY-MM-DD");
+                $('#month').find('.fc-day-top[data-date=' + dateStart + ']').css('background', 'red', "!important");
+            }
+        },//EventRender
+        dayRender: function (date) {
+            if (date > moment()) { //if date is after today, the background will have no color
+                var dateAfterToday = date.format("YYYY-MM-DD");
+                $('#month').find('.fc-day-top[data-date=' + dateAfterToday + ']').css('background', 'none', "!important");
+            }
+            if (date <= moment()) { //if there is no event on a day before today or today, the background will have a red color
+                var dateBeforeToday = date.format("YYYY-MM-DD");
+                $('#month').find('.fc-day-top[data-date=' + dateBeforeToday + ']').css('background', 'red');
+            }
+        },//DayRender
+        //viewRender was here and events after that
         editable: false,
         allDaySlot: true,
         selectable: true,
@@ -97,85 +102,23 @@ $(document).ready(function (date) {
             $('#selectionTo').val(date.format('YYYY-MM-DD'));
             $('#selectionsApply').click();
         },//navLinkDayClick 
-        viewRender: function (view, element) {
-            //alert(view.start.format("YYYY-MM-DD") + " - " + view.end.format("YYYY-MM-DD"))
-            //localStorage.Date = view.start;
-            var model = new Object();
-            model.start = view.start;
-            model.end = view.end;
-            localStorage.Model = model
-
-            jQuery.ajax({
-                type: 'POST',
-                url: "/Time/GetMonthEvents/",
-                dataType: "json",
-                contentType: "application/json; charset=utf-8",
-                data: JSON.stringify({ hej: localStorage.Model }),
-                success: function() {
-                    $('#week').fullCalendar('rerenderEvents');
-                    alert("refetch?");
-                }
-            });
-        },
-        dayRender: function (date) {
-            if (date > moment()) { //if date is after today, the background will have no color
-                var dateAfterToday = date.format("YYYY-MM-DD");
-                $('#month').find('.fc-day-top[data-date=' + dateAfterToday + ']').css('background', 'none', "!important");
-            }
-            if (date <= moment()) { //if there is no event on a day before today or today, the background will have a red color
-                var dateBeforeToday = date.format("YYYY-MM-DD");
-                $('#month').find('.fc-day-top[data-date=' + dateBeforeToday + ']').css('background', 'red');
-            }
-        },
-        eventRender: function (event, element, view) {
-            var eventStart = event.start.format("HH:mm");
-            var eventEnd = event.end.format("HH:mm");
-            if (eventEnd >= "09:00" || eventStart >= "09:00") { //if there is atleast 8 hours reported that day, the color is green   
-                var dateEnd = event.end.format("YYYY-MM-DD");
-                $('#month').find('.fc-day-top[data-date=' + dateEnd + ']').css('background', 'green', "!important");
-            }
-            else { //if there is less than 8 hours reported that day, the color is red  
-                var dateStart = event.start.format("YYYY-MM-DD");
-                $('#month').find('.fc-day-top[data-date=' + dateStart + ']').css('background', 'red');
-            }
-        }
+        //viewRender with jQuert.ajax
     });//Month
 
-    $(".fc-month-button").click(function () {
-        //$('#selectionFrom').val(date.format('YYYY-MM-DD'));
-        //$('#selectionTo').val(date.endOf('month').format('YYYY-MM-DD'));
-
-        //var date = new Date(), y = date.getFullYear(), m = date.getMonth();
-        //alert(date.getMonth);
-        //var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-        //var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-
-        var startOfMonth = moment().startOf('month');
-        $('#selectionFrom').val(startOfMonth.format('YYYY-MM-DD'));
-        $('#selectionTo').val(moment().endOf('month').format('YYYY-MM-DD'));
-
-        //alert(firstDay.format('YYYY-MM-DD'));
-        //alert(lastDay.format('YYYY-MM-DD'));
-
-        //$('#selectionFrom').val(firstDay.format('YYYY-MM-DD'));
-        //$('#selectionTo').val(lastDay.format('YYYY-MM-DD'));
-        $('#selectionsApply').click();
-    });//click
-
-    //$('.fc-prev-button').click(function () {
-    //    $.ajax({
-    //        type: 'POST',
-    //        url: "/Time/GetMonthEvents/",
-    //        success: function (response) {
-    //            $('#week').fullCalendar('refetchEvents');
-    //            alert('Database populated! ');
-    //        }
-    //    });
-    //});
-
+    //$(".fc-month-button").click(function () {
+    //    var startOfMonth = moment().startOf('month');
+    //    $('#selectionFrom').val(startOfMonth.format('YYYY-MM-DD'));
+    //    $('#selectionTo').val(moment().endOf('month').format('YYYY-MM-DD'));
+    //    $('#selectionsApply').click();
+    //});//click
 
 });//document.ready
 
+
+//$('.btn-danger').click(function () {
+
+//    //$('#week').fullCalendar('refetchEvents');
+//});
 
 //Increase/decrease numerics with arrow keys
 $('.amount').keydown(function (event) {
