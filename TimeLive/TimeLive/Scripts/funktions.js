@@ -64,10 +64,10 @@ $(document).ready(function (date) {
                 $('#month').find('.fc-day-top[data-date=' + dateStart + ']').css('background', 'red', "!important");
             }
         },//EventRender
-        dayRender: function (date) {
+        dayRender: function (date, cell) {
             if (date > moment()) { //if date is after today, the background will have no color
                 var dateAfterToday = date.format("YYYY-MM-DD");
-                $('#month').find('.fc-day-top[data-date=' + dateAfterToday + ']').css('background', 'none', "!important");
+                $('#month').find('.fc-day-top[data-date=' + dateAfterToday + ']').css('background', 'none', "!important");               
             }
             if (date <= moment()) { //if there is no event on a day before today or today, the background will have a red color
                 var dateBeforeToday = date.format("YYYY-MM-DD");
@@ -119,6 +119,10 @@ $(document).ready(function (date) {
 
 //    //$('#week').fullCalendar('refetchEvents');
 //});
+
+$('.btn-primary').click(function () {
+    localStorage.hej = $(".companyDropDown option:selected").text();
+});
 
 //Increase/decrease numerics with arrow keys
 $('.amount').keydown(function (event) {

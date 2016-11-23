@@ -3,6 +3,7 @@
 @model TimeLive.Models.TimeModel
 @{
     var selectRows = Model.SelectRows.OrderBy(x => x.regdate).ToArray();
+    var latestReport = selectRows.OrderBy(x => x.regdate).Reverse().Take(5).ToArray();
     var dayDictionary = selectRows.Select(x => x.regdate).Distinct().ToDictionary(day => day, day => false);
     var totalUsed = selectRows.Sum(x => x.usedtime);
     var totalInvoiced = selectRows.Sum(x => x.invoicedtime);
@@ -98,13 +99,14 @@
 <div id="month"></div>
 
 <div id="favorite-container">
-    <a href="#"><div class="favorite">
-        <h4>saasd</h4>
-    </div></a>
-    <a href="#"><div class="favorite"></div></a>
-    <a href="#"><div class="favorite"></div></a>
-    <a href="#"><div class="favorite"></div></a>
-    <a href="#"><div class="favorite"></div></a>
+    @foreach (var row in latestReport)
+    {
+        <div class="favorite">
+            <h5>@row.companyname</h5>
+            <h5>@row.projectname</h5>
+            <h5>@row.subprojectname</h5>
+        </div>
+    }
 </div>
 
 <div class="row">
@@ -280,7 +282,7 @@
         @Html.AntiForgeryToken()
         <div class="row">
             <div class="col col-dropdown">
-                <input type="hidden" class="pCompanyId" />
+                @*<input type="hidden" class="pCompanyId" />*@
                 <select name="pCompanyId" class="form-control companyDropDown">
                     <option value="">Select Customer</option>
                 </select>
@@ -292,23 +294,23 @@
                 <select name="pSubProjectId" class="form-control subProjectDropDown"></select>
             </div>
             <div class="col date">
-                <input type="text" class="form-control date-picker" name="pRegDate" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                <input type="text" name="pRegDate" class="form-control date-picker" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
             </div>
             <div class="col amount">
-                <input type="text" class="form-control hours amount" name="pInvoicedTime" value="0.00" />
+                <input type="text" name="pInvoicedTime" class="form-control hours amount" value="0.00" />
             </div>
             <div class="col amount">
-                <input type="text" class="form-control hours amount" name="pUsedTime" value="0.00" />
+                <input type="text" name="pUsedTime" class="form-control hours amount" value="0.00" />
             </div>
             <div class="col externCom">
-                <input type="text" class="form-control comment" name="pExternComment" />
+                <input type="text" name="pExternComment" class="form-control comment" />
             </div>
             <input type="checkbox" class="delayChk" />
             <input type="hidden" name="pDealyinvoice" class="pDealyinvoice" value="0" />
         </div>
         <div class="row">
             <div class="col col-full">
-                <input type="text" class="form-control comment" name="pInternComment" placeholder="Internal comment" />
+                <input type="text" name="pInternComment" class="form-control comment" placeholder="Internal comment" />
             </div>
             <div class="btn-group btn-group-sm">
                 <button type="submit" class="btn btn-primary" title="Save">
@@ -354,14 +356,15 @@
             //Delete function
             $('.btn-danger').click(function() {
                 var row = $(this).parents('.timerow');
-                $('month').fullCalendar('refetchEvents')
                 //__RequestVerificationToken
                 var guiid = row.find('.q_hrp_guiid').val();
                 var token = row.find('input[name=__RequestVerificationToken]').val();
                 $.post('@Url.Action("Delete")', { '__RequestVerificationToken': token, 'q_hrp_guiid': guiid },
                     function(data) {
                         if (data.Result) {
-                            row.hide(150); //Gör den "utgråad" istället
+                            row.hide(150);
+                            $('#week').fullCalendar('refetchEvents');
+                            $('#month').fullCalendar('refetchEvents');
                         } else {
                             //Todo: Display error message
                         }
