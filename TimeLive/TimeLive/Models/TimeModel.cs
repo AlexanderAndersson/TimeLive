@@ -14,6 +14,14 @@ namespace TimeLive.Models
         public string textColor { get; set; }
     }
 
+
+    //public class LatestReport
+    //{
+    //    public int? ProjectId { get; set; }
+    //    public string SubProjectId { get; set; }
+    //    public string CustomerId { get; set; }
+    //}
+
     public class TimeModel
     {
         public IEnumerable<q_SelectRowsTime_Result> SelectRows { get; set; }
@@ -21,6 +29,7 @@ namespace TimeLive.Models
         public IEnumerable<Project> Projects { get; set; }
         public IEnumerable<SubProject> SubProjects { get; set; }
         public TimeSelection Selections { get; set; }
+        //public IEnumerable<LatestReport> Report { get; set; }
     }
 
     public class TimeSelection

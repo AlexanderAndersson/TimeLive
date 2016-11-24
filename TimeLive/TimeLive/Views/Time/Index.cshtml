@@ -2,8 +2,9 @@
 @using Newtonsoft.Json
 @model TimeLive.Models.TimeModel
 @{
-    var selectRows = Model.SelectRows.OrderBy(x => x.regdate).ToArray();
-    var latestReport = selectRows.OrderBy(x => x.regdate).Reverse().Take(5).ToArray();
+    //var latestReport1 = Model.Report;
+    var selectRows = Model.SelectRows.OrderBy(x => x.regdate).Reverse().ToArray();
+    var latestReport = selectRows.OrderBy(x => x.regdate).Take(5).ToArray();
     var dayDictionary = selectRows.Select(x => x.regdate).Distinct().ToDictionary(day => day, day => false);
     var totalUsed = selectRows.Sum(x => x.usedtime);
     var totalInvoiced = selectRows.Sum(x => x.invoicedtime);
@@ -98,16 +99,31 @@
 
 <div id="month"></div>
 
-<div id="favorite-container">
-    @foreach (var row in latestReport)
-    {
-        <div class="favorite">
-            <h5>@row.companyname</h5>
-            <h5>@row.projectname</h5>
-            <h5>@row.subprojectname</h5>
-        </div>
-    }
+    <div id="favorite-container">
+        @foreach (var row in latestReport)
+        {
+            @*foreach (var hej in Model.Customers)
+            {
+                if (row.CustomerId == hej.Code)
+                {
+                    <h1>@hej.Name</h1>
+                }
+            }*@
+
+
+            <a href="#">
+                <div class="favorite">
+                    <input type="hidden" class="companyId" name="pCompanyId" value="@row.companyid" />
+                    <h5>@row.companyname</h5>
+                    <input type="hidden" class="projectId" name="pProjectId" value="@row.projectid" />
+                    <h5>@row.projectname</h5>
+                    <input type="hidden" class="subProjectId" name="pSubProjectId" value="@row.subprojectid" />
+                    <h5>@row.subprojectname</h5>
+                </div>
+            </a>
+        }
 </div>
+
 
 <div class="row">
     <div id="week"></div>
@@ -283,15 +299,15 @@
         <div class="row">
             <div class="col col-dropdown">
                 @*<input type="hidden" class="pCompanyId" />*@
-                <select name="pCompanyId" class="form-control companyDropDown">
+                <select name="pCompanyId" class="form-control newCompany companyDropDown">
                     <option value="">Select Customer</option>
                 </select>
             </div>
             <div class="col col-dropdown">
-                <select name="pProjectId" class="form-control projectDropDown"></select>
+                <select name="pProjectId" class="form-control newProject projectDropDown"></select>
             </div>
             <div class="col col-dropdown">
-                <select name="pSubProjectId" class="form-control subProjectDropDown"></select>
+                <select name="pSubProjectId" class="form-control newSubProject subProjectDropDown"></select>
             </div>
             <div class="col date">
                 <input type="text" name="pRegDate" class="form-control date-picker" value="@DateTime.Today.ToString("yyyy-MM-dd")" />

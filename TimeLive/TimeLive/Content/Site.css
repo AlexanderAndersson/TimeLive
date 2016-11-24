@@ -347,14 +347,14 @@ input[type=checkbox].glyphicon{
 }*/
 
 #favorite-container {
-        display: flex;
-        margin-left: 140px;
-        margin-top: 30px;
+    display: flex;
+    margin-left: 140px;
+    margin-top: 30px;
 }
 
 .favorite {
     width: 130px;
-    height: 100px;
+    height: 115px;
     border: 3px solid black;
     border-radius: 5px;
     margin-right: 40px;

@@ -13,6 +13,7 @@ namespace TimeLive.Controllers
         private static IEnumerable<Customer> customers;
         private static IEnumerable<Project> projects;
         private static IEnumerable<SubProject> subProjects;
+        //private static IEnumerable<LatestReport> latesReport;
         //public string LastEnd;
         public DateTime LastEnd;
         public DateTime From;
@@ -42,7 +43,8 @@ namespace TimeLive.Controllers
                 Customers = customers,
                 Projects = projects,
                 SubProjects = subProjects,
-                Selections = selections
+                Selections = selections,
+                //Report = latesReport
             };
 
             ViewBag.User = ((Classes.UserClass.User)Session["User"]).FullName;
@@ -245,6 +247,14 @@ namespace TimeLive.Controllers
             #endregion
         }
 
+        //private List<Events> LatestReports()
+        //{
+        //    var reportList = 
+
+        //    return
+        //}
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Insert(string pCompanyId, int pProjectId, string pSubProjectId, DateTime pRegDate, double pInvoicedTime, double pUsedTime, string pExternComment, string pInternComment, int pDealyinvoice)
@@ -255,6 +265,19 @@ namespace TimeLive.Controllers
 
             TimeLiveDB.q_InsertRowTime(user.Username, pProjectId, pSubProjectId, pCompanyId, pRegDate, pExternComment, pInternComment,
                  pInvoicedTime, pUsedTime, pDealyinvoice, null, null);
+
+
+            //List<LatestReport> ListOfReports = new List<LatestReport>();
+
+            //LatestReport newReport = new LatestReport
+            //{
+            //    CustomerId = pCompanyId,
+            //    ProjectId = pProjectId,
+            //    SubProjectId = pSubProjectId
+            //};
+
+            //ListOfReports.Add(newReport);
+
 
             return RedirectToAction("Index");
         }

@@ -6,6 +6,8 @@ $(document).ready(function (date) {
         localStorage.View = "agendaWeek";
     };
 
+    alert(localStorage.ss);
+
     $('#week').fullCalendar({
         theme: true,
         header: false,
@@ -120,8 +122,20 @@ $(document).ready(function (date) {
 //    //$('#week').fullCalendar('refetchEvents');
 //});
 
+
+$('#favorite-container a').click(function () {
+    var row = $(this);
+    var companyId = row.find('input[name$=pCompanyId]').val();
+    var projectId = row.find('input[name$=pProjectId]').val();
+    var subProjectId = row.find('input[name$=pSubProjectId]').val();
+
+    $('.newCompany').val(companyId).change();
+    $('.newProject').val(projectId).change();
+    $('.newSubProject').val(subProjectId).change();
+});
+
 $('.btn-primary').click(function () {
-    localStorage.hej = $(".companyDropDown option:selected").text();
+    localStorage.ss = $('.newCompany').val();
 });
 
 //Increase/decrease numerics with arrow keys
