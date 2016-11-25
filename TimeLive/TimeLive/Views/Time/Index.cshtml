@@ -2,9 +2,8 @@
 @using Newtonsoft.Json
 @model TimeLive.Models.TimeModel
 @{
-    //var latestReport1 = Model.Report;
-    var selectRows = Model.SelectRows.OrderBy(x => x.regdate).Reverse().ToArray();
-    var latestReport = selectRows.OrderBy(x => x.regdate).Take(5).ToArray();
+    var latestReports = Model.LatestRows.OrderBy(x => x.rowcreateddt).Reverse().ToArray();
+    var selectRows = Model.SelectRows.OrderBy(x => x.regdate).ToArray();
     var dayDictionary = selectRows.Select(x => x.regdate).Distinct().ToDictionary(day => day, day => false);
     var totalUsed = selectRows.Sum(x => x.usedtime);
     var totalInvoiced = selectRows.Sum(x => x.invoicedtime);
@@ -97,31 +96,23 @@
     </form>
 </div>
 
+
 <div id="month"></div>
 
-    <div id="favorite-container">
-        @foreach (var row in latestReport)
-        {
-            @*foreach (var hej in Model.Customers)
-            {
-                if (row.CustomerId == hej.Code)
-                {
-                    <h1>@hej.Name</h1>
-                }
-            }*@
-
-
-            <a href="#">
-                <div class="favorite">
-                    <input type="hidden" class="companyId" name="pCompanyId" value="@row.companyid" />
-                    <h5>@row.companyname</h5>
-                    <input type="hidden" class="projectId" name="pProjectId" value="@row.projectid" />
-                    <h5>@row.projectname</h5>
-                    <input type="hidden" class="subProjectId" name="pSubProjectId" value="@row.subprojectid" />
-                    <h5>@row.subprojectname</h5>
-                </div>
-            </a>
-        }
+<div id="favorite-container">
+    @foreach (var row in latestReports)
+    {
+        <a href="#" class="latest">
+            <div class="favorite">
+                <input type="hidden" class="companyId" name="pCompanyId" value="@row.companyid" />
+                <h5>@row.companyname</h5>
+                <input type="hidden" class="projectId" name="pProjectId" value="@row.projectid" />
+                <h5>@row.projectname</h5>
+                <input type="hidden" class="subProjectId" name="pSubProjectId" value="@row.subprojectid" />
+                <h5>@row.subprojectname</h5>
+            </div>
+        </a>
+    }
 </div>
 
 

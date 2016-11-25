@@ -12,20 +12,17 @@ namespace TimeLive.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class q_hrp_preinsert
+    public partial class q_getdefinition
     {
-        public string q_hrp_guiid { get; set; }
         public string ftgnr { get; set; }
+        public string ftgnamn { get; set; }
         public string projcode { get; set; }
-        public System.DateTime regdate { get; set; }
-        public string perssign { get; set; }
-        public string subproject { get; set; }
-        public string editext { get; set; }
-        public string editint { get; set; }
-        public double usedtime { get; set; }
-        public double invoicedtime { get; set; }
-        public Nullable<int> delayinvoice { get; set; }
-        public Nullable<int> foretagkod { get; set; }
-        public Nullable<int> record_ok { get; set; }
+        public string projdescr { get; set; }
+        public string aktivitet { get; set; }
+        public string strdatetimehr { get; set; }
+        public string AssignmentStatus { get; set; }
+        public string ProjectStatus { get; set; }
+        public string SubProjectStatus { get; set; }
+        public string SubprojectEntry { get; set; }
     }
 }

@@ -27,15 +27,6 @@ namespace TimeLive.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<ex> ex { get; set; }
-        public virtual DbSet<hr> hr { get; set; }
-        public virtual DbSet<hrp> hrp { get; set; }
-        public virtual DbSet<prj> prj { get; set; }
-        public virtual DbSet<sy2> sy2 { get; set; }
-        public virtual DbSet<sysp> sysp { get; set; }
-        public virtual DbSet<q_ex_preinsert> q_ex_preinsert { get; set; }
-        public virtual DbSet<q_hrp_preinsert> q_hrp_preinsert { get; set; }
-        public virtual DbSet<xe> xe { get; set; }
         public virtual DbSet<q_getdefinition> q_getdefinition { get; set; }
         public virtual DbSet<get_teammanager_options> get_teammanager_options { get; set; }
     
@@ -569,7 +560,7 @@ namespace TimeLive.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<q_SelectRowsExpense_Result>("q_SelectRowsExpense", perssignParameter, projcodeParameter, ftgnrParameter, artnrParameter, regdateParameter, fromregdateParameter, toregdateParameter, reimburseParameter, debug_msgParameter);
         }
     
-        public virtual ObjectResult<q_SelectRowsTime_Result> q_SelectRowsTime(string customerresponsible, string perssign, Nullable<int> projcode, string projname, string subprojectid, string subprojectname, string ftgnr, string ftgnamn, Nullable<System.DateTime> regdate, Nullable<System.DateTime> fromregdate, Nullable<System.DateTime> toregdate, Nullable<int> delayinvoice, Nullable<int> highattention, string debug_msg)
+        public virtual ObjectResult<q_SelectRowsTime_Result> q_SelectRowsTime(string customerresponsible, string perssign, Nullable<int> projcode, string projname, string subprojectid, string subprojectname, string ftgnr, string ftgnamn, Nullable<System.DateTime> regdate, Nullable<System.DateTime> fromregdate, Nullable<System.DateTime> toregdate, Nullable<int> delayinvoice, Nullable<int> highattention, string debug_msg, Nullable<int> numofrows)
         {
             var customerresponsibleParameter = customerresponsible != null ?
                 new ObjectParameter("customerresponsible", customerresponsible) :
@@ -627,7 +618,11 @@ namespace TimeLive.Models
                 new ObjectParameter("debug_msg", debug_msg) :
                 new ObjectParameter("debug_msg", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<q_SelectRowsTime_Result>("q_SelectRowsTime", customerresponsibleParameter, perssignParameter, projcodeParameter, projnameParameter, subprojectidParameter, subprojectnameParameter, ftgnrParameter, ftgnamnParameter, regdateParameter, fromregdateParameter, toregdateParameter, delayinvoiceParameter, highattentionParameter, debug_msgParameter);
+            var numofrowsParameter = numofrows.HasValue ?
+                new ObjectParameter("numofrows", numofrows) :
+                new ObjectParameter("numofrows", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<q_SelectRowsTime_Result>("q_SelectRowsTime", customerresponsibleParameter, perssignParameter, projcodeParameter, projnameParameter, subprojectidParameter, subprojectnameParameter, ftgnrParameter, ftgnamnParameter, regdateParameter, fromregdateParameter, toregdateParameter, delayinvoiceParameter, highattentionParameter, debug_msgParameter, numofrowsParameter);
         }
     
         public virtual ObjectResult<q_SelectSubProject1_Result> q_SelectSubProject1(string customerresponsible, string companyid, string companyname, string projectid, string projectname, string subprojectid, string subprojectname)

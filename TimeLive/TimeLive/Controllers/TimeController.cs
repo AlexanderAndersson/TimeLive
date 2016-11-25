@@ -25,26 +25,40 @@ namespace TimeLive.Controllers
 
         public ActionResult Index()
         {
-
             Session["User"] = Session["User"] ?? Classes.UserClass.GetUserByIdentity(WindowsIdentity.GetCurrent());
-            //Session["User"] = Session["User"] as AdUser ?? new AdUser { Domain = "OPTIVASYS", FullName = "Rasmus Jansson", Username = "raja" };
-
             if (DateTime.Now - lastUpdate >= updateFrequency) UpdateStatics();
-            // var selections = TimeSelection.ThisWeek;
+
             var selections = Session["selection"] as TimeSelection ?? TimeSelection.ThisWeek;
+
+            var latestReports = TimeLiveDB.q_SelectRowsTime(
+                    null, ((Classes.UserClass.User)Session["User"]).Username,
+                    null, null, null, null,
+                    null, null, null, null,
+                    null, null, null, null, 2);
+
+            //List<object> listOfReports = new List<object>();
+
+            //foreach (var row in latestReports)
+            //{
+            //    listOfReports.Add(row);
+            //}
+
+            //List<object> hej = listOfReports.Distinct().ToList();
+
             var model = new TimeModel
             {
+                LatestRows = latestReports,
+
                 SelectRows = TimeLiveDB.q_SelectRowsTime(
                     null, ((Classes.UserClass.User)Session["User"]).Username,
                     selections.ProjectId, null, selections.SubProjectId, null,
                     selections.CustomerId, null, null, selections.From,
-                    selections.To, selections.Delayed, null, null),
+                    selections.To, selections.Delayed, null, null, 50),
 
                 Customers = customers,
                 Projects = projects,
                 SubProjects = subProjects,
                 Selections = selections,
-                //Report = latesReport
             };
 
             ViewBag.User = ((Classes.UserClass.User)Session["User"]).FullName;
@@ -98,7 +112,7 @@ namespace TimeLive.Controllers
             var selectRows = from c in TimeLiveDB.q_SelectRowsTime(null, ((Classes.UserClass.User)Session["User"]).Username,
                              null, null, null, null,
                              null, null, null, From,
-                             To, null, null, null).ToArray().OrderBy((x => x.regdate)) //Order by date (last to latest)
+                             To, null, null, null, 50).ToArray().OrderBy((x => x.regdate)) //Order by date (last to latest)
                              select c;
 
             List<Events> eventList = new List<Events>(); //Creates new list with events
@@ -142,7 +156,7 @@ namespace TimeLive.Controllers
                                 end = row.regdate.AddHours(1).AddHours((double)row.usedtime).ToString(), //End-time equals to 01:00 + invoicedtime
                                 backgroundColor = color[count], //Adding a color to the event
                                 borderColor = color[count],
-                                textColor = "#FFFFFF",
+                                textColor = "#FFFFFF", //White color
                             };
 
                             LastEnd = row.regdate.AddHours(1).AddMinutes(LastEnd.Minute).AddHours((double)row.usedtime); //LastEnd equals to 01:00
@@ -158,7 +172,7 @@ namespace TimeLive.Controllers
                                 end = row.regdate.AddHours(LastEnd.Hour).AddMinutes(LastEnd.Minute).AddHours((double)row.usedtime).ToString(), //End-time equals to LastEnd + invoicedtime
                                 backgroundColor = color[count], //Adding a color to the event
                                 borderColor = color[count],
-                                textColor = "#FFFFFF",
+                                textColor = "#FFFFFF", //White color
                             };
 
                             LastEnd = row.regdate.AddHours(LastEnd.Hour).AddMinutes(LastEnd.Minute).AddHours((double)row.usedtime); //LastEnd equals to latest events end
@@ -195,7 +209,7 @@ namespace TimeLive.Controllers
             var selectRows = from c in TimeLiveDB.q_SelectRowsTime(null, ((Classes.UserClass.User)Session["User"]).Username,
                              null, null, null, null,
                              null, null, null, From,
-                             To, null, null, null).ToArray().OrderBy((x => x.regdate)) //Order by date (last to latest)
+                             To, null, null, null, 50).ToArray().OrderBy((x => x.regdate)) //Order by date (last to latest)
                              select c;
 
             List<Events> eventList = new List<Events>(); //Creates new list with events
@@ -247,14 +261,6 @@ namespace TimeLive.Controllers
             #endregion
         }
 
-        //private List<Events> LatestReports()
-        //{
-        //    var reportList = 
-
-        //    return
-        //}
-
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Insert(string pCompanyId, int pProjectId, string pSubProjectId, DateTime pRegDate, double pInvoicedTime, double pUsedTime, string pExternComment, string pInternComment, int pDealyinvoice)
@@ -265,19 +271,6 @@ namespace TimeLive.Controllers
 
             TimeLiveDB.q_InsertRowTime(user.Username, pProjectId, pSubProjectId, pCompanyId, pRegDate, pExternComment, pInternComment,
                  pInvoicedTime, pUsedTime, pDealyinvoice, null, null);
-
-
-            //List<LatestReport> ListOfReports = new List<LatestReport>();
-
-            //LatestReport newReport = new LatestReport
-            //{
-            //    CustomerId = pCompanyId,
-            //    ProjectId = pProjectId,
-            //    SubProjectId = pSubProjectId
-            //};
-
-            //ListOfReports.Add(newReport);
-
 
             return RedirectToAction("Index");
         }
@@ -336,11 +329,17 @@ namespace TimeLive.Controllers
 
             var model = new TimeModel
             {
+                LatestRows = TimeLiveDB.q_SelectRowsTime(
+                    null, ((Classes.UserClass.User)Session["User"]).Username,
+                    null, null, null, null,
+                    null, null, null, null,
+                    null, null, null, null, 50),
+
                 SelectRows = TimeLiveDB.q_SelectRowsTime(
                     null, ((Classes.UserClass.User)Session["User"]).Username,
                     selections.ProjectId, null, selections.SubProjectId, null,
                     selections.CustomerId, null, null, selections.From,
-                    selections.To, selections.Delayed, null, null),
+                    selections.To, selections.Delayed, null, null, 50),
 
                 Selections = selections,
                 Projects = projects,

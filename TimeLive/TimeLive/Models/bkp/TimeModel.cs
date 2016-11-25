@@ -24,7 +24,6 @@ namespace TimeLive.Models
 
     public class TimeModel
     {
-        public IEnumerable<q_SelectRowsTime_Result> LatestRows { get; set; }
         public IEnumerable<q_SelectRowsTime_Result> SelectRows { get; set; }
         public IEnumerable<Customer> Customers { get; set; }
         public IEnumerable<Project> Projects { get; set; }

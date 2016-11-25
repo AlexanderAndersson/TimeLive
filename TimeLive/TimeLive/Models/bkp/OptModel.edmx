@@ -1,0 +1,754 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="optModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'test_opt.dbo.q_getdefinition' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="q_getdefinition">
+          <Key>
+            <PropertyRef Name="aktivitet" />
+            <PropertyRef Name="AssignmentStatus" />
+            <PropertyRef Name="ProjectStatus" />
+            <PropertyRef Name="SubProjectStatus" />
+            <PropertyRef Name="SubprojectEntry" />
+          </Key>
+          <Property Name="ftgnr" Type="varchar" MaxLength="20" />
+          <Property Name="ftgnamn" Type="varchar" MaxLength="200" />
+          <Property Name="projcode" Type="varchar" MaxLength="36" />
+          <Property Name="projdescr" Type="varchar" MaxLength="40" />
+          <Property Name="aktivitet" Type="varchar" MaxLength="60" Nullable="false" />
+          <Property Name="strdatetimehr" Type="varchar" MaxLength="67" />
+          <Property Name="AssignmentStatus" Type="varchar" MaxLength="6" Nullable="false" />
+          <Property Name="ProjectStatus" Type="varchar" MaxLength="6" Nullable="false" />
+          <Property Name="SubProjectStatus" Type="varchar" MaxLength="6" Nullable="false" />
+          <Property Name="SubprojectEntry" Type="varchar" MaxLength="9" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'test_opt.time.get_teammanager_options' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="get_teammanager_options">
+          <Key>
+            <PropertyRef Name="perssign" />
+          </Key>
+          <Property Name="perssign" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="ftgnr" Type="varchar" MaxLength="20" />
+          <Property Name="prelfaktura" Type="int" />
+          <Property Name="customerresponsible" Type="varchar" MaxLength="10" />
+        </EntityType>
+        <Function Name="JvsLgCrptV1" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="JvsLgCrptV2" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="q_DeleteRowExpense" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="time">
+          <Parameter Name="q_hrp_guiid" Type="varchar" Mode="In" />
+          <Parameter Name="debug_msg" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="q_DeleteRowTime" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="time">
+          <Parameter Name="q_hrp_guiid" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="q_InsertRowDistance" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="time">
+          <Parameter Name="regdate" Type="datetime" Mode="In" />
+          <Parameter Name="perssign" Type="varchar" Mode="In" />
+          <Parameter Name="startingdistance" Type="float" Mode="In" />
+          <Parameter Name="workdistance" Type="float" Mode="In" />
+          <Parameter Name="privatedistance" Type="float" Mode="In" />
+          <Parameter Name="endingdistance" Type="float" Mode="In" />
+          <Parameter Name="comment" Type="varchar" Mode="In" />
+          <Parameter Name="debug_msg" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="q_InsertRowExpense" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="time">
+          <Parameter Name="perssign" Type="varchar" Mode="In" />
+          <Parameter Name="projcode" Type="int" Mode="In" />
+          <Parameter Name="ftgnr" Type="varchar" Mode="In" />
+          <Parameter Name="artnr" Type="varchar" Mode="In" />
+          <Parameter Name="regdate" Type="datetime" Mode="In" />
+          <Parameter Name="reimburse" Type="int" Mode="In" />
+          <Parameter Name="amount_excl_Vat" Type="money" Mode="In" />
+          <Parameter Name="vat_amount" Type="money" Mode="In" />
+          <Parameter Name="external_comment" Type="varchar" Mode="In" />
+          <Parameter Name="internal_comment" Type="varchar" Mode="In" />
+          <Parameter Name="qty" Type="float" Mode="In" />
+          <Parameter Name="valutakod" Type="varchar" Mode="In" />
+          <Parameter Name="valutakurs" Type="float" Mode="In" />
+          <Parameter Name="debug_msg" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="q_InsertRowTime" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="time">
+          <Parameter Name="perssign" Type="varchar" Mode="In" />
+          <Parameter Name="projcode" Type="int" Mode="In" />
+          <Parameter Name="subproject" Type="varchar" Mode="In" />
+          <Parameter Name="ftgnr" Type="varchar" Mode="In" />
+          <Parameter Name="regdate" Type="datetime" Mode="In" />
+          <Parameter Name="editext" Type="varchar" Mode="In" />
+          <Parameter Name="editint" Type="varchar" Mode="In" />
+          <Parameter Name="invoicedtime" Type="float" Mode="In" />
+          <Parameter Name="usedtime" Type="float" Mode="In" />
+          <Parameter Name="delayinvoice" Type="int" Mode="In" />
+          <Parameter Name="highattention" Type="int" Mode="In" />
+          <Parameter Name="debug_msg" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="q_InsertSubProject" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="time">
+          <Parameter Name="companyid" Type="varchar" Mode="In" />
+          <Parameter Name="companyname" Type="varchar" Mode="In" />
+          <Parameter Name="customerresponsible" Type="varchar" Mode="In" />
+          <Parameter Name="projectid" Type="varchar" Mode="In" />
+          <Parameter Name="projectname" Type="varchar" Mode="In" />
+          <Parameter Name="subprojectid" Type="varchar" Mode="In" />
+          <Parameter Name="subprojectname" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="q_SelectRowsDistance" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="time">
+          <Parameter Name="perssign" Type="varchar" Mode="In" />
+          <Parameter Name="debug_msg" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="q_SelectRowsExpense" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="time">
+          <Parameter Name="perssign" Type="varchar" Mode="In" />
+          <Parameter Name="projcode" Type="int" Mode="In" />
+          <Parameter Name="ftgnr" Type="varchar" Mode="In" />
+          <Parameter Name="artnr" Type="varchar" Mode="In" />
+          <Parameter Name="regdate" Type="datetime" Mode="In" />
+          <Parameter Name="fromregdate" Type="datetime" Mode="In" />
+          <Parameter Name="toregdate" Type="datetime" Mode="In" />
+          <Parameter Name="reimburse" Type="int" Mode="In" />
+          <Parameter Name="debug_msg" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="q_SelectRowsTime" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="time">
+          <Parameter Name="customerresponsible" Type="varchar" Mode="In" />
+          <Parameter Name="perssign" Type="varchar" Mode="In" />
+          <Parameter Name="projcode" Type="int" Mode="In" />
+          <Parameter Name="projname" Type="varchar" Mode="In" />
+          <Parameter Name="subprojectid" Type="varchar" Mode="In" />
+          <Parameter Name="subprojectname" Type="varchar" Mode="In" />
+          <Parameter Name="ftgnr" Type="varchar" Mode="In" />
+          <Parameter Name="ftgnamn" Type="varchar" Mode="In" />
+          <Parameter Name="regdate" Type="datetime" Mode="In" />
+          <Parameter Name="fromregdate" Type="datetime" Mode="In" />
+          <Parameter Name="toregdate" Type="datetime" Mode="In" />
+          <Parameter Name="delayinvoice" Type="int" Mode="In" />
+          <Parameter Name="highattention" Type="int" Mode="In" />
+          <Parameter Name="debug_msg" Type="varchar" Mode="In" />
+          <Parameter Name="numofrows" Type="int" Mode="In" />
+        </Function>
+        <Function Name="q_SelectSubProject" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="time">
+          <Parameter Name="customerresponsible" Type="varchar" Mode="In" />
+          <Parameter Name="companyid" Type="varchar" Mode="In" />
+          <Parameter Name="companyname" Type="varchar" Mode="In" />
+          <Parameter Name="projectid" Type="varchar" Mode="In" />
+          <Parameter Name="projectname" Type="varchar" Mode="In" />
+          <Parameter Name="subprojectid" Type="varchar" Mode="In" />
+          <Parameter Name="subprojectname" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="q_UpdateRowDistance" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="time">
+          <Parameter Name="id" Type="smallint" Mode="In" />
+          <Parameter Name="regdate" Type="datetime" Mode="In" />
+          <Parameter Name="perssign" Type="varchar" Mode="In" />
+          <Parameter Name="startingdistance" Type="float" Mode="In" />
+          <Parameter Name="workdistance" Type="float" Mode="In" />
+          <Parameter Name="privatedistance" Type="float" Mode="In" />
+          <Parameter Name="endingdistance" Type="float" Mode="In" />
+          <Parameter Name="comment" Type="varchar" Mode="In" />
+          <Parameter Name="debug_msg" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="q_UpdateRowExpense" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="time">
+          <Parameter Name="q_hrp_guiid" Type="varchar" Mode="In" />
+          <Parameter Name="perssign" Type="varchar" Mode="In" />
+          <Parameter Name="projcode" Type="int" Mode="In" />
+          <Parameter Name="ftgnr" Type="varchar" Mode="In" />
+          <Parameter Name="artnr" Type="varchar" Mode="In" />
+          <Parameter Name="regdate" Type="datetime" Mode="In" />
+          <Parameter Name="reimburse" Type="int" Mode="In" />
+          <Parameter Name="amount_excl_Vat" Type="money" Mode="In" />
+          <Parameter Name="vat_amount" Type="money" Mode="In" />
+          <Parameter Name="external_comment" Type="varchar" Mode="In" />
+          <Parameter Name="internal_comment" Type="varchar" Mode="In" />
+          <Parameter Name="qty" Type="float" Mode="In" />
+          <Parameter Name="valutakod" Type="varchar" Mode="In" />
+          <Parameter Name="valutakurs" Type="float" Mode="In" />
+          <Parameter Name="debug_msg" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="q_UpdateRowTime" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="time">
+          <Parameter Name="q_hrp_guiid" Type="varchar" Mode="In" />
+          <Parameter Name="perssign" Type="varchar" Mode="In" />
+          <Parameter Name="projcode" Type="int" Mode="In" />
+          <Parameter Name="subproject" Type="varchar" Mode="In" />
+          <Parameter Name="ftgnr" Type="varchar" Mode="In" />
+          <Parameter Name="regdate" Type="datetime" Mode="In" />
+          <Parameter Name="editext" Type="varchar" Mode="In" />
+          <Parameter Name="editint" Type="varchar" Mode="In" />
+          <Parameter Name="invoicedtime" Type="float" Mode="In" />
+          <Parameter Name="usedtime" Type="float" Mode="In" />
+          <Parameter Name="delayinvoice" Type="int" Mode="In" />
+          <Parameter Name="highattention" Type="int" Mode="In" />
+          <Parameter Name="q_hrp_commentcust_prio" Type="varchar" Mode="In" />
+          <Parameter Name="q_hrp_subprojectid_prio" Type="varchar" Mode="In" />
+          <Parameter Name="debug_msg" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="q_UpdateRowTimeTeam" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="time">
+          <Parameter Name="q_hrp_guiid" Type="varchar" Mode="In" />
+          <Parameter Name="perssign" Type="varchar" Mode="In" />
+          <Parameter Name="projcode" Type="int" Mode="In" />
+          <Parameter Name="subproject" Type="varchar" Mode="In" />
+          <Parameter Name="ftgnr" Type="varchar" Mode="In" />
+          <Parameter Name="regdate" Type="datetime" Mode="In" />
+          <Parameter Name="editext" Type="varchar" Mode="In" />
+          <Parameter Name="editint" Type="varchar" Mode="In" />
+          <Parameter Name="invoicedtime" Type="float" Mode="In" />
+          <Parameter Name="usedtime" Type="float" Mode="In" />
+          <Parameter Name="delayinvoice" Type="int" Mode="In" />
+          <Parameter Name="highattention" Type="int" Mode="In" />
+          <Parameter Name="q_hrp_commentcust_prio" Type="varchar" Mode="In" />
+          <Parameter Name="q_hrp_subprojectid_prio" Type="varchar" Mode="In" />
+          <Parameter Name="debug_msg" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="q_UpdateSubProject" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="time">
+          <Parameter Name="companyid" Type="varchar" Mode="In" />
+          <Parameter Name="companyname" Type="varchar" Mode="In" />
+          <Parameter Name="customerresponsible" Type="varchar" Mode="In" />
+          <Parameter Name="projectid" Type="varchar" Mode="In" />
+          <Parameter Name="projectname" Type="varchar" Mode="In" />
+          <Parameter Name="subprojectid" Type="varchar" Mode="In" />
+          <Parameter Name="subprojectname" Type="varchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="optModelStoreContainer">
+          <EntitySet Name="q_getdefinition" EntityType="Self.q_getdefinition" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [q_getdefinition].[ftgnr] AS [ftgnr], 
+    [q_getdefinition].[ftgnamn] AS [ftgnamn], 
+    [q_getdefinition].[projcode] AS [projcode], 
+    [q_getdefinition].[projdescr] AS [projdescr], 
+    [q_getdefinition].[aktivitet] AS [aktivitet], 
+    [q_getdefinition].[strdatetimehr] AS [strdatetimehr], 
+    [q_getdefinition].[AssignmentStatus] AS [AssignmentStatus], 
+    [q_getdefinition].[ProjectStatus] AS [ProjectStatus], 
+    [q_getdefinition].[SubProjectStatus] AS [SubProjectStatus], 
+    [q_getdefinition].[SubprojectEntry] AS [SubprojectEntry]
+    FROM [dbo].[q_getdefinition] AS [q_getdefinition]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="get_teammanager_options" EntityType="Self.get_teammanager_options" store:Type="Views" store:Schema="time">
+            <DefiningQuery>SELECT 
+    [get_teammanager_options].[perssign] AS [perssign], 
+    [get_teammanager_options].[ftgnr] AS [ftgnr], 
+    [get_teammanager_options].[prelfaktura] AS [prelfaktura], 
+    [get_teammanager_options].[customerresponsible] AS [customerresponsible]
+    FROM [time].[get_teammanager_options] AS [get_teammanager_options]</DefiningQuery>
+          </EntitySet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="optModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="q_getdefinition">
+          <Key>
+            <PropertyRef Name="aktivitet" />
+            <PropertyRef Name="AssignmentStatus" />
+            <PropertyRef Name="ProjectStatus" />
+            <PropertyRef Name="SubProjectStatus" />
+            <PropertyRef Name="SubprojectEntry" />
+          </Key>
+          <Property Name="ftgnr" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ftgnamn" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="projcode" Type="String" MaxLength="36" FixedLength="false" Unicode="false" />
+          <Property Name="projdescr" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="aktivitet" Type="String" MaxLength="60" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="strdatetimehr" Type="String" MaxLength="67" FixedLength="false" Unicode="false" />
+          <Property Name="AssignmentStatus" Type="String" MaxLength="6" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ProjectStatus" Type="String" MaxLength="6" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="SubProjectStatus" Type="String" MaxLength="6" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="SubprojectEntry" Type="String" MaxLength="9" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="get_teammanager_options">
+          <Key>
+            <PropertyRef Name="perssign" />
+          </Key>
+          <Property Name="perssign" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ftgnr" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="prelfaktura" Type="Int32" />
+          <Property Name="customerresponsible" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityContainer Name="OptEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="q_getdefinition" EntityType="Self.q_getdefinition" />
+          <EntitySet Name="get_teammanager_options" EntityType="Self.get_teammanager_options" />
+          <FunctionImport Name="JvsLgCrptV1" ReturnType="Collection(String)" />
+          <FunctionImport Name="JvsLgCrptV2" ReturnType="Collection(String)" />
+          <FunctionImport Name="q_insert_intoex">
+            <Parameter Name="debug_msg" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="q_insert_intohrp">
+            <Parameter Name="debug_msg" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="q_InsertSubProject">
+            <Parameter Name="companyid" Mode="In" Type="String" />
+            <Parameter Name="companyname" Mode="In" Type="String" />
+            <Parameter Name="customerresponsible" Mode="In" Type="String" />
+            <Parameter Name="projectid" Mode="In" Type="String" />
+            <Parameter Name="projectname" Mode="In" Type="String" />
+            <Parameter Name="subprojectid" Mode="In" Type="String" />
+            <Parameter Name="subprojectname" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="q_SelectSubProject" ReturnType="Collection(optModel.q_SelectSubProject_Result)">
+            <Parameter Name="customerresponsible" Mode="In" Type="String" />
+            <Parameter Name="companyid" Mode="In" Type="String" />
+            <Parameter Name="companyname" Mode="In" Type="String" />
+            <Parameter Name="projectid" Mode="In" Type="String" />
+            <Parameter Name="projectname" Mode="In" Type="String" />
+            <Parameter Name="subprojectid" Mode="In" Type="String" />
+            <Parameter Name="subprojectname" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="q_spr_validateTime" ReturnType="Collection(optModel.q_spr_validateTime_Result)" />
+          <FunctionImport Name="q_UpdateSubProject">
+            <Parameter Name="companyid" Mode="In" Type="String" />
+            <Parameter Name="companyname" Mode="In" Type="String" />
+            <Parameter Name="customerresponsible" Mode="In" Type="String" />
+            <Parameter Name="projectid" Mode="In" Type="String" />
+            <Parameter Name="projectname" Mode="In" Type="String" />
+            <Parameter Name="subprojectid" Mode="In" Type="String" />
+            <Parameter Name="subprojectname" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SelectTime" ReturnType="Collection(optModel.SelectTime_Result)">
+            <Parameter Name="companyid" Mode="In" Type="String" />
+            <Parameter Name="companyname" Mode="In" Type="String" />
+            <Parameter Name="customerresponsible" Mode="In" Type="String" />
+            <Parameter Name="delayinvoice" Mode="In" Type="Boolean" />
+            <Parameter Name="eventdatefrom" Mode="In" Type="DateTime" />
+            <Parameter Name="eventdateto" Mode="In" Type="DateTime" />
+            <Parameter Name="externalcomment" Mode="In" Type="String" />
+            <Parameter Name="externalpriocomment" Mode="In" Type="String" />
+            <Parameter Name="id" Mode="In" Type="String" />
+            <Parameter Name="internalcomment" Mode="In" Type="String" />
+            <Parameter Name="invoiceno" Mode="In" Type="Int32" />
+            <Parameter Name="projectid" Mode="In" Type="String" />
+            <Parameter Name="projectname" Mode="In" Type="String" />
+            <Parameter Name="signature" Mode="In" Type="String" />
+            <Parameter Name="subprojectid" Mode="In" Type="String" />
+            <Parameter Name="subprojectname" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="UpdateTime">
+            <Parameter Name="companyid" Mode="In" Type="String" />
+            <Parameter Name="companyname" Mode="In" Type="String" />
+            <Parameter Name="customerresponsible" Mode="In" Type="String" />
+            <Parameter Name="delayinvoice" Mode="In" Type="Boolean" />
+            <Parameter Name="eventdate" Mode="In" Type="DateTime" />
+            <Parameter Name="externalcomment" Mode="In" Type="String" />
+            <Parameter Name="externalpriocomment" Mode="In" Type="String" />
+            <Parameter Name="id" Mode="In" Type="String" />
+            <Parameter Name="internalcomment" Mode="In" Type="String" />
+            <Parameter Name="invoicedtime" Mode="In" Type="Decimal" />
+            <Parameter Name="projectid" Mode="In" Type="String" />
+            <Parameter Name="projectname" Mode="In" Type="String" />
+            <Parameter Name="signature" Mode="In" Type="String" />
+            <Parameter Name="subprojectid" Mode="In" Type="String" />
+            <Parameter Name="subprojectname" Mode="In" Type="String" />
+            <Parameter Name="usedtime" Mode="In" Type="Decimal" />
+          </FunctionImport>
+          <FunctionImport Name="q_DeleteRowExpense" ReturnType="Collection(Int32)">
+            <Parameter Name="q_hrp_guiid" Mode="In" Type="String" />
+            <Parameter Name="debug_msg" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="q_DeleteRowTime" ReturnType="Collection(Int32)">
+          <Parameter Name="q_hrp_guiid" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="q_InsertRowDistance">
+            <Parameter Name="regdate" Mode="In" Type="DateTime" />
+            <Parameter Name="perssign" Mode="In" Type="String" />
+            <Parameter Name="startingdistance" Mode="In" Type="Double" />
+            <Parameter Name="workdistance" Mode="In" Type="Double" />
+            <Parameter Name="privatedistance" Mode="In" Type="Double" />
+            <Parameter Name="endingdistance" Mode="In" Type="Double" />
+            <Parameter Name="comment" Mode="In" Type="String" />
+            <Parameter Name="debug_msg" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="q_InsertRowExpense" ReturnType="Collection(String)">
+            <Parameter Name="perssign" Mode="In" Type="String" />
+            <Parameter Name="projcode" Mode="In" Type="Int32" />
+            <Parameter Name="ftgnr" Mode="In" Type="String" />
+            <Parameter Name="artnr" Mode="In" Type="String" />
+            <Parameter Name="regdate" Mode="In" Type="DateTime" />
+            <Parameter Name="reimburse" Mode="In" Type="Int32" />
+            <Parameter Name="amount_excl_Vat" Mode="In" Type="Decimal" />
+            <Parameter Name="vat_amount" Mode="In" Type="Decimal" />
+            <Parameter Name="external_comment" Mode="In" Type="String" />
+            <Parameter Name="internal_comment" Mode="In" Type="String" />
+            <Parameter Name="qty" Mode="In" Type="Double" />
+            <Parameter Name="valutakod" Mode="In" Type="String" />
+            <Parameter Name="valutakurs" Mode="In" Type="Double" />
+            <Parameter Name="debug_msg" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="q_InsertRowTime" ReturnType="Collection(String)">
+            <Parameter Name="perssign" Mode="In" Type="String" />
+            <Parameter Name="projcode" Mode="In" Type="Int32" />
+            <Parameter Name="subproject" Mode="In" Type="String" />
+            <Parameter Name="ftgnr" Mode="In" Type="String" />
+            <Parameter Name="regdate" Mode="In" Type="DateTime" />
+            <Parameter Name="editext" Mode="In" Type="String" />
+            <Parameter Name="editint" Mode="In" Type="String" />
+            <Parameter Name="invoicedtime" Mode="In" Type="Double" />
+            <Parameter Name="usedtime" Mode="In" Type="Double" />
+            <Parameter Name="delayinvoice" Mode="In" Type="Int32" />
+            <Parameter Name="highattention" Mode="In" Type="Int32" />
+            <Parameter Name="debug_msg" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="q_InsertSubProject1">
+            <Parameter Name="companyid" Mode="In" Type="String" />
+            <Parameter Name="companyname" Mode="In" Type="String" />
+            <Parameter Name="customerresponsible" Mode="In" Type="String" />
+            <Parameter Name="projectid" Mode="In" Type="String" />
+            <Parameter Name="projectname" Mode="In" Type="String" />
+            <Parameter Name="subprojectid" Mode="In" Type="String" />
+            <Parameter Name="subprojectname" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="q_SelectRowsDistance" ReturnType="Collection(optModel.q_SelectRowsDistance_Result)">
+            <Parameter Name="perssign" Mode="In" Type="String" />
+            <Parameter Name="debug_msg" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="q_SelectRowsExpense" ReturnType="Collection(optModel.q_SelectRowsExpense_Result)">
+            <Parameter Name="perssign" Mode="In" Type="String" />
+            <Parameter Name="projcode" Mode="In" Type="Int32" />
+            <Parameter Name="ftgnr" Mode="In" Type="String" />
+            <Parameter Name="artnr" Mode="In" Type="String" />
+            <Parameter Name="regdate" Mode="In" Type="DateTime" />
+            <Parameter Name="fromregdate" Mode="In" Type="DateTime" />
+            <Parameter Name="toregdate" Mode="In" Type="DateTime" />
+            <Parameter Name="reimburse" Mode="In" Type="Int32" />
+            <Parameter Name="debug_msg" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="q_SelectRowsTime" ReturnType="Collection(optModel.q_SelectRowsTime_Result)">
+            <Parameter Name="customerresponsible" Mode="In" Type="String" />
+            <Parameter Name="perssign" Mode="In" Type="String" />
+            <Parameter Name="projcode" Mode="In" Type="Int32" />
+            <Parameter Name="projname" Mode="In" Type="String" />
+            <Parameter Name="subprojectid" Mode="In" Type="String" />
+            <Parameter Name="subprojectname" Mode="In" Type="String" />
+            <Parameter Name="ftgnr" Mode="In" Type="String" />
+            <Parameter Name="ftgnamn" Mode="In" Type="String" />
+            <Parameter Name="regdate" Mode="In" Type="DateTime" />
+            <Parameter Name="fromregdate" Mode="In" Type="DateTime" />
+            <Parameter Name="toregdate" Mode="In" Type="DateTime" />
+            <Parameter Name="delayinvoice" Mode="In" Type="Int32" />
+            <Parameter Name="highattention" Mode="In" Type="Int32" />
+            <Parameter Name="debug_msg" Mode="In" Type="String" />
+            <Parameter Name="numofrows" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="q_SelectSubProject1" ReturnType="Collection(optModel.q_SelectSubProject1_Result)">
+            <Parameter Name="customerresponsible" Mode="In" Type="String" />
+            <Parameter Name="companyid" Mode="In" Type="String" />
+            <Parameter Name="companyname" Mode="In" Type="String" />
+            <Parameter Name="projectid" Mode="In" Type="String" />
+            <Parameter Name="projectname" Mode="In" Type="String" />
+            <Parameter Name="subprojectid" Mode="In" Type="String" />
+            <Parameter Name="subprojectname" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="q_UpdateRowDistance">
+            <Parameter Name="id" Mode="In" Type="Int16" />
+            <Parameter Name="regdate" Mode="In" Type="DateTime" />
+            <Parameter Name="perssign" Mode="In" Type="String" />
+            <Parameter Name="startingdistance" Mode="In" Type="Double" />
+            <Parameter Name="workdistance" Mode="In" Type="Double" />
+            <Parameter Name="privatedistance" Mode="In" Type="Double" />
+            <Parameter Name="endingdistance" Mode="In" Type="Double" />
+            <Parameter Name="comment" Mode="In" Type="String" />
+            <Parameter Name="debug_msg" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="q_UpdateRowExpense" ReturnType="Collection(Int32)">
+            <Parameter Name="q_hrp_guiid" Mode="In" Type="String" />
+            <Parameter Name="perssign" Mode="In" Type="String" />
+            <Parameter Name="projcode" Mode="In" Type="Int32" />
+            <Parameter Name="ftgnr" Mode="In" Type="String" />
+            <Parameter Name="artnr" Mode="In" Type="String" />
+            <Parameter Name="regdate" Mode="In" Type="DateTime" />
+            <Parameter Name="reimburse" Mode="In" Type="Int32" />
+            <Parameter Name="amount_excl_Vat" Mode="In" Type="Decimal" />
+            <Parameter Name="vat_amount" Mode="In" Type="Decimal" />
+            <Parameter Name="external_comment" Mode="In" Type="String" />
+            <Parameter Name="internal_comment" Mode="In" Type="String" />
+            <Parameter Name="qty" Mode="In" Type="Double" />
+            <Parameter Name="valutakod" Mode="In" Type="String" />
+            <Parameter Name="valutakurs" Mode="In" Type="Double" />
+            <Parameter Name="debug_msg" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="q_UpdateRowTime" ReturnType="Collection(Int32)">
+            <Parameter Name="q_hrp_guiid" Mode="In" Type="String" />
+            <Parameter Name="perssign" Mode="In" Type="String" />
+            <Parameter Name="projcode" Mode="In" Type="Int32" />
+            <Parameter Name="subproject" Mode="In" Type="String" />
+            <Parameter Name="ftgnr" Mode="In" Type="String" />
+            <Parameter Name="regdate" Mode="In" Type="DateTime" />
+            <Parameter Name="editext" Mode="In" Type="String" />
+            <Parameter Name="editint" Mode="In" Type="String" />
+            <Parameter Name="invoicedtime" Mode="In" Type="Double" />
+            <Parameter Name="usedtime" Mode="In" Type="Double" />
+            <Parameter Name="delayinvoice" Mode="In" Type="Int32" />
+            <Parameter Name="highattention" Mode="In" Type="Int32" />
+            <Parameter Name="q_hrp_commentcust_prio" Mode="In" Type="String" />
+            <Parameter Name="q_hrp_subprojectid_prio" Mode="In" Type="String" />
+            <Parameter Name="debug_msg" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="q_UpdateRowTimeTeam" ReturnType="Collection(Int32)">
+            <Parameter Name="q_hrp_guiid" Mode="In" Type="String" />
+            <Parameter Name="perssign" Mode="In" Type="String" />
+            <Parameter Name="projcode" Mode="In" Type="Int32" />
+            <Parameter Name="subproject" Mode="In" Type="String" />
+            <Parameter Name="ftgnr" Mode="In" Type="String" />
+            <Parameter Name="regdate" Mode="In" Type="DateTime" />
+            <Parameter Name="editext" Mode="In" Type="String" />
+            <Parameter Name="editint" Mode="In" Type="String" />
+            <Parameter Name="invoicedtime" Mode="In" Type="Double" />
+            <Parameter Name="usedtime" Mode="In" Type="Double" />
+            <Parameter Name="delayinvoice" Mode="In" Type="Int32" />
+            <Parameter Name="highattention" Mode="In" Type="Int32" />
+            <Parameter Name="q_hrp_commentcust_prio" Mode="In" Type="String" />
+            <Parameter Name="q_hrp_subprojectid_prio" Mode="In" Type="String" />
+            <Parameter Name="debug_msg" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="q_UpdateSubProject1">
+            <Parameter Name="companyid" Mode="In" Type="String" />
+            <Parameter Name="companyname" Mode="In" Type="String" />
+            <Parameter Name="customerresponsible" Mode="In" Type="String" />
+            <Parameter Name="projectid" Mode="In" Type="String" />
+            <Parameter Name="projectname" Mode="In" Type="String" />
+            <Parameter Name="subprojectid" Mode="In" Type="String" />
+            <Parameter Name="subprojectname" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="q_SelectSubProject_Result">
+          <Property Type="String" Name="companyid" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="companyname" Nullable="true" MaxLength="36" />
+          <Property Type="String" Name="projectid" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="projectname" Nullable="true" MaxLength="40" />
+          <Property Type="String" Name="subprojectname" Nullable="true" MaxLength="60" />
+          <Property Type="String" Name="subprojectid" Nullable="true" MaxLength="38" />
+          <Property Type="String" Name="customerresponsible" Nullable="true" MaxLength="10" />
+        </ComplexType>
+        <ComplexType Name="q_spr_validateTime_Result">
+          <Property Type="String" Name="comparefield" Nullable="false" MaxLength="18" />
+          <Property Type="String" Name="compare_value" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="error_descr" Nullable="false" MaxLength="44" />
+          <Property Type="String" Name="q_hrp_guiid" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="ftgnr" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="projcode" Nullable="false" MaxLength="20" />
+          <Property Type="DateTime" Name="regdate" Nullable="false" Precision="23" />
+          <Property Type="String" Name="perssign" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="subproject" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="editext" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="editint" Nullable="true" MaxLength="255" />
+          <Property Type="Double" Name="usedtime" Nullable="false" />
+          <Property Type="Double" Name="invoicedtime" Nullable="false" />
+          <Property Type="Int32" Name="delayinvoice" Nullable="true" />
+          <Property Type="Int32" Name="foretagkod" Nullable="true" />
+          <Property Type="Int32" Name="record_ok" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="SelectTime_Result">
+          <Property Type="String" Name="id" Nullable="true" MaxLength="60" />
+          <Property Type="String" Name="companyid" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="companyname" Nullable="true" MaxLength="36" />
+          <Property Type="String" Name="projectid" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="projectname" Nullable="true" MaxLength="40" />
+          <Property Type="String" Name="subprojectid" Nullable="true" MaxLength="38" />
+          <Property Type="String" Name="subprojectname" Nullable="true" MaxLength="60" />
+          <Property Type="Int16" Name="delayinvoice" Nullable="true" />
+          <Property Type="DateTime" Name="eventdate" Nullable="false" Precision="23" />
+          <Property Type="String" Name="externalcomment" Nullable="true" />
+          <Property Type="String" Name="internalcomment" Nullable="true" />
+          <Property Type="String" Name="externalpriocomment" Nullable="true" />
+          <Property Type="Decimal" Name="usedtime" Nullable="false" Precision="15" Scale="3" />
+          <Property Type="Decimal" Name="invoicedtime" Nullable="false" Precision="15" Scale="3" />
+          <Property Type="String" Name="signature" Nullable="false" MaxLength="30" />
+          <Property Type="String" Name="customerresponsible" Nullable="true" MaxLength="10" />
+        </ComplexType>
+        <ComplexType Name="q_SelectRowsDistance_Result">
+          <Property Type="DateTime" Name="regdate" Nullable="false" Precision="23" />
+          <Property Type="String" Name="perssign" Nullable="false" MaxLength="10" />
+          <Property Type="Double" Name="startingdistance" Nullable="false" />
+          <Property Type="Double" Name="workdistance" Nullable="false" />
+          <Property Type="Double" Name="privatedistance" Nullable="false" />
+          <Property Type="Double" Name="endingdistance" Nullable="false" />
+          <Property Type="String" Name="comment" Nullable="true" MaxLength="255" />
+          <Property Type="DateTime" Name="rowcreateddt" Nullable="true" Precision="23" />
+          <Property Type="Int16" Name="id" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="q_SelectRowsExpense_Result">
+          <Property Type="String" Name="q_ex_guuid" Nullable="false" MaxLength="60" />
+          <Property Type="DateTime" Name="regdate" Nullable="false" Precision="23" />
+          <Property Type="String" Name="perssign" Nullable="false" MaxLength="6" />
+          <Property Type="String" Name="companyid" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="companyname" Nullable="true" MaxLength="36" />
+          <Property Type="String" Name="projectid" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="projectname" Nullable="true" MaxLength="40" />
+          <Property Type="String" Name="artnr" Nullable="false" MaxLength="30" />
+          <Property Type="Double" Name="qty" Nullable="false" />
+          <Property Type="Decimal" Name="amount_excl_Vat" Nullable="false" Precision="19" />
+          <Property Type="Decimal" Name="vat_amount" Nullable="true" Precision="19" />
+          <Property Type="String" Name="comment_internal" Nullable="true" MaxLength="Max" />
+          <Property Type="String" Name="comment_external" Nullable="true" MaxLength="Max" />
+          <Property Type="String" Name="valutakod" Nullable="true" MaxLength="5" />
+          <Property Type="Double" Name="valutakurs" Nullable="true" />
+          <Property Type="Int32" Name="reimburse" Nullable="true" />
+          <Property Type="String" Name="InvoiceStatus" Nullable="false" MaxLength="11" />
+          <Property Type="String" Name="ReimbursedStatus" Nullable="false" MaxLength="14" />
+          <Property Type="Int32" Name="CustomerInvoiceID" Nullable="true" />
+          <Property Type="Int32" Name="ReimbursedVoucherNo" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="q_SelectRowsTime_Result">
+          <Property Type="String" Name="q_hrp_guiid" Nullable="true" MaxLength="60" />
+          <Property Type="Decimal" Name="invoicedtime" Nullable="false" Precision="15" Scale="3" />
+          <Property Type="Decimal" Name="usedtime" Nullable="false" Precision="15" Scale="3" />
+          <Property Type="DateTime" Name="regdate" Nullable="false" Precision="23" />
+          <Property Type="String" Name="interncomment" Nullable="true" />
+          <Property Type="String" Name="externtcomment" Nullable="true" MaxLength="60" />
+          <Property Type="Int16" Name="dealyinvoice" Nullable="true" />
+          <Property Type="String" Name="anstalld" Nullable="false" MaxLength="30" />
+          <Property Type="String" Name="companyid" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="companyname" Nullable="true" MaxLength="36" />
+          <Property Type="String" Name="projectid" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="projectname" Nullable="true" MaxLength="40" />
+          <Property Type="String" Name="subprojectname" Nullable="true" MaxLength="60" />
+          <Property Type="String" Name="subprojectid" Nullable="true" MaxLength="38" />
+          <Property Type="String" Name="customerresponsible" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="InvoiceStatus" Nullable="false" MaxLength="11" />
+          <Property Type="String" Name="RowStatus" Nullable="true" MaxLength="8" />
+          <Property Type="String" Name="externcomment_prio" Nullable="true" />
+          <Property Type="String" Name="subprojectid_prio" Nullable="true" MaxLength="30" />
+          <Property Type="Int32" Name="prelinvoiceid" Nullable="true" />
+          <Property Type="Int32" Name="invoiceID" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="q_SelectSubProject1_Result">
+          <Property Type="String" Name="companyid" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="companyname" Nullable="true" MaxLength="36" />
+          <Property Type="String" Name="projectid" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="projectname" Nullable="true" MaxLength="40" />
+          <Property Type="String" Name="subprojectname" Nullable="true" MaxLength="60" />
+          <Property Type="String" Name="subprojectid" Nullable="true" MaxLength="38" />
+          <Property Type="String" Name="customerresponsible" Nullable="true" MaxLength="10" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="optModelStoreContainer" CdmEntityContainer="OptEntities">
+          <EntitySetMapping Name="q_getdefinition">
+            <EntityTypeMapping TypeName="optModel.q_getdefinition">
+              <MappingFragment StoreEntitySet="q_getdefinition">
+                <ScalarProperty Name="ftgnr" ColumnName="ftgnr" />
+                <ScalarProperty Name="ftgnamn" ColumnName="ftgnamn" />
+                <ScalarProperty Name="projcode" ColumnName="projcode" />
+                <ScalarProperty Name="projdescr" ColumnName="projdescr" />
+                <ScalarProperty Name="aktivitet" ColumnName="aktivitet" />
+                <ScalarProperty Name="strdatetimehr" ColumnName="strdatetimehr" />
+                <ScalarProperty Name="AssignmentStatus" ColumnName="AssignmentStatus" />
+                <ScalarProperty Name="ProjectStatus" ColumnName="ProjectStatus" />
+                <ScalarProperty Name="SubProjectStatus" ColumnName="SubProjectStatus" />
+                <ScalarProperty Name="SubprojectEntry" ColumnName="SubprojectEntry" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="get_teammanager_options">
+            <EntityTypeMapping TypeName="optModel.get_teammanager_options">
+              <MappingFragment StoreEntitySet="get_teammanager_options">
+                <ScalarProperty Name="perssign" ColumnName="perssign" />
+                <ScalarProperty Name="ftgnr" ColumnName="ftgnr" />
+                <ScalarProperty Name="prelfaktura" ColumnName="prelfaktura" />
+                <ScalarProperty Name="customerresponsible" ColumnName="customerresponsible" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="JvsLgCrptV1" FunctionName="optModel.Store.JvsLgCrptV1" />
+          <FunctionImportMapping FunctionImportName="JvsLgCrptV2" FunctionName="optModel.Store.JvsLgCrptV2" />
+          <FunctionImportMapping FunctionImportName="q_DeleteRowExpense" FunctionName="optModel.Store.q_DeleteRowExpense" />
+          <FunctionImportMapping FunctionImportName="q_DeleteRowTime" FunctionName="optModel.Store.q_DeleteRowTime" />
+          <FunctionImportMapping FunctionImportName="q_InsertRowDistance" FunctionName="optModel.Store.q_InsertRowDistance" />
+          <FunctionImportMapping FunctionImportName="q_InsertRowExpense" FunctionName="optModel.Store.q_InsertRowExpense" />
+          <FunctionImportMapping FunctionImportName="q_InsertRowTime" FunctionName="optModel.Store.q_InsertRowTime" />
+          <FunctionImportMapping FunctionImportName="q_SelectRowsDistance" FunctionName="optModel.Store.q_SelectRowsDistance">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="optModel.q_SelectRowsDistance_Result">
+                <ScalarProperty Name="regdate" ColumnName="regdate" />
+                <ScalarProperty Name="perssign" ColumnName="perssign" />
+                <ScalarProperty Name="startingdistance" ColumnName="startingdistance" />
+                <ScalarProperty Name="workdistance" ColumnName="workdistance" />
+                <ScalarProperty Name="privatedistance" ColumnName="privatedistance" />
+                <ScalarProperty Name="endingdistance" ColumnName="endingdistance" />
+                <ScalarProperty Name="comment" ColumnName="comment" />
+                <ScalarProperty Name="rowcreateddt" ColumnName="rowcreateddt" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="q_SelectRowsExpense" FunctionName="optModel.Store.q_SelectRowsExpense">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="optModel.q_SelectRowsExpense_Result">
+                <ScalarProperty Name="q_ex_guuid" ColumnName="q_ex_guuid" />
+                <ScalarProperty Name="regdate" ColumnName="regdate" />
+                <ScalarProperty Name="perssign" ColumnName="perssign" />
+                <ScalarProperty Name="companyid" ColumnName="companyid" />
+                <ScalarProperty Name="companyname" ColumnName="companyname" />
+                <ScalarProperty Name="projectid" ColumnName="projectid" />
+                <ScalarProperty Name="projectname" ColumnName="projectname" />
+                <ScalarProperty Name="artnr" ColumnName="artnr" />
+                <ScalarProperty Name="qty" ColumnName="qty" />
+                <ScalarProperty Name="amount_excl_Vat" ColumnName="amount_excl_Vat" />
+                <ScalarProperty Name="vat_amount" ColumnName="vat_amount" />
+                <ScalarProperty Name="comment_internal" ColumnName="comment_internal" />
+                <ScalarProperty Name="comment_external" ColumnName="comment_external" />
+                <ScalarProperty Name="valutakod" ColumnName="valutakod" />
+                <ScalarProperty Name="valutakurs" ColumnName="valutakurs" />
+                <ScalarProperty Name="reimburse" ColumnName="reimburse" />
+                <ScalarProperty Name="InvoiceStatus" ColumnName="InvoiceStatus" />
+                <ScalarProperty Name="ReimbursedStatus" ColumnName="ReimbursedStatus" />
+                <ScalarProperty Name="CustomerInvoiceID" ColumnName="CustomerInvoiceID" />
+                <ScalarProperty Name="ReimbursedVoucherNo" ColumnName="ReimbursedVoucherNo" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="q_SelectRowsTime" FunctionName="optModel.Store.q_SelectRowsTime">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="optModel.q_SelectRowsTime_Result">
+                <ScalarProperty Name="q_hrp_guiid" ColumnName="q_hrp_guiid" />
+                <ScalarProperty Name="invoicedtime" ColumnName="invoicedtime" />
+                <ScalarProperty Name="usedtime" ColumnName="usedtime" />
+                <ScalarProperty Name="regdate" ColumnName="regdate" />
+                <ScalarProperty Name="interncomment" ColumnName="interncomment" />
+                <ScalarProperty Name="externtcomment" ColumnName="externtcomment" />
+                <ScalarProperty Name="dealyinvoice" ColumnName="dealyinvoice" />
+                <ScalarProperty Name="anstalld" ColumnName="anstalld" />
+                <ScalarProperty Name="companyid" ColumnName="companyid" />
+                <ScalarProperty Name="companyname" ColumnName="companyname" />
+                <ScalarProperty Name="projectid" ColumnName="projectid" />
+                <ScalarProperty Name="projectname" ColumnName="projectname" />
+                <ScalarProperty Name="subprojectname" ColumnName="subprojectname" />
+                <ScalarProperty Name="subprojectid" ColumnName="subprojectid" />
+                <ScalarProperty Name="customerresponsible" ColumnName="customerresponsible" />
+                <ScalarProperty Name="InvoiceStatus" ColumnName="InvoiceStatus" />
+                <ScalarProperty Name="RowStatus" ColumnName="RowStatus" />
+                <ScalarProperty Name="externcomment_prio" ColumnName="externcomment_prio" />
+                <ScalarProperty Name="subprojectid_prio" ColumnName="subprojectid_prio" />
+                <ScalarProperty Name="prelinvoiceid" ColumnName="prelinvoiceid" />
+                <ScalarProperty Name="invoiceID" ColumnName="invoiceID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="q_UpdateRowDistance" FunctionName="optModel.Store.q_UpdateRowDistance" />
+          <FunctionImportMapping FunctionImportName="q_UpdateRowExpense" FunctionName="optModel.Store.q_UpdateRowExpense" />
+          <FunctionImportMapping FunctionImportName="q_UpdateRowTime" FunctionName="optModel.Store.q_UpdateRowTime" />
+          <FunctionImportMapping FunctionImportName="q_UpdateRowTimeTeam" FunctionName="optModel.Store.q_UpdateRowTimeTeam" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

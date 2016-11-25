@@ -6,7 +6,7 @@ $(document).ready(function (date) {
         localStorage.View = "agendaWeek";
     };
 
-    alert(localStorage.ss);
+    //alert(localStorage.first);
 
     $('#week').fullCalendar({
         theme: true,
@@ -116,28 +116,28 @@ $(document).ready(function (date) {
 
 });//document.ready
 
-
-//$('.btn-danger').click(function () {
-
-//    //$('#week').fullCalendar('refetchEvents');
-//});
-
-
 $('#favorite-container a').click(function () {
     var row = $(this);
     var companyId = row.find('input[name$=pCompanyId]').val();
     var projectId = row.find('input[name$=pProjectId]').val();
     var subProjectId = row.find('input[name$=pSubProjectId]').val();
-
+    
     $('.newCompany').val(companyId).change();
     $('.newProject').val(projectId).change();
     $('.newSubProject').val(subProjectId).change();
 });
 
 $('.btn-primary').click(function () {
-    localStorage.ss = $('.newCompany').val();
-});
+    var report = [$('.newCompany').val(), $('.newProject').val(), $('.newSubProject').val()];
+    //localStorage.first = report;
 
+    localStorage.setItem("report", JSON.stringify(report));
+
+    var storedNames = JSON.parse(localStorage.getItem("report"));
+
+    localStorage.hej = storedNames
+
+});
 //Increase/decrease numerics with arrow keys
 $('.amount').keydown(function (event) {
     var currentNumber = Number($(this).val());

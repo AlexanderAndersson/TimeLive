@@ -34,6 +34,5 @@ namespace TimeLive.Models
         public string subprojectid_prio { get; set; }
         public Nullable<int> prelinvoiceid { get; set; }
         public Nullable<int> invoiceID { get; set; }
-        public System.DateTime rowcreateddt { get; set; }
     }
 }

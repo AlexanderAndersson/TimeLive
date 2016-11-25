@@ -11,16 +11,8 @@ namespace TimeLive.Models
 {
     using System;
     
-    public partial class q_SelectRowsTime_Result
+    public partial class q_SelectSubProject_Result
     {
-        public string q_hrp_guiid { get; set; }
-        public decimal invoicedtime { get; set; }
-        public decimal usedtime { get; set; }
-        public System.DateTime regdate { get; set; }
-        public string interncomment { get; set; }
-        public string externtcomment { get; set; }
-        public Nullable<short> dealyinvoice { get; set; }
-        public string anstalld { get; set; }
         public string companyid { get; set; }
         public string companyname { get; set; }
         public string projectid { get; set; }
@@ -28,12 +20,5 @@ namespace TimeLive.Models
         public string subprojectname { get; set; }
         public string subprojectid { get; set; }
         public string customerresponsible { get; set; }
-        public string InvoiceStatus { get; set; }
-        public string RowStatus { get; set; }
-        public string externcomment_prio { get; set; }
-        public string subprojectid_prio { get; set; }
-        public Nullable<int> prelinvoiceid { get; set; }
-        public Nullable<int> invoiceID { get; set; }
-        public System.DateTime rowcreateddt { get; set; }
     }
 }

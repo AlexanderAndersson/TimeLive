@@ -177,10 +177,6 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
-    <EntityDeploy Include="Models\OptModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>OptModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
     <Content Include="img\btnTime_All2.png" />
     <Content Include="img\btnTime_Dayy.png" />
     <Content Include="img\btnTime_Month2.png" />
@@ -192,24 +188,28 @@
     <Content Include="img\btn_Time.png" />
     <Content Include="img\logo.png" />
     <Content Include="img\optivasys.png" />
-    <Content Include="Models\OptModel.edmx.diagram">
-      <DependentUpon>OptModel.edmx</DependentUpon>
+    <Content Include="Models\Model1.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Model1.edmx</DependentUpon>
+      <LastGenOutput>Model1.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\Model1.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Model1.edmx</DependentUpon>
+      <LastGenOutput>Model1.cs</LastGenOutput>
     </Content>
     <Content Include="Scripts\fullcalendar.js" />
     <Content Include="Scripts\fullcalendar.min.js" />
     <Content Include="Scripts\funktions.js" />
-    <Content Include="Models\OptModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>OptModel.edmx</DependentUpon>
-      <LastGenOutput>OptModel.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Models\OptModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>OptModel.edmx</DependentUpon>
-      <LastGenOutput>OptModel.cs</LastGenOutput>
-    </Content>
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <EntityDeploy Include="Models\Model1.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Model1.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\Model1.edmx.diagram">
+      <DependentUpon>Model1.edmx</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\gcal.js" />
     <Content Include="Scripts\jquery-3.1.1.js" />
@@ -319,77 +319,41 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\DistanceModel.cs" />
-    <Compile Include="Models\ex.cs">
-      <DependentUpon>OptModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\ExpensesModel.cs" />
     <Compile Include="Models\get_teammanager_options.cs">
-      <DependentUpon>OptModel.tt</DependentUpon>
+      <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\hr.cs">
-      <DependentUpon>OptModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\hrp.cs">
-      <DependentUpon>OptModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\OptModel.Context.cs">
+    <Compile Include="Models\Model1.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>OptModel.Context.tt</DependentUpon>
+      <DependentUpon>Model1.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\OptModel.cs">
+    <Compile Include="Models\Model1.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>OptModel.tt</DependentUpon>
+      <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\OptModel.Designer.cs">
+    <Compile Include="Models\Model1.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>OptModel.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Models\prj.cs">
-      <DependentUpon>OptModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\q_ex_preinsert.cs">
-      <DependentUpon>OptModel.tt</DependentUpon>
+      <DependentUpon>Model1.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\q_getdefinition.cs">
-      <DependentUpon>OptModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\q_hrp_preinsert.cs">
-      <DependentUpon>OptModel.tt</DependentUpon>
+      <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\q_SelectRowsDistance_Result.cs">
-      <DependentUpon>OptModel.tt</DependentUpon>
+      <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\q_SelectRowsExpense_Result.cs">
-      <DependentUpon>OptModel.tt</DependentUpon>
+      <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\q_SelectRowsTime_Result.cs">
-      <DependentUpon>OptModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\q_SelectSubProject1_Result.cs">
-      <DependentUpon>OptModel.tt</DependentUpon>
+      <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\q_SelectSubProject_Result.cs">
-      <DependentUpon>OptModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\q_spr_validateTime_Result.cs">
-      <DependentUpon>OptModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\SelectTime_Result.cs">
-      <DependentUpon>OptModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\sy2.cs">
-      <DependentUpon>OptModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\sysp.cs">
-      <DependentUpon>OptModel.tt</DependentUpon>
+      <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\TimeModel.cs" />
-    <Compile Include="Models\xe.cs">
-      <DependentUpon>OptModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
