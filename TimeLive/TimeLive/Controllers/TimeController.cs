@@ -34,26 +34,132 @@ namespace TimeLive.Controllers
                     null, ((Classes.UserClass.User)Session["User"]).Username,
                     null, null, null, null,
                     null, null, null, null,
-                    null, null, null, null, 2);
+                    null, null, null, null, 5).ToArray();
+
+            var duplicateCompany = from p in latestReports
+                                   group p by p.companyid into g
+                                   where g.Count() > 1
+                                   select g.Key;
+
+            var lastReport = latestReports.OrderBy(x => x.rowcreateddt).Reverse().Take(1);
+
+            List < q_SelectRowsTime_Result > duplicates = new List<q_SelectRowsTime_Result>();
+
+            foreach (var item in lastReport)
+            {
+                for (int i = 0; i < 1; i++)
+                {
+                    duplicates.Add(item);
+                }
+            }
+
+            foreach (var companyId in duplicateCompany)
+            {
+                foreach (var row in duplicates)
+                {
+                    if (row.companyid.Contains(companyId))
+                    {
+                        duplicates.Add(row);
+                    }
+                }
+
+
+                //foreach (var row in duplicates.FindAll(p => p.companyid == item))
+                //    if (duplicates.Count() == 0)
+                //    {
+                //        duplicates.Add(row);
+                //    }
+                //    else
+                //    {
+                //        if (row.companyid.Contains(item))
+                //            duplicates.Add(row);
+                //    }
+
+            }
+
+            //gör en till lids
+
+
+            //duplicates.ForEach(dup => duplicates.Remove(dup));
+
+
+
+
+            //foreach (var item in latestReports)
+            //{
+            //    if (bla.Contains(item.companyid))
+            //    {
+            //        if (!bla.Contains(item.projectid))
+            //        {
+            //            if (!bla.Contains(item.subprojectid))
+            //            {
+
+            //            }
+            //        }
+            //        else
+            //        {
+            //            bla.Add(item);
+            //        }
+            //    }
+            //    else
+            //    {
+            //        bla.Add(item);
+            //    }
+            //}
+
+
+
+            //bla = customers.ToList();
+
+
+
+            //for (int i = 0; i < latestReports.Count() && DisplayReports.Count() < 5; i++)
+            //{
+            //    if (DisplayReports.Contains(latestReports[i].companyid))
+            //    {
+            //        foreach (var item in DisplayReports)
+            //        {
+            //            if (item == latestReports[i].subprojectid)
+            //            {
+            //                DisplayReports[DisplayReports.Count()] = latestReports[i];
+            //            }
+            //        }
+            //    }
+            //    else
+            //    {
+            //        DisplayReports[DisplayReports.Count()] = latestReports[i];
+            //    }
+            //}
+
+            //DisplayReports = hej.ToList();
+
+            //for (int i = 0; i < latestReports.Count() && DisplayReports.Count() < 5; i++)
+            //{
+            //    if (DisplayReports.Contains(latestReports.))
+            //    {
+            //        if (!DisplayReports.Contains(latestReports.SubProjectName))
+            //        {
+            //            DisplayReports[DisplayReports.Count()] = latestReports[i];
+            //        }
+            //    }
+            //    else
+            //    {
+            //        DisplayReports[DisplayReports.Count()] = latestReports[i];
+            //    }
+            //}
 
             //List<object> listOfReports = new List<object>();
 
-            //foreach (var row in latestReports)
-            //{
-            //    listOfReports.Add(row);
-            //}
-
-            //List<object> hej = listOfReports.Distinct().ToList();
 
             var model = new TimeModel
             {
-                LatestRows = latestReports,
+                LatestRows = duplicates,
 
                 SelectRows = TimeLiveDB.q_SelectRowsTime(
                     null, ((Classes.UserClass.User)Session["User"]).Username,
                     selections.ProjectId, null, selections.SubProjectId, null,
                     selections.CustomerId, null, null, selections.From,
-                    selections.To, selections.Delayed, null, null, 50),
+                    selections.To, selections.Delayed, null, null, 100),
 
                 Customers = customers,
                 Projects = projects,
@@ -209,7 +315,7 @@ namespace TimeLive.Controllers
             var selectRows = from c in TimeLiveDB.q_SelectRowsTime(null, ((Classes.UserClass.User)Session["User"]).Username,
                              null, null, null, null,
                              null, null, null, From,
-                             To, null, null, null, 50).ToArray().OrderBy((x => x.regdate)) //Order by date (last to latest)
+                             To, null, null, null, 300).ToArray().OrderBy((x => x.regdate)) //Order by date (last to latest)
                              select c;
 
             List<Events> eventList = new List<Events>(); //Creates new list with events
@@ -333,13 +439,13 @@ namespace TimeLive.Controllers
                     null, ((Classes.UserClass.User)Session["User"]).Username,
                     null, null, null, null,
                     null, null, null, null,
-                    null, null, null, null, 50),
+                    null, null, null, null, 20),
 
                 SelectRows = TimeLiveDB.q_SelectRowsTime(
                     null, ((Classes.UserClass.User)Session["User"]).Username,
                     selections.ProjectId, null, selections.SubProjectId, null,
                     selections.CustomerId, null, null, selections.From,
-                    selections.To, selections.Delayed, null, null, 50),
+                    selections.To, selections.Delayed, null, null, 100),
 
                 Selections = selections,
                 Projects = projects,

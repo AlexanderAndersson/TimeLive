@@ -98,23 +98,32 @@
 
 
 <div id="month"></div>
-
-<div id="favorite-container">
-    @foreach (var row in latestReports)
-    {
-        <a href="#" class="latest">
-            <div class="favorite">
-                <input type="hidden" class="companyId" name="pCompanyId" value="@row.companyid" />
-                <h5>@row.companyname</h5>
-                <input type="hidden" class="projectId" name="pProjectId" value="@row.projectid" />
-                <h5>@row.projectname</h5>
-                <input type="hidden" class="subProjectId" name="pSubProjectId" value="@row.subprojectid" />
-                <h5>@row.subprojectname</h5>
-            </div>
-        </a>
-    }
+<div class="row" id="latesReportsRow">
+    <div id="favorite-container">
+        @foreach (var row in latestReports)
+        {
+            if (latestReports.Count() > 0)
+            {
+                <a href="#" class="latest">
+                    <div class="favorite">
+                        <input type="hidden" class="companyId" name="pCompanyId" value="@row.companyid" />
+                        <h5>@row.companyname</h5>
+                        <input type="hidden" class="projectId" name="pProjectId" value="@row.projectid" />
+                        <h5>@row.projectname</h5>
+                        <input type="hidden" class="subProjectId" name="pSubProjectId" value="@row.subprojectid" />
+                        <h5>@row.subprojectname</h5>
+                    </div>
+                </a>
+            }
+            else
+            {
+                <div class="favorite latest">
+                    <h5>Ingen rapport</h5>
+                </div>
+            }
+        }
+    </div>
 </div>
-
 
 <div class="row">
     <div id="week"></div>
@@ -122,7 +131,7 @@
 
 
 <br />
-<div class="container">
+<div class="container" id="titles">
     <div class="row row-header">
         <div class="col col-dropdown col-header">
             Customer

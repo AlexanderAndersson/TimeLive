@@ -15,12 +15,16 @@ namespace TimeLive.Models
     }
 
 
-    //public class LatestReport
-    //{
-    //    public int? ProjectId { get; set; }
-    //    public string SubProjectId { get; set; }
-    //    public string CustomerId { get; set; }
-    //}
+    public class LatestReport
+    {
+        public string CustomerId { get; set; }
+        public int? ProjectId { get; set; }
+        public string SubProjectId { get; set; }
+
+        public string CustomerName { get; set; }
+        public string ProjectName { get; set; }
+        public string SubProjectName { get; set; }
+    }
 
     public class TimeModel
     {

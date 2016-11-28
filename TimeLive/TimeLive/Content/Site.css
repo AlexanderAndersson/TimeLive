@@ -373,3 +373,17 @@ input[type=checkbox].glyphicon{
     margin-bottom: 15px;
     width: 300px
 }
+
+.ui-state-highlight a, .ui-widget-content .ui-state-highlight a, .ui-widget-header .ui-state-highlight a { /*Making so that the highlited day number is black*/
+    color: black;
+}
+
+#latesReportsRow {
+    background-color: white;
+    position: fixed;
+    z-index: 1000;
+}
+
+#titles {
+    margin-top: 160px;
+}
