@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace TimeLive.Models
 {
-
     public class Events
     {
         public string title { get; set; }
@@ -12,18 +11,9 @@ namespace TimeLive.Models
         public string backgroundColor { get; set; }
         public string borderColor { get; set; }
         public string textColor { get; set; }
-    }
+        public string description { get; set; }
+        public string invoiced { get; set; }
 
-
-    public class LatestReport
-    {
-        public string CustomerId { get; set; }
-        public int? ProjectId { get; set; }
-        public string SubProjectId { get; set; }
-
-        public string CustomerName { get; set; }
-        public string ProjectName { get; set; }
-        public string SubProjectName { get; set; }
     }
 
     public class TimeModel
@@ -34,7 +24,6 @@ namespace TimeLive.Models
         public IEnumerable<Project> Projects { get; set; }
         public IEnumerable<SubProject> SubProjects { get; set; }
         public TimeSelection Selections { get; set; }
-        //public IEnumerable<LatestReport> Report { get; set; }
     }
 
     public class TimeSelection

@@ -13,12 +13,10 @@ namespace TimeLive.Controllers
         private static IEnumerable<Customer> customers;
         private static IEnumerable<Project> projects;
         private static IEnumerable<SubProject> subProjects;
-        //private static IEnumerable<LatestReport> latesReport;
-        //public string LastEnd;
-        public DateTime LastEnd;
-        public DateTime From;
+
+        public DateTime LastEnd; //When the last event ended
+        public DateTime From; 
         public DateTime To;
-        //public static readonly TimeModel hej = new TimeModel();
 
         private static DateTime lastUpdate = DateTime.FromFileTime(0);
         private static readonly TimeSpan updateFrequency = TimeSpan.FromMinutes(5);
@@ -34,126 +32,29 @@ namespace TimeLive.Controllers
                     null, ((Classes.UserClass.User)Session["User"]).Username,
                     null, null, null, null,
                     null, null, null, null,
-                    null, null, null, null, 5).ToArray();
+                    null, null, null, null, 20).ToArray();
 
-            var duplicateCompany = from p in latestReports
-                                   group p by p.companyid into g
-                                   where g.Count() > 1
-                                   select g.Key;
+            List<q_SelectRowsTime_Result> latestReportsList = new List<q_SelectRowsTime_Result>(); //List of the 20 latest reports
 
-            var lastReport = latestReports.OrderBy(x => x.rowcreateddt).Reverse().Take(1);
+            var duplicates = latestReports.OrderByDescending(e => e.rowcreateddt)
+                    .GroupBy(e => new { e.companyid, e.projectid, e.subprojectid })
+                    .Where(e => e.Count() > 1) //Determines if it's a dubplicate or not
+                    .Select(g => g.FirstOrDefault()); //Most recent of duplicated reports
 
-            List < q_SelectRowsTime_Result > duplicates = new List<q_SelectRowsTime_Result>();
+            var uniques = latestReports.OrderByDescending(e => e.rowcreateddt)
+                    .GroupBy(e => new { e.companyid, e.projectid, e.subprojectid })
+                    .Where(e => e.Count() == 1) //Determines if it's unique or not
+                    .Select(g => g.FirstOrDefault()); //Most recent of unique reports
 
-            foreach (var item in lastReport)
-            {
-                for (int i = 0; i < 1; i++)
-                {
-                    duplicates.Add(item);
-                }
-            }
+            foreach (var item in duplicates)
+                latestReportsList.Add(item); //Adding the latest of each duplicate report
 
-            foreach (var companyId in duplicateCompany)
-            {
-                foreach (var row in duplicates)
-                {
-                    if (row.companyid.Contains(companyId))
-                    {
-                        duplicates.Add(row);
-                    }
-                }
-
-
-                //foreach (var row in duplicates.FindAll(p => p.companyid == item))
-                //    if (duplicates.Count() == 0)
-                //    {
-                //        duplicates.Add(row);
-                //    }
-                //    else
-                //    {
-                //        if (row.companyid.Contains(item))
-                //            duplicates.Add(row);
-                //    }
-
-            }
-
-            //gör en till lids
-
-
-            //duplicates.ForEach(dup => duplicates.Remove(dup));
-
-
-
-
-            //foreach (var item in latestReports)
-            //{
-            //    if (bla.Contains(item.companyid))
-            //    {
-            //        if (!bla.Contains(item.projectid))
-            //        {
-            //            if (!bla.Contains(item.subprojectid))
-            //            {
-
-            //            }
-            //        }
-            //        else
-            //        {
-            //            bla.Add(item);
-            //        }
-            //    }
-            //    else
-            //    {
-            //        bla.Add(item);
-            //    }
-            //}
-
-
-
-            //bla = customers.ToList();
-
-
-
-            //for (int i = 0; i < latestReports.Count() && DisplayReports.Count() < 5; i++)
-            //{
-            //    if (DisplayReports.Contains(latestReports[i].companyid))
-            //    {
-            //        foreach (var item in DisplayReports)
-            //        {
-            //            if (item == latestReports[i].subprojectid)
-            //            {
-            //                DisplayReports[DisplayReports.Count()] = latestReports[i];
-            //            }
-            //        }
-            //    }
-            //    else
-            //    {
-            //        DisplayReports[DisplayReports.Count()] = latestReports[i];
-            //    }
-            //}
-
-            //DisplayReports = hej.ToList();
-
-            //for (int i = 0; i < latestReports.Count() && DisplayReports.Count() < 5; i++)
-            //{
-            //    if (DisplayReports.Contains(latestReports.))
-            //    {
-            //        if (!DisplayReports.Contains(latestReports.SubProjectName))
-            //        {
-            //            DisplayReports[DisplayReports.Count()] = latestReports[i];
-            //        }
-            //    }
-            //    else
-            //    {
-            //        DisplayReports[DisplayReports.Count()] = latestReports[i];
-            //    }
-            //}
-
-            //List<object> listOfReports = new List<object>();
-
+            foreach (var item in uniques)
+                latestReportsList.Add(item); //Adding all unique reports
 
             var model = new TimeModel
             {
-                LatestRows = duplicates,
+                LatestRows = latestReportsList.OrderBy(x => x.rowcreateddt).Reverse().Take(5), //Takes out the 5 latest reports made
 
                 SelectRows = TimeLiveDB.q_SelectRowsTime(
                     null, ((Classes.UserClass.User)Session["User"]).Username,
@@ -175,7 +76,6 @@ namespace TimeLive.Controllers
         public ActionResult GetWeekEvents()
         {
             var eventList = WeekEvents();
-            //var rows = eventList;
 
             return Json(eventList, JsonRequestBehavior.AllowGet);
         }
@@ -263,6 +163,8 @@ namespace TimeLive.Controllers
                                 backgroundColor = color[count], //Adding a color to the event
                                 borderColor = color[count],
                                 textColor = "#FFFFFF", //White color
+                                description = row.companyname.Replace(",", " "),
+                                invoiced = row.invoicedtime.ToString("0.0" + "h").Replace(",", "."),
                             };
 
                             LastEnd = row.regdate.AddHours(1).AddMinutes(LastEnd.Minute).AddHours((double)row.usedtime); //LastEnd equals to 01:00
@@ -279,6 +181,8 @@ namespace TimeLive.Controllers
                                 backgroundColor = color[count], //Adding a color to the event
                                 borderColor = color[count],
                                 textColor = "#FFFFFF", //White color
+                                description = row.companyname,
+                                invoiced = row.invoicedtime.ToString("0.0" + "h").Replace(",", "."),
                             };
 
                             LastEnd = row.regdate.AddHours(LastEnd.Hour).AddMinutes(LastEnd.Minute).AddHours((double)row.usedtime); //LastEnd equals to latest events end
@@ -296,7 +200,6 @@ namespace TimeLive.Controllers
         public ActionResult GetMonthEvents(Events pEvent)
         {
             var eventList = MonthEvents(pEvent);
-            //var rows = eventList;
 
             return Json(eventList, JsonRequestBehavior.AllowGet);
         }
@@ -372,7 +275,6 @@ namespace TimeLive.Controllers
         public ActionResult Insert(string pCompanyId, int pProjectId, string pSubProjectId, DateTime pRegDate, double pInvoicedTime, double pUsedTime, string pExternComment, string pInternComment, int pDealyinvoice)
         {
             Session["User"] = (Classes.UserClass.User)Session["User"] ?? Classes.UserClass.GetUserByIdentity(WindowsIdentity.GetCurrent());
-            //Session["User"] = Session["User"] as AdUser ?? new AdUser { Domain = "OPTIVASYS", FullName = "Rasmus Jansson", Username = "raja" };
             var user = (Classes.UserClass.User)Session["User"];
 
             TimeLiveDB.q_InsertRowTime(user.Username, pProjectId, pSubProjectId, pCompanyId, pRegDate, pExternComment, pInternComment,
@@ -386,13 +288,11 @@ namespace TimeLive.Controllers
         public ActionResult Update(string q_hrp_guiid, string pCompanyId, int pProjectId, string pSubProjectId, DateTime pRegDate, double? pInvoicedTime, double pUsedTime, string pExternComment, string pInternComment, int pDealyinvoice)
         {
             Session["User"] = (Classes.UserClass.User)Session["User"] ?? Classes.UserClass.GetUserByIdentity(WindowsIdentity.GetCurrent());
-            //Session["User"] = Session["User"] as AdUser ?? new AdUser { Domain = "OPTIVASYS", FullName = "Rasmus Jansson", Username = "raja" };
             var user = (Classes.UserClass.User)Session["User"];
 
             TimeLiveDB.q_UpdateRowTime(q_hrp_guiid, user.Username, pProjectId, pSubProjectId, pCompanyId, pRegDate, pExternComment, pInternComment,
                 pInvoicedTime, pUsedTime, pDealyinvoice, null, null, null, null);
 
-            //return Json(new { Result = true });
             return RedirectToAction("Index");
         }
 
@@ -408,12 +308,11 @@ namespace TimeLive.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Filter(DateTime selectionFrom, DateTime selectionTo, string companyId, int? projectId, string subProjectId, int? pDealyinvoice)
         {
-
             Session["From"] = selectionFrom;
             Session["To"] = selectionTo;
 
             Session["User"] = Session["User"] ?? Classes.UserClass.GetUserByIdentity(WindowsIdentity.GetCurrent());
-            //Session["User"] = Session["User"] as AdUser ?? new AdUser { Domain = "OPTIVASYS", FullName = "Rasmus Jansson", Username = "raja" };
+
             if (DateTime.Now - lastUpdate >= updateFrequency) UpdateStatics();
             if (pDealyinvoice == 0)
                 pDealyinvoice = null;
@@ -433,13 +332,37 @@ namespace TimeLive.Controllers
 
             Session["selection"] = selections;
 
-            var model = new TimeModel
-            {
-                LatestRows = TimeLiveDB.q_SelectRowsTime(
+            var latestReports = TimeLiveDB.q_SelectRowsTime(
                     null, ((Classes.UserClass.User)Session["User"]).Username,
                     null, null, null, null,
                     null, null, null, null,
-                    null, null, null, null, 20),
+                    null, null, null, null, 20).ToArray();
+
+            List<q_SelectRowsTime_Result> latestReportsList = new List<q_SelectRowsTime_Result>(); //List of the 20 latest reports
+
+            var duplicates = latestReports.OrderByDescending(e => e.rowcreateddt)
+                    .GroupBy(e => new { e.companyid, e.projectid, e.subprojectid })
+                    .Where(e => e.Count() > 1)
+                    .Select(g => g.FirstOrDefault()); //Most recent of duplicated reports
+
+
+            var uniques = latestReports.OrderByDescending(e => e.rowcreateddt)
+                    .GroupBy(e => new { e.companyid, e.projectid, e.subprojectid })
+                    .Where(e => e.Count() == 1)
+                    .Select(g => g.FirstOrDefault()); //Most recent of unique reports
+
+            foreach (var item in duplicates)
+            {
+                latestReportsList.Add(item); //Adding the latest of each duplicate report
+            }
+            foreach (var item in uniques)
+            {
+                latestReportsList.Add(item); //Adding all unique reports
+            }
+
+            var model = new TimeModel
+            {
+                LatestRows = latestReportsList.OrderBy(x => x.rowcreateddt).Reverse().Take(5), //Takes out the 5 latest reports made
 
                 SelectRows = TimeLiveDB.q_SelectRowsTime(
                     null, ((Classes.UserClass.User)Session["User"]).Username,

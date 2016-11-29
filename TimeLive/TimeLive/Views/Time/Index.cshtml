@@ -2,7 +2,7 @@
 @using Newtonsoft.Json
 @model TimeLive.Models.TimeModel
 @{
-    var latestReports = Model.LatestRows.OrderBy(x => x.rowcreateddt).Reverse().ToArray();
+    var latestReports = Model.LatestRows;
     var selectRows = Model.SelectRows.OrderBy(x => x.regdate).ToArray();
     var dayDictionary = selectRows.Select(x => x.regdate).Distinct().ToDictionary(day => day, day => false);
     var totalUsed = selectRows.Sum(x => x.usedtime);
@@ -96,34 +96,33 @@
     </form>
 </div>
 
-
-<div id="month"></div>
 <div class="row" id="latesReportsRow">
-    <div id="favorite-container">
+    <div id="latest-container">
         @foreach (var row in latestReports)
         {
-            if (latestReports.Count() > 0)
+            <a href="#" class="latest" style="text-decoration:none">
+                <div class="latestReports">
+                    <input type="hidden" class="companyId" name="pCompanyId" value="@row.companyid" />
+                    <h5>@row.companyname</h5>
+                    <input type="hidden" class="projectId" name="pProjectId" value="@row.projectid" />
+                    <h5>@row.projectname</h5>
+                    <input type="hidden" class="subProjectId" name="pSubProjectId" value="@row.subprojectid" />
+                    <h5>@row.subprojectname</h5>
+                </div>
+            </a>
+        }
+        @if (latestReports.Count() < 5)
+        {
+            for (int i = latestReports.Count(); i < 5; i++)
             {
-                <a href="#" class="latest">
-                    <div class="favorite">
-                        <input type="hidden" class="companyId" name="pCompanyId" value="@row.companyid" />
-                        <h5>@row.companyname</h5>
-                        <input type="hidden" class="projectId" name="pProjectId" value="@row.projectid" />
-                        <h5>@row.projectname</h5>
-                        <input type="hidden" class="subProjectId" name="pSubProjectId" value="@row.subprojectid" />
-                        <h5>@row.subprojectname</h5>
-                    </div>
-                </a>
-            }
-            else
-            {
-                <div class="favorite latest">
-                    <h5>Ingen rapport</h5>
+                <div class="favorite latest" style="background-color:#71797b">
                 </div>
             }
-        }
+        }        
     </div>
 </div>
+
+<div id="month"></div>
 
 <div class="row">
     <div id="week"></div>
@@ -131,7 +130,7 @@
 
 
 <br />
-<div class="container" id="titles">
+<div id="titles">
     <div class="row row-header">
         <div class="col col-dropdown col-header">
             Customer
@@ -139,16 +138,16 @@
         <div class="col col-dropdown col-header">
             Project
         </div>
-        <div class="col col-dropdown col-header">
+        <div class="col col-dropdown supProjectT col-header">
             Sub-project
         </div>
         <div class="col col-date1 col-header">
             Date
         </div>
-        <div class="col amount-head col-header">
+        <div class="col amount-head invT col-header">
             Inv
         </div>
-        <div class="col amount-head col-header">
+        <div class="col amount-head usedT col-header">
             Used
         </div>
         <div class="col col-text col-header">
@@ -181,7 +180,7 @@
                         <input type="hidden" class="companyId" name="pCompanyId" value="@row.companyid" />
                         <select class="form-control nopadding companyDropDown"></select>
                     </div>
-                    <div class="col nopadding col-dropdown">
+                    <div class="col col-dropdown">
                         <input type="hidden" class="projectId" name="pProjectId" value="@row.projectid" />
                         <select class="form-control nopadding projectDropDown"></select>
                     </div>
@@ -192,11 +191,37 @@
                     <div class="col date">
                         <input type="text" class="form-control date-picker" name="pRegDate" value="@row.regdate.ToString("yyyy-MM-dd")" />
                     </div>
-                    <div class="col amount">
+                    @*<div class="col amount">
                         <input type="text" class="form-control amount hours" name="pInvoicedTime" value="@row.invoicedtime.ToString("0.00").Replace(",", ".")" />
                     </div>
                     <div class="col amount">
                         <input type="text" class="form-control amount hours" name="pUsedTime" value="@row.usedtime.ToString("0.00").Replace(",", ".")" />
+                    </div>*@
+                    <div class="input-group col amount">
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-danger btn-number btn-minus" @*disabled="disabled" data-type="minus" data-field="quant[1]"*@>
+                                <span class="glyphicon glyphicon-minus"></span>
+                            </button>
+                        </span>
+                        <input type="text" name="pInvoicedTime" class="form-control hours amount" value="@row.invoicedtime.ToString("0.00").Replace(",", ".")">
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-success btn-number btn-plus" @*data-type="plus" data-field="quant[1]"*@>
+                                <span class="glyphicon glyphicon-plus"></span>
+                            </button>
+                        </span>
+                    </div>
+                    <div class="input-group col amount">
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-danger btn-number btn-minus" @*disabled="disabled" data-type="minus" data-field="quant[1]"*@>
+                                <span class="glyphicon glyphicon-minus"></span>
+                            </button>
+                        </span>
+                        <input type="text" name="pUsedTime" class="form-control hours amount" value="@row.usedtime.ToString("0.00").Replace(",", ".")" min="0">
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-success btn-number btn-plus" @*data-type="plus" data-field="quant[1]"*@>
+                                <span class="glyphicon glyphicon-plus"></span>
+                            </button>
+                        </span>
                     </div>
                     <div class="col externCom">
                         <input type="text" class="form-control comment" name="pExternComment" value="@row.externtcomment" />
@@ -213,7 +238,7 @@
                             <span class="glyphicon glyphicon-floppy-disk"></span>
                             Update
                         </button>
-                        <button type="button" class="btn btn-danger" title="Delete">
+                        <button type="button" class="btn btn-danger delete" title="Delete">
                             <span class="glyphicon glyphicon-remove"></span>
                             Delete
                         </button>
@@ -252,43 +277,12 @@
         @*}*@
     </div>
 }
-
-@*<div id="reportList">
-
-    </div>*@
-
-@*@section scripts{
-
-        <script type="text/javascript">
-            $(document).ready(function () {
-                $('#calendar').fullCalendar({
-                    theme: true,
-                    header: {
-                        left: 'prev,next today',
-                        center: 'title',
-                        right: 'month,agendaWeek,agendaDay'
-                    },
-
-                    defaultView: 'agendaDay',
-                    editable: true,
-                    allDaySlot: false,
-                    selectable: true,
-                    slotMinutes: 15,
-                    events: "/home/getevents/"
-                });
-            });
-        </script>
-
-    }*@
-
 @if (selectRows.Count() != 0)
 {
     <br />
-    <div class="container">
         <div class="row row-header">
             <div class="col col-dropdown col-header">
                 New Report
-            </div>
         </div>
     </div>
 }
@@ -312,11 +306,37 @@
             <div class="col date">
                 <input type="text" name="pRegDate" class="form-control date-picker" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
             </div>
-            <div class="col amount">
+            @*<div class="col amount">
                 <input type="text" name="pInvoicedTime" class="form-control hours amount" value="0.00" />
-            </div>
-            <div class="col amount">
+            </div>*@
+            @*<div class="col amount">
                 <input type="text" name="pUsedTime" class="form-control hours amount" value="0.00" />
+            </div>*@
+            <div class="input-group col amount">
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-danger btn-number btn-minus" @*disabled="disabled" data-type="minus" data-field="quant[1]"*@>
+                        <span class="glyphicon glyphicon-minus"></span>
+                    </button>
+                </span>
+                <input type="text" name="pInvoicedTime" class="form-control hours amount" value="0.00" min="0">
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-success btn-number btn-plus" @*data-type="plus" data-field="quant[1]"*@>
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                </span>
+            </div>
+            <div class="input-group col amount">
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-danger btn-number btn-minus" @*disabled="disabled" data-type="minus" data-field="quant[1]"*@>
+                        <span class="glyphicon glyphicon-minus"></span>
+                    </button>
+                </span>
+                <input type="text" name="pUsedTime" class="form-control hours amount" value="0.00" min="0">
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-success btn-number btn-plus" @*data-type="plus" data-field="quant[1]"*@>
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                </span>
             </div>
             <div class="col externCom">
                 <input type="text" name="pExternComment" class="form-control comment" />
@@ -325,7 +345,7 @@
             <input type="hidden" name="pDealyinvoice" class="pDealyinvoice" value="0" />
         </div>
         <div class="row">
-            <div class="col col-full">
+            <div class="col col-full-insert">
                 <input type="text" name="pInternComment" class="form-control comment" placeholder="Internal comment" />
             </div>
             <div class="btn-group btn-group-sm">
@@ -339,7 +359,6 @@
 </div>
 <br />
         <script src="~/Scripts/funktions.js"></script>
-        @*<script src="~/Scripts/refetchReports.js"></script>*@
         <script type="text/javascript">
 
             var globalId;
@@ -370,7 +389,7 @@
             });
 
             //Delete function
-            $('.btn-danger').click(function() {
+            $('.delete').click(function() {
                 var row = $(this).parents('.timerow');
                 //__RequestVerificationToken
                 var guiid = row.find('.q_hrp_guiid').val();

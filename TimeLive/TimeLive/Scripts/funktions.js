@@ -28,6 +28,25 @@ $(document).ready(function (date) {
         displayEventTime: false,
         timeFormat: 'h:mm',
         events: "/Time/GetWeekEvents/",
+        eventMouseover: function (data, event, view) {
+            tooltip = '<div class="tooltiptopicevent" style="width:auto; height:auto; font-weight:bold; background:#25849a; color:white; border:1px solid black; position:absolute; z-index:10001; padding:5px 5px 5px 5px; line-height:200%; ">' + 'Used: ' + data.title + '</br>' + 'Invoiced: ' + data.invoiced + '</br>' + 'Company: ' + data.description + '</div>';
+
+            $("body").append(tooltip);
+            $(this).mouseover(function (e) {
+                $(this).css('z-index', 10000);
+                $('.tooltiptopicevent').fadeIn('500');
+                $('.tooltiptopicevent').fadeTo('10', 1.9);
+            }).mousemove(function (e) {
+                $('.tooltiptopicevent').css('top', e.pageY + 10);
+                $('.tooltiptopicevent').css('left', e.pageX + -145);
+            });
+        },
+        eventMouseout: function (data, event, view) {
+            $(this).css('z-index', 8);
+
+            $('.tooltiptopicevent').remove();
+
+        },
         slotDuration: "00:60:00",
         eventBorderColor: "none",
         businessHours: true,
@@ -59,11 +78,11 @@ $(document).ready(function (date) {
             var eventEnd = event.end.format("HH:mm");
             if (eventEnd >= "09:00" || eventStart >= "09:00") { //if there is atleast 8 hours reported that day, the color is green   
                 var dateEnd = event.end.format("YYYY-MM-DD");
-                $('#month').find('.fc-day-top[data-date=' + dateEnd + ']').css('background', 'green', "!important");
+                $('#month').find('.fc-day-top[data-date=' + dateEnd + ']').css('background', '#128f12', "!important");
             }
             else { //if there is less than 8 hours reported that day, the color is red  
                 var dateStart = event.start.format("YYYY-MM-DD");
-                $('#month').find('.fc-day-top[data-date=' + dateStart + ']').css('background', 'red', "!important");
+                $('#month').find('.fc-day-top[data-date=' + dateStart + ']').css('background', '#fe2d2d', "!important");
             }
         },//EventRender
         dayRender: function (date, cell) {
@@ -73,7 +92,7 @@ $(document).ready(function (date) {
             }
             if (date <= moment()) { //if there is no event on a day before today or today, the background will have a red color
                 var dateBeforeToday = date.format("YYYY-MM-DD");
-                $('#month').find('.fc-day-top[data-date=' + dateBeforeToday + ']').css('background', 'red');
+                $('#month').find('.fc-day-top[data-date=' + dateBeforeToday + ']').css('background', '#fe2d2d');
             }
         },//DayRender
         //viewRender was here and events after that
@@ -106,17 +125,9 @@ $(document).ready(function (date) {
         },//navLinkDayClick 
         //viewRender with jQuert.ajax
     });//Month
-
-    //$(".fc-month-button").click(function () {
-    //    var startOfMonth = moment().startOf('month');
-    //    $('#selectionFrom').val(startOfMonth.format('YYYY-MM-DD'));
-    //    $('#selectionTo').val(moment().endOf('month').format('YYYY-MM-DD'));
-    //    $('#selectionsApply').click();
-    //});//click
-
 });//document.ready
 
-$('#favorite-container a').click(function () {
+$('#latest-container a').click(function () {
     var row = $(this);
     var companyId = row.find('input[name$=pCompanyId]').val();
     var projectId = row.find('input[name$=pProjectId]').val();
@@ -127,17 +138,6 @@ $('#favorite-container a').click(function () {
     $('.newSubProject').val(subProjectId).change();
 });
 
-$('.btn-primary').click(function () {
-    var report = [$('.newCompany').val(), $('.newProject').val(), $('.newSubProject').val()];
-    //localStorage.first = report;
-
-    localStorage.setItem("report", JSON.stringify(report));
-
-    var storedNames = JSON.parse(localStorage.getItem("report"));
-
-    localStorage.hej = storedNames
-
-});
 //Increase/decrease numerics with arrow keys
 $('.amount').keydown(function (event) {
     var currentNumber = Number($(this).val());
@@ -155,6 +155,26 @@ $('.amount').keydown(function (event) {
         else
             $(this).val(Math.floor(currentNumber * 2) / 2); //Rounds down to nearest 0.50 number
     }
+});
+
+//Increase numerics with (plus button)
+$('.btn-plus').on('click', function () {
+    var currentNumber = $(this).parent().siblings('input').val();
+    var field = $(this).parent().siblings('input');
+    $(this).parent().siblings('input').val(Math.max(0, parseFloat($(this).parent().siblings('input').val()) + 0.50).toFixed(2))
+    if (currentNumber > 7.50)
+        $(field).css("background-color", "#febcbc"); //red
+    else
+        $(field).css("background-color", "#cbefb8"); //green
+});
+
+//Decrease numerics with (minus button)
+$('.btn-minus').on('click', function () {
+    var currentNumber = $(this).parent().siblings('input').val();
+    var field = $(this).parent().siblings('input');
+    $(this).parent().siblings('input').val(Math.max(0, parseFloat($(this).parent().siblings('input').val()) - 0.50).toFixed(2))
+    if (currentNumber <= 8.50)
+        $(field).css("background-color", "#cbefb8"); //green
 });
 
 //Increase/decrease numerics with arrow keys

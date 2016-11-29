@@ -9,6 +9,8 @@
     padding-left: 15px;
     padding-right: 15px;
     margin-left: 20px !important;
+    width: 1470px;
+    /*background: red;*/
 }
 
 /* Set width on the form input elements since they're 100% wide by default */
@@ -18,10 +20,10 @@ select,
 /*textarea {
     max-width: 280px;
 }*/
-
 .col {
     float: left;
     position: relative;
+    margin-right:5px
 }
 
 .nopadding {
@@ -29,8 +31,13 @@ select,
    margin: 0 !important;
 }
 
+#titles {
+    margin-top: 160px;
+    margin-left: 0;
+}
+
 .col-dropdown {
-    width: 227px;
+    width: 240px;
 }
 
 .col-type {
@@ -43,12 +50,12 @@ select,
 
 .col-date1 {
     width: 90px;
-    margin-right: 15px;
+    margin-right: 37px;
 }
 
 .amount {
-    text-align: right;
-    width: 61px;
+    text-align: center;
+    width: 139px;
 }
 
 .col-header {
@@ -56,8 +63,24 @@ select,
     font-size: large;
 }
 
+.invT {
+    margin-right: 85px;
+}
+
+.usedT {
+    margin-right: 50px
+}
+
+.supProjectT {
+    margin-right: 40px;
+}
+
 .col-full {
-    width: 280px;
+    width: 1270px;
+}
+
+.col-full-insert {
+    width: 1350px;
 }
 
 .amount-head {
@@ -69,7 +92,7 @@ select,
 }
 
 .col-dropdown1 {
-    width: 220px;
+    width: 230px;
 }
 
 btn-primary{
@@ -81,7 +104,7 @@ div {
 }
 
 .externCom {
-    width: 250px;
+    width: 320px;
 }
 
 .col-text{
@@ -267,6 +290,8 @@ input[type=checkbox].glyphicon{
     border: solid 1px red;
 }*/
 
+/*********CALANDER STUFF************/
+
 #month {
     width: 300px;
     position: fixed;
@@ -293,10 +318,6 @@ input[type=checkbox].glyphicon{
     content: "h";
 }
 
-/*.ui-widget-content a {
-    color: red;
-}*/
-
 .fc-event { /*Events have straight corners*/
     border-radius: 0px !important;
 }
@@ -309,59 +330,41 @@ input[type=checkbox].glyphicon{
     background-color: #b6ff00 !important;
 }
 
-/*.ui-widget-content a { All date-numbers have red color
-    color: #ff0000
-}*/
-
-
+.ui-state-highlight a, .ui-widget-content .ui-state-highlight a, .ui-widget-header .ui-state-highlight a { /*Making so that the highlited day number is black*/
+    color: black;
+}
 
 .fc-week-number a { /*Week-numbers color is black*/
     color: #000000 !important;
 }
 
-/*#month .fc-day-top {
-    background-color: red;
-}*/
+/**********LATEST REPORTS**************/
 
-
-/*#month .fc-day-number {
-  color: red !important;
-}*/
-
-/*#month .fc th, .fc td {
-    background: red;
-}*/
-
-/*#month .ui-widget-content {
-    background: red;
-}
-
-#month .fc-basic-view td.fc-week-number {
-    background: white;
-}*/
-
-
-/*#week > .ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight { Highlight (today)
-    border: 1px solid #a6c9e2;
-    background: none;
-}*/
-
-#favorite-container {
+#latest-container {
     display: flex;
-    margin-left: 140px;
+    margin-left: 240px;
     margin-top: 30px;
+    margin-right: 350px;
 }
 
-.favorite {
+.latestReports {
     width: 130px;
     height: 115px;
     border: 3px solid black;
     border-radius: 5px;
     text-align:center !important;
+    background-color: #25849a;
+    color: white;
 }
 
 .latest {
     margin-right: 40px;
+}
+
+#latesReportsRow {
+    background-color: white;
+    position: fixed;
+    z-index: 1000;
 }
 
 .alert {
@@ -372,18 +375,4 @@ input[type=checkbox].glyphicon{
     transition: opacity 0.6s;
     margin-bottom: 15px;
     width: 300px
-}
-
-.ui-state-highlight a, .ui-widget-content .ui-state-highlight a, .ui-widget-header .ui-state-highlight a { /*Making so that the highlited day number is black*/
-    color: black;
-}
-
-#latesReportsRow {
-    background-color: white;
-    position: fixed;
-    z-index: 1000;
-}
-
-#titles {
-    margin-top: 160px;
 }
