@@ -6,10 +6,10 @@
 
 /* Set padding to keep content from hitting the edges */
 .body-content {
-    padding-left: 15px;
+    padding-left: 30px;
     padding-right: 15px;
     margin-left: 20px !important;
-    width: 1470px;
+    width: 1500px;
     /*background: red;*/
 }
 
@@ -29,6 +29,14 @@ select,
 .nopadding {
    padding: 0 !important;
    margin: 0 !important;
+}
+
+.input-group {
+    z-index: 0;
+}
+
+.btn2 {
+    margin-top: 8px;
 }
 
 #titles {
@@ -56,6 +64,11 @@ select,
 .amount {
     text-align: center;
     width: 139px;
+    border-radius: 4px !important;
+}
+
+.intComment {
+    margin-top: 7px;
 }
 
 .col-header {
@@ -295,14 +308,14 @@ input[type=checkbox].glyphicon{
 #month {
     width: 300px;
     position: fixed;
-    right: 100px;
+    right: 60px;
     top: 200px;
 }
 
 #week {
     width: 300px;
     position: fixed;
-    right: 100px;
+    right: 60px;
     top: 580px;
 }
 
@@ -344,11 +357,11 @@ input[type=checkbox].glyphicon{
     display: flex;
     margin-left: 240px;
     margin-top: 30px;
-    margin-right: 350px;
+    margin-right: 385px;
 }
 
 .latestReports {
-    width: 130px;
+    width: 140px;
     height: 115px;
     border: 3px solid black;
     border-radius: 5px;

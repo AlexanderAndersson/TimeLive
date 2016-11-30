@@ -163,7 +163,7 @@
         {
             @Html.AntiForgeryToken()
             <input type="hidden" name="q_hrp_guiid" class="q_hrp_guiid" value="@row.q_hrp_guiid" />
-                <input type="hidden" value="@row.RowStatus" />
+                @*<input type="hidden" value="@row.RowStatus" />
                 <input type="hidden" value="@row.InvoiceStatus" />
                 <input type="hidden" value="@row.anstalld" />
                 <input type="hidden" value="@row.companyname" />
@@ -171,7 +171,7 @@
                 <input type="hidden" value="@row.externcomment_prio" />
                 <input type="hidden" value="@row.invoiceID" />
                 <input type="hidden" value="@row.prelinvoiceid" />
-                <input type="hidden" value="@row.subprojectname" />
+                <input type="hidden" value="@row.subprojectname" />*@
 
                 @*<input type="hidden" name="dealyinvoice" value="@row.dealyinvoice" />*@
                 <input type="hidden" name="subprojectid_prio" value="@row.subprojectid_prio" />
@@ -198,26 +198,26 @@
                         <input type="text" class="form-control amount hours" name="pUsedTime" value="@row.usedtime.ToString("0.00").Replace(",", ".")" />
                     </div>*@
                     <div class="input-group col amount">
-                        <span class="input-group-btn">
+                        <span class="input-group-btn row toggle" style="display: none;">
                             <button type="button" class="btn btn-danger btn-number btn-minus" @*disabled="disabled" data-type="minus" data-field="quant[1]"*@>
                                 <span class="glyphicon glyphicon-minus"></span>
                             </button>
                         </span>
                         <input type="text" name="pInvoicedTime" class="form-control hours amount" value="@row.invoicedtime.ToString("0.00").Replace(",", ".")">
-                        <span class="input-group-btn">
+                        <span class="input-group-btn row toggle" style="display: none;">
                             <button type="button" class="btn btn-success btn-number btn-plus" @*data-type="plus" data-field="quant[1]"*@>
                                 <span class="glyphicon glyphicon-plus"></span>
                             </button>
                         </span>
                     </div>
                     <div class="input-group col amount">
-                        <span class="input-group-btn">
+                        <span class="input-group-btn row toggle" style="display: none;">
                             <button type="button" class="btn btn-danger btn-number btn-minus" @*disabled="disabled" data-type="minus" data-field="quant[1]"*@>
                                 <span class="glyphicon glyphicon-minus"></span>
                             </button>
                         </span>
                         <input type="text" name="pUsedTime" class="form-control hours amount" value="@row.usedtime.ToString("0.00").Replace(",", ".")" min="0">
-                        <span class="input-group-btn">
+                        <span class="input-group-btn row toggle" style="display: none;">
                             <button type="button" class="btn btn-success btn-number btn-plus" @*data-type="plus" data-field="quant[1]"*@>
                                 <span class="glyphicon glyphicon-plus"></span>
                             </button>
@@ -231,14 +231,14 @@
                 </div>
                 <div class="row toggle" style="display: none;">
                     <div class="col col-full">
-                        <input type="text" class="form-control comment" name="pInternComment" value="@row.interncomment" />
+                        <input type="text" class="form-control intComment comment" name="pInternComment" value="@row.interncomment" />
                     </div>
-                    <div class="btn-group btn-group-sm">
-                        <button type="submit" id="btnSave" class="btn btn-success" title="Update">
+                    <div class="btn-group-sm">
+                        <button type="submit" id="btnSave" class="btn btn-success btn2" title="Update">
                             <span class="glyphicon glyphicon-floppy-disk"></span>
                             Update
                         </button>
-                        <button type="button" class="btn btn-danger delete" title="Delete">
+                        <button type="button" class="btn btn-danger delete btn2" title="Delete">
                             <span class="glyphicon glyphicon-remove"></span>
                             Delete
                         </button>
@@ -346,10 +346,10 @@
         </div>
         <div class="row">
             <div class="col col-full-insert">
-                <input type="text" name="pInternComment" class="form-control comment" placeholder="Internal comment" />
+                <input type="text" name="pInternComment" class="form-control intComment comment" placeholder="Internal comment" />
             </div>
             <div class="btn-group btn-group-sm">
-                <button type="submit" class="btn btn-primary" title="Save">
+                <button type="submit" class="btn btn-primary btn2" title="Save">
                     <span class="glyphicon glyphicon-floppy-disk"></span>
                     Save
                 </button>

@@ -14,6 +14,7 @@ namespace TimeLive.Controllers
         private static IEnumerable<Project> projects;
         private static IEnumerable<SubProject> subProjects;
 
+        public DateTime LastEnd2;
         public DateTime LastEnd; //When the last event ended
         public DateTime From; 
         public DateTime To;
@@ -26,7 +27,71 @@ namespace TimeLive.Controllers
             Session["User"] = Session["User"] ?? Classes.UserClass.GetUserByIdentity(WindowsIdentity.GetCurrent());
             if (DateTime.Now - lastUpdate >= updateFrequency) UpdateStatics();
 
+            DateTime date = DateTime.Today;
+            var firstDayOfMonth = new DateTime(date.Year, date.Month, 1);
+            var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
+            var fromDay = firstDayOfMonth.AddDays(-31);
+
             var selections = Session["selection"] as TimeSelection ?? TimeSelection.ThisWeek;
+
+            List<q_SelectRowsTime_Result> list = new List<q_SelectRowsTime_Result>();
+
+            List<q_SelectRowsTime_Result> reportsWithLessThan8H = new List<q_SelectRowsTime_Result>();
+
+            var twoMonthsOfReports = TimeLiveDB.q_SelectRowsTime(
+                    null, ((Classes.UserClass.User)Session["User"]).Username,
+                    null, null, null, null,
+                    null, null, null, firstDayOfMonth,
+                    lastDayOfMonth, null, null, null, 500).OrderBy(x => x.regdate).ToArray();
+
+            DateTime nineoClock = DateTime.Today;
+            TimeSpan ts = new TimeSpan(09, 00, 00);
+            nineoClock = nineoClock.Date + ts;
+
+            foreach (var row in twoMonthsOfReports)
+            {
+                //Checks if the latest date is the same as the latest report. If not, LastEnd = 00:00:00
+                if (row.regdate != LastEnd2.Date)
+                {
+                    LastEnd2 = LastEnd2.Date;
+                }
+                if (row.usedtime == 0) { /*if usedtime is 0, don't show event*/ }
+
+                else
+                {
+                    if (LastEnd2.Hour == 0)
+                    {
+                        LastEnd2 = row.regdate.AddHours(1).AddMinutes(LastEnd.Minute).AddHours((double)row.usedtime); //LastEnd equals to 01:00
+                        if (LastEnd2.Hour < nineoClock.Hour)
+                        {
+                            list.Add(row);
+                        }
+                    }
+                    else
+                    {
+                        LastEnd2 = row.regdate.AddHours(LastEnd.Hour).AddMinutes(LastEnd.Minute).AddHours((double)row.usedtime);
+                        if (LastEnd2.Hour < nineoClock.Hour)
+                        {
+                            list.Add(row.regdate.TimeOfDay.Add(LastEnd2.TimeOfDay));
+                        }
+                    }
+                }
+            }
+
+            var duplicateDates = twoMonthsOfReports.OrderByDescending(e => e.rowcreateddt)
+                    .GroupBy(e => new { e.regdate.Date })
+                    .Where(e => e.Count() > 1) //Determines if it's a dubplicate or not
+                    .Select(g => g.FirstOrDefault()); //Most recent of duplicated reports
+
+            var dateLessThan8H = duplicateDates.OrderByDescending(e => e.regdate < nineoClock)
+                    .GroupBy(e => new { e.regdate })
+                    .Where(e => e.Count() > 1) //Determines if it's a dubplicate or not
+                    .Select(g => g.FirstOrDefault()); //Most recent of duplicated reports
+
+            foreach (var item in dateLessThan8H)
+            {
+                reportsWithLessThan8H.Add(item);
+            }
 
             var latestReports = TimeLiveDB.q_SelectRowsTime(
                     null, ((Classes.UserClass.User)Session["User"]).Username,
@@ -54,6 +119,8 @@ namespace TimeLive.Controllers
 
             var model = new TimeModel
             {
+                LessThan8H = reportsWithLessThan8H,
+
                 LatestRows = latestReportsList.OrderBy(x => x.rowcreateddt).Reverse().Take(5), //Takes out the 5 latest reports made
 
                 SelectRows = TimeLiveDB.q_SelectRowsTime(
@@ -106,8 +173,10 @@ namespace TimeLive.Controllers
                 DateTime date = DateTime.Today;
                 var firstDayOfMonth = new DateTime(date.Year, date.Month, 1);
                 var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
-                From = firstDayOfMonth;
-                To = lastDayOfMonth;
+                var fromDay = firstDayOfMonth.AddDays(-5);
+                var toDay = lastDayOfMonth.AddDays(5);
+                From = fromDay;
+                To = toDay;
             }
             else
             {
@@ -240,7 +309,7 @@ namespace TimeLive.Controllers
                         {
                             Events newEvent = new Events //This is always the first event on each day
                             {
-                                title = row.usedtime.ToString("0.0" + "h").Replace(",", "."), //Title equals to how many hours you been reporting
+                                title = row.usedtime.ToString("0.0" + "h").Replace(",","."), //Title equals to how many hours you been reporting
                                 start = row.regdate.AddHours(1).ToString(), //Start-time begins at 01:00 if LastEnd hour = 00:00:00
                                 end = row.regdate.AddHours(1).AddHours((double)row.usedtime).ToString(), //End-time equals to 01:00 + invoicedtime
                             };
@@ -253,7 +322,7 @@ namespace TimeLive.Controllers
                         {
                             Events newEvent = new Events //This is always the event(s) after the first event on the same day if there is one
                             {
-                                title = row.usedtime.ToString("0.0" + "h").Replace(",", "."), //Title equals to how many hours you been reporting
+                                title = row.usedtime.ToString("0.0" + "h").Replace(",","."), //Title equals to how many hours you been reporting
                                 start = LastEnd.ToString(), //Start-time begins when the latest report ended
                                 end = row.regdate.AddHours(LastEnd.Hour).AddMinutes(LastEnd.Minute).AddHours((double)row.usedtime).ToString(), //End-time equals to LastEnd + invoicedtime
                             };

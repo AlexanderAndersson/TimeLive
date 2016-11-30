@@ -28,6 +28,17 @@ $(document).ready(function (date) {
         displayEventTime: false,
         timeFormat: 'h:mm',
         events: "/Time/GetWeekEvents/",
+        slotDuration: "00:60:00",
+        eventBorderColor: "none",
+        businessHours: true,
+        businessHours: {
+            dow: [1, 2, 3, 4, 5], // Monday, Tuesday, Wednesday....
+            start: '01:00',
+            end: '09:00',
+        },//businessHours
+        slotLabelFormat: 'H(:mm)',
+        minTime: "01:00:00",
+        maxTime: '09:00:00',
         eventMouseover: function (data, event, view) {
             tooltip = '<div class="tooltiptopicevent" style="width:auto; height:auto; font-weight:bold; background:#25849a; color:white; border:1px solid black; position:absolute; z-index:10001; padding:5px 5px 5px 5px; line-height:200%; ">' + 'Used: ' + data.title + '</br>' + 'Invoiced: ' + data.invoiced + '</br>' + 'Company: ' + data.description + '</div>';
 
@@ -46,18 +57,7 @@ $(document).ready(function (date) {
 
             $('.tooltiptopicevent').remove();
 
-        },
-        slotDuration: "00:60:00",
-        eventBorderColor: "none",
-        businessHours: true,
-        businessHours: {
-            dow: [1, 2, 3, 4, 5], // Monday, Tuesday, Wednesday....
-            start: '01:00',
-            end: '09:00',
-        },//businessHours
-        slotLabelFormat: 'H(:mm)',
-        minTime: "01:00:00",
-        maxTime: '09:00:00',
+        },//Mouseover
     });//Week
 
     $('#month').fullCalendar({
@@ -73,6 +73,16 @@ $(document).ready(function (date) {
         defaultDate: localStorage.Date,
         weekNumberCalculation: 'ISO',
         events: "/Time/GetMonthEvents/",
+        //viewRender was here and events after that
+        editable: false,
+        allDaySlot: true,
+        selectable: true,
+        firstDay: 1,
+        fixedWeekCount: false,
+        weekNumbers: true,
+        weekends: false,
+        height: "auto",
+        navLinks: true,
         eventRender: function (event) {
             var eventStart = event.start.format("HH:mm");
             var eventEnd = event.end.format("HH:mm");
@@ -88,23 +98,13 @@ $(document).ready(function (date) {
         dayRender: function (date, cell) {
             if (date > moment()) { //if date is after today, the background will have no color
                 var dateAfterToday = date.format("YYYY-MM-DD");
-                $('#month').find('.fc-day-top[data-date=' + dateAfterToday + ']').css('background', 'none', "!important");               
+                $('#month').find('.fc-day-top[data-date=' + dateAfterToday + ']').css('background', 'none', "!important");
             }
             if (date <= moment()) { //if there is no event on a day before today or today, the background will have a red color
                 var dateBeforeToday = date.format("YYYY-MM-DD");
                 $('#month').find('.fc-day-top[data-date=' + dateBeforeToday + ']').css('background', '#fe2d2d');
             }
         },//DayRender
-        //viewRender was here and events after that
-        editable: false,
-        allDaySlot: true,
-        selectable: true,
-        firstDay: 1,
-        fixedWeekCount: false,
-        weekNumbers: true,
-        weekends: false,
-        height: "auto",
-        navLinks: true,
         navLinkWeekClick: function (date) {
             $('#week').fullCalendar('gotoDate', date);
             $('#week').fullCalendar('changeView', 'agendaWeek');
