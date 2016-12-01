@@ -27,22 +27,49 @@ namespace TimeLive.Controllers
             Session["User"] = Session["User"] ?? Classes.UserClass.GetUserByIdentity(WindowsIdentity.GetCurrent());
             if (DateTime.Now - lastUpdate >= updateFrequency) UpdateStatics();
 
-            DateTime date = DateTime.Today;
-            var firstDayOfMonth = new DateTime(date.Year, date.Month, 1);
-            var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
-            var fromDay = firstDayOfMonth.AddDays(-31);
-
             var selections = Session["selection"] as TimeSelection ?? TimeSelection.ThisWeek;
 
-            List<q_SelectRowsTime_Result> list = new List<q_SelectRowsTime_Result>();
+            #region Alerts
 
-            List<q_SelectRowsTime_Result> reportsWithLessThan8H = new List<q_SelectRowsTime_Result>();
+            DateTime date = DateTime.Today;
+            var firstDayOfMonth = new DateTime(date.Year, date.Month, 1);
+            var ToDay = firstDayOfMonth.AddMonths(1).AddDays(-1);
+            var fromDay = firstDayOfMonth.AddMonths(-1);
+
+            List<DateTime> tempList = new List<DateTime>();
+
+            List<DateTime> daysWithLessThan8H = new List<DateTime>();
 
             var twoMonthsOfReports = TimeLiveDB.q_SelectRowsTime(
                     null, ((Classes.UserClass.User)Session["User"]).Username,
                     null, null, null, null,
-                    null, null, null, firstDayOfMonth,
-                    lastDayOfMonth, null, null, null, 500).OrderBy(x => x.regdate).ToArray();
+                    null, null, null, fromDay,
+                    date, null, null, null, 500).OrderBy(x => x.regdate).Reverse().ToArray();
+
+            var dates = from d in twoMonthsOfReports.Reverse()
+                        select d.regdate;
+
+            dates = dates.Select(x => x.Date).Distinct().ToList();
+
+
+            var fiveDaysAgo = date.AddDays(-5);
+
+            // create an IEnumerable<DateTime> for all dates in the range
+            IEnumerable<DateTime> allDates = Enumerable.Range(0, 30)
+                .Select(n => fromDay.AddDays(n));
+
+            var datesMissing = allDates.Except(dates);
+
+            foreach (var item in datesMissing)
+            {
+                if (item.DayOfWeek != DayOfWeek.Saturday)
+                {
+                    if (item.DayOfWeek != DayOfWeek.Sunday && item.Day < fiveDaysAgo.Day)
+                    {
+                        daysWithLessThan8H.Add(item);
+                    }
+                }
+            }
 
             DateTime nineoClock = DateTime.Today;
             TimeSpan ts = new TimeSpan(09, 00, 00);
@@ -52,46 +79,56 @@ namespace TimeLive.Controllers
             {
                 //Checks if the latest date is the same as the latest report. If not, LastEnd = 00:00:00
                 if (row.regdate != LastEnd2.Date)
-                {
                     LastEnd2 = LastEnd2.Date;
-                }
+
                 if (row.usedtime == 0) { /*if usedtime is 0, don't show event*/ }
 
                 else
                 {
                     if (LastEnd2.Hour == 0)
                     {
-                        LastEnd2 = row.regdate.AddHours(1).AddMinutes(LastEnd.Minute).AddHours((double)row.usedtime); //LastEnd equals to 01:00
-                        if (LastEnd2.Hour < nineoClock.Hour)
-                        {
-                            list.Add(row);
-                        }
+                        LastEnd2 = row.regdate.AddHours(1).AddMinutes(LastEnd2.Minute).AddHours((double)row.usedtime); //LastEnd equals to 01:00
+                        tempList.Add(row.regdate.AddHours(LastEnd2.Hour).AddMinutes(LastEnd2.Minute));
                     }
                     else
                     {
-                        LastEnd2 = row.regdate.AddHours(LastEnd.Hour).AddMinutes(LastEnd.Minute).AddHours((double)row.usedtime);
-                        if (LastEnd2.Hour < nineoClock.Hour)
-                        {
-                            list.Add(row.regdate.TimeOfDay.Add(LastEnd2.TimeOfDay));
-                        }
+                        LastEnd2 = row.regdate.AddHours(LastEnd2.Hour).AddMinutes(LastEnd2.Minute).AddHours((double)row.usedtime);
+                        tempList.Add(row.regdate.AddHours(LastEnd2.Hour).AddMinutes(LastEnd2.Minute));
                     }
                 }
             }
 
-            var duplicateDates = twoMonthsOfReports.OrderByDescending(e => e.rowcreateddt)
-                    .GroupBy(e => new { e.regdate.Date })
-                    .Where(e => e.Count() > 1) //Determines if it's a dubplicate or not
-                    .Select(g => g.FirstOrDefault()); //Most recent of duplicated reports
+            var dub = tempList.OrderByDescending(e => e.Date)
+                    .GroupBy(e => new { e.Date })
+                    .Where(e => e.Count() > 1) //Determines if it's unique or not
+                    .Select(g => g.LastOrDefault()); //Most recent of dublicate reports
 
-            var dateLessThan8H = duplicateDates.OrderByDescending(e => e.regdate < nineoClock)
-                    .GroupBy(e => new { e.regdate })
-                    .Where(e => e.Count() > 1) //Determines if it's a dubplicate or not
-                    .Select(g => g.FirstOrDefault()); //Most recent of duplicated reports
+            var uni = tempList.OrderByDescending(e => e.Date)
+                    .GroupBy(e => new { e.Date })
+                    .Where(e => e.Count() == 1) //Determines if it's unique or not
+                    .Select(g => g.FirstOrDefault()); //Most recent of unique reports
 
-            foreach (var item in dateLessThan8H)
+            foreach (var duplicate in dub)
             {
-                reportsWithLessThan8H.Add(item);
+                if (duplicate.Hour < 9 && duplicate.Day < fiveDaysAgo.Day)
+                {
+                    daysWithLessThan8H.Add(duplicate);
+                }
             }
+
+            foreach (var unique in uni)
+            {
+                if (unique.Hour < 9 && unique.Day < fiveDaysAgo.Day)
+                {
+                    daysWithLessThan8H.Add(unique);
+                }
+            }
+
+            tempList.Clear();
+
+            #endregion
+
+            #region LatestReports
 
             var latestReports = TimeLiveDB.q_SelectRowsTime(
                     null, ((Classes.UserClass.User)Session["User"]).Username,
@@ -117,11 +154,13 @@ namespace TimeLive.Controllers
             foreach (var item in uniques)
                 latestReportsList.Add(item); //Adding all unique reports
 
+            #endregion
+
             var model = new TimeModel
             {
-                LessThan8H = reportsWithLessThan8H,
+                LessThan8H = daysWithLessThan8H,
 
-                LatestRows = latestReportsList.OrderBy(x => x.rowcreateddt).Reverse().Take(5), //Takes out the 5 latest reports made
+                LatestRows = latestReportsList.OrderBy(x => x.rowcreateddt).Reverse(), //Takes out the 5 latest reports made
 
                 SelectRows = TimeLiveDB.q_SelectRowsTime(
                     null, ((Classes.UserClass.User)Session["User"]).Username,
@@ -401,6 +440,107 @@ namespace TimeLive.Controllers
 
             Session["selection"] = selections;
 
+            #region Alerts
+
+            DateTime date = DateTime.Today;
+            var firstDayOfMonth = new DateTime(date.Year, date.Month, 1);
+            var ToDay = firstDayOfMonth.AddMonths(1).AddDays(-1);
+            var fromDay = firstDayOfMonth.AddMonths(-1);
+
+            List<DateTime> tempList = new List<DateTime>();
+
+            List<DateTime> daysWithLessThan8H = new List<DateTime>();
+
+            var twoMonthsOfReports = TimeLiveDB.q_SelectRowsTime(
+                    null, ((Classes.UserClass.User)Session["User"]).Username,
+                    null, null, null, null,
+                    null, null, null, fromDay,
+                    date, null, null, null, 500).OrderBy(x => x.regdate).Reverse().ToArray();
+
+            var dates = from d in twoMonthsOfReports.Reverse()
+                        select d.regdate;
+
+            dates = dates.Select(x => x.Date).Distinct().ToList();
+
+
+            var fiveDaysAgo = date.AddDays(-5);
+
+            // create an IEnumerable<DateTime> for all dates in the range
+            IEnumerable<DateTime> allDates = Enumerable.Range(0, 30)
+                .Select(n => fromDay.AddDays(n));
+
+            var datesMissing = allDates.Except(dates);
+
+            foreach (var item in datesMissing)
+            {
+                if (item.DayOfWeek != DayOfWeek.Saturday)
+                {
+                    if (item.DayOfWeek != DayOfWeek.Sunday && item.Day < fiveDaysAgo.Day)
+                    {
+                        daysWithLessThan8H.Add(item);
+                    }
+                }
+            }
+
+            DateTime nineoClock = DateTime.Today;
+            TimeSpan ts = new TimeSpan(09, 00, 00);
+            nineoClock = nineoClock.Date + ts;
+
+            foreach (var row in twoMonthsOfReports)
+            {
+                //Checks if the latest date is the same as the latest report. If not, LastEnd = 00:00:00
+                if (row.regdate != LastEnd2.Date)
+                    LastEnd2 = LastEnd2.Date;
+
+                if (row.usedtime == 0) { /*if usedtime is 0, don't show event*/ }
+
+                else
+                {
+                    if (LastEnd2.Hour == 0)
+                    {
+                        LastEnd2 = row.regdate.AddHours(1).AddMinutes(LastEnd2.Minute).AddHours((double)row.usedtime); //LastEnd equals to 01:00
+                        tempList.Add(row.regdate.AddHours(LastEnd2.Hour).AddMinutes(LastEnd2.Minute));
+                    }
+                    else
+                    {
+                        LastEnd2 = row.regdate.AddHours(LastEnd2.Hour).AddMinutes(LastEnd2.Minute).AddHours((double)row.usedtime);
+                        tempList.Add(row.regdate.AddHours(LastEnd2.Hour).AddMinutes(LastEnd2.Minute));
+                    }
+                }
+            }
+
+            var dub = tempList.OrderByDescending(e => e.Date)
+                    .GroupBy(e => new { e.Date })
+                    .Where(e => e.Count() > 1) //Determines if it's unique or not
+                    .Select(g => g.LastOrDefault()); //Most recent of dublicate reports
+
+            var uni = tempList.OrderByDescending(e => e.Date)
+                    .GroupBy(e => new { e.Date })
+                    .Where(e => e.Count() == 1) //Determines if it's unique or not
+                    .Select(g => g.FirstOrDefault()); //Most recent of unique reports
+
+            foreach (var duplicate in dub)
+            {
+                if (duplicate.Hour < 9 && duplicate.Day < fiveDaysAgo.Day)
+                {
+                    daysWithLessThan8H.Add(duplicate);
+                }
+            }
+
+            foreach (var unique in uni)
+            {
+                if (unique.Hour < 9 && unique.Day < fiveDaysAgo.Day)
+                {
+                    daysWithLessThan8H.Add(unique);
+                }
+            }
+
+            tempList.Clear();
+
+            #endregion
+
+            #region LatestReports
+
             var latestReports = TimeLiveDB.q_SelectRowsTime(
                     null, ((Classes.UserClass.User)Session["User"]).Username,
                     null, null, null, null,
@@ -411,26 +551,26 @@ namespace TimeLive.Controllers
 
             var duplicates = latestReports.OrderByDescending(e => e.rowcreateddt)
                     .GroupBy(e => new { e.companyid, e.projectid, e.subprojectid })
-                    .Where(e => e.Count() > 1)
+                    .Where(e => e.Count() > 1) //Determines if it's a dubplicate or not
                     .Select(g => g.FirstOrDefault()); //Most recent of duplicated reports
-
 
             var uniques = latestReports.OrderByDescending(e => e.rowcreateddt)
                     .GroupBy(e => new { e.companyid, e.projectid, e.subprojectid })
-                    .Where(e => e.Count() == 1)
+                    .Where(e => e.Count() == 1) //Determines if it's unique or not
                     .Select(g => g.FirstOrDefault()); //Most recent of unique reports
 
             foreach (var item in duplicates)
-            {
                 latestReportsList.Add(item); //Adding the latest of each duplicate report
-            }
+
             foreach (var item in uniques)
-            {
                 latestReportsList.Add(item); //Adding all unique reports
-            }
+
+            #endregion
 
             var model = new TimeModel
             {
+                LessThan8H = daysWithLessThan8H,
+
                 LatestRows = latestReportsList.OrderBy(x => x.rowcreateddt).Reverse().Take(5), //Takes out the 5 latest reports made
 
                 SelectRows = TimeLiveDB.q_SelectRowsTime(

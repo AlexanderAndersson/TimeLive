@@ -2,7 +2,8 @@
 @using Newtonsoft.Json
 @model TimeLive.Models.TimeModel
 @{
-    var latestReports = Model.LatestRows;
+    var missingHours = Model.LessThan8H.OrderBy(x => x.Date).Reverse();
+    var latestReports = Model.LatestRows.Take(5);
     var selectRows = Model.SelectRows.OrderBy(x => x.regdate).ToArray();
     var dayDictionary = selectRows.Select(x => x.regdate).Distinct().ToDictionary(day => day, day => false);
     var totalUsed = selectRows.Sum(x => x.usedtime);
@@ -115,12 +116,24 @@
         {
             for (int i = latestReports.Count(); i < 5; i++)
             {
-                <div class="favorite latest" style="background-color:#71797b">
-                </div>
+                <a class="latest" style="text-decoration:none">
+                    <div class="latestReports" style="background-color:#71797b"></div>
+                </a>
             }
         }        
     </div>
 </div>
+
+@foreach (var item in missingHours.Take(1))
+{
+    <div class="alert alert-info">
+        There are @missingHours.Count() alerts left
+    </div>
+    <div class="alert alert-danger">
+        Missing hours for @item.ToShortDateString()
+    </div>
+}
+
 
 <div id="month"></div>
 

@@ -339,9 +339,6 @@ input[type=checkbox].glyphicon{
     display: none;
 }
 
-.activeDay {
-    background-color: #b6ff00 !important;
-}
 
 .ui-state-highlight a, .ui-widget-content .ui-state-highlight a, .ui-widget-header .ui-state-highlight a { /*Making so that the highlited day number is black*/
     color: black;
@@ -355,9 +352,9 @@ input[type=checkbox].glyphicon{
 
 #latest-container {
     display: flex;
-    margin-left: 240px;
+    margin-left: 255px;
     margin-top: 30px;
-    margin-right: 385px;
+    margin-right: 335px;
 }
 
 .latestReports {
@@ -380,12 +377,28 @@ input[type=checkbox].glyphicon{
     z-index: 1000;
 }
 
-.alert {
-    padding: 20px;
-    background-color: #f44336;
-    color: white;
-    opacity: 1;
-    transition: opacity 0.6s;
-    margin-bottom: 15px;
-    width: 300px
+/************************************/
+
+.alert-info {
+    width: 300px;
+    position: fixed;
+    right: 60px;
+    top: 84px;
+    text-align: center;
+    padding: 2px;
+    border-radius: 3px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
 }
+
+.alert-danger {
+    width: 300px;
+    position: fixed;
+    right: 60px;
+    top: 110px;
+    text-align: center;
+    border-radius: 3px;
+    border-top-right-radius: 0px;
+    border-top-left-radius: 0px;
+}
+

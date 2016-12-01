@@ -18,7 +18,7 @@ namespace TimeLive.Models
 
     public class TimeModel
     {
-        public IEnumerable<q_SelectRowsTime_Result> LessThan8H { get; set; }
+        public IEnumerable<DateTime> LessThan8H { get; set; }
         public IEnumerable<q_SelectRowsTime_Result> LatestRows { get; set; }
         public IEnumerable<q_SelectRowsTime_Result> SelectRows { get; set; }
         public IEnumerable<Customer> Customers { get; set; }
