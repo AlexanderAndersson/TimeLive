@@ -8,7 +8,7 @@
     var dayDictionary = selectRows.Select(x => x.regdate).Distinct().ToDictionary(day => day, day => false);
     var totalUsed = selectRows.Sum(x => x.usedtime);
     var totalInvoiced = selectRows.Sum(x => x.invoicedtime);
-    var totalAbsence = selectRows.Where(x => x.projectid == "1019").Sum(x => x.usedtime);
+    var totalAbsence = selectRows.Where(x => x.projectid == "1019").Sum(x => x.usedtime); //1019 is the projectid for Frånvaro, which is under the customer OPT
 }
 @*@section sidebar
     {
@@ -116,9 +116,9 @@
         {
             for (int i = latestReports.Count(); i < 5; i++)
             {
-                <a class="latest" style="text-decoration:none">
+                <div class="latest" style="text-decoration:none">
                     <div class="latestReports" style="background-color:#71797b"></div>
-                </a>
+                </div>
             }
         }        
     </div>
@@ -126,11 +126,21 @@
 
 @foreach (var item in missingHours.Take(1))
 {
-    <div class="alert alert-info">
-        There are @missingHours.Count() alerts left
-    </div>
+    if (missingHours.Count() > 1)
+    {
+        <div class="alert alert-info">
+            <b>@missingHours.Count()</b> alerts
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            <b>@missingHours.Count()</b> alert
+        </div>
+    }
+
     <div class="alert alert-danger">
-        Missing hours for @item.ToShortDateString()
+        Missing hours for <b>@item.ToShortDateString()</b>
     </div>
 }
 
@@ -141,6 +151,29 @@
     <div id="week"></div>
 </div>
 
+<div class="CurrentFilter">
+    <table class="pTable" @*cellspacing="0" cellpadding="0"*@>
+        <tr id="tableTitle">
+            <th colspan="2" class="CurrentFilterTitle"><b>Total hours</b></th>
+        </tr>
+        <tr>
+            <td class="tRow"><b>Invoiced</b></td>
+            <td class="tRow2">@totalInvoiced.ToString("N1").Replace(",", ".")h</td>
+        </tr>
+        <tr>
+            <td class="tRow"><b>Used</b></td>
+            <td class="tRow2">@totalUsed.ToString("N1").Replace(",", ".")h</td>
+        </tr>
+        <tr>
+            <td class="tRow"><b>Inv/Used</b></td>
+            <td class="tRow2">@(totalUsed != 0 ? (totalInvoiced / totalUsed).ToString("P0") : "0%")</td>
+        </tr>
+        <tr>
+            <td class="tRow"><b>Absence</b></td>
+            <td class="tRow2">@totalAbsence.ToString("N1").Replace(",", ".")h</td>
+        </tr>
+    </table>
+</div>
 
 <br />
 <div id="titles">
@@ -212,26 +245,26 @@
                     </div>*@
                     <div class="input-group col amount">
                         <span class="input-group-btn row toggle" style="display: none;">
-                            <button type="button" class="btn btn-danger btn-number btn-minus" @*disabled="disabled" data-type="minus" data-field="quant[1]"*@>
+                            <button type="button" class="btn btn-danger btn-number btn-minus">
                                 <span class="glyphicon glyphicon-minus"></span>
                             </button>
                         </span>
                         <input type="text" name="pInvoicedTime" class="form-control hours amount" value="@row.invoicedtime.ToString("0.00").Replace(",", ".")">
                         <span class="input-group-btn row toggle" style="display: none;">
-                            <button type="button" class="btn btn-success btn-number btn-plus" @*data-type="plus" data-field="quant[1]"*@>
+                            <button type="button" class="btn btn-success btn-number btn-plus">
                                 <span class="glyphicon glyphicon-plus"></span>
                             </button>
                         </span>
                     </div>
                     <div class="input-group col amount">
                         <span class="input-group-btn row toggle" style="display: none;">
-                            <button type="button" class="btn btn-danger btn-number btn-minus" @*disabled="disabled" data-type="minus" data-field="quant[1]"*@>
+                            <button type="button" class="btn btn-danger btn-number btn-minus">
                                 <span class="glyphicon glyphicon-minus"></span>
                             </button>
                         </span>
-                        <input type="text" name="pUsedTime" class="form-control hours amount" value="@row.usedtime.ToString("0.00").Replace(",", ".")" min="0">
+                        <input type="text" name="pUsedTime" class="form-control hours amount" value="@row.usedtime.ToString("0.00").Replace(",", ".")">
                         <span class="input-group-btn row toggle" style="display: none;">
-                            <button type="button" class="btn btn-success btn-number btn-plus" @*data-type="plus" data-field="quant[1]"*@>
+                            <button type="button" class="btn btn-success btn-number btn-plus">
                                 <span class="glyphicon glyphicon-plus"></span>
                             </button>
                         </span>
@@ -239,8 +272,21 @@
                     <div class="col externCom">
                         <input type="text" class="form-control comment" name="pExternComment" value="@row.externtcomment" />
                     </div>
-                    <input type="checkbox" class="delayChk" @(row.dealyinvoice == 1 ? "checked" : "") />
-                    <input type="hidden" name="pDealyinvoice" class="pDealyinvoice" value="@row.dealyinvoice" />
+                    @*<input type="checkbox" class="delayChk" @(row.dealyinvoice == 1 ? "checked" : "") />
+                    <input type="hidden" name="pDealyinvoice" class="pDealyinvoice" value="@row.dealyinvoice" />*@
+
+                    <img src="~/img/delay_true.png" onclick="" />
+
+                    <a href="#" class="copy">
+                        <img src="~/img/btn_copy.png" />
+                        <input type="hidden" class="companyId" name="pCompanyId" value="@row.companyid" />
+                        <input type="hidden" class="projectId" name="pProjectId" value="@row.projectid" />
+                        <input type="hidden" class="subProjectId" name="pSubProjectId" value="@row.subprojectid" />
+                        <input type="hidden" class="form-control hours amount" name="pInvoicedTime" value="@row.invoicedtime.ToString("0.00").Replace(",", ".")">
+                        <input type="hidden" class="form-control hours amount" name="pUsedTime" value="@row.usedtime.ToString("0.00").Replace(",", ".")">
+                        <input type="hidden" class="form-control comment" name="pExternComment" value="@row.externtcomment" />
+                        <input type="hidden" class="form-control intComment comment" name="pInternComment" value="@row.interncomment" />
+                    </a>
                 </div>
                 <div class="row toggle" style="display: none;">
                     <div class="col col-full">
@@ -331,7 +377,7 @@
                         <span class="glyphicon glyphicon-minus"></span>
                     </button>
                 </span>
-                <input type="text" name="pInvoicedTime" class="form-control hours amount" value="0.00" min="0">
+                <input type="text" name="pInvoicedTime" class="form-control hours amount newInvoice" value="0.00" min="0">
                 <span class="input-group-btn">
                     <button type="button" class="btn btn-success btn-number btn-plus" @*data-type="plus" data-field="quant[1]"*@>
                         <span class="glyphicon glyphicon-plus"></span>
@@ -344,7 +390,7 @@
                         <span class="glyphicon glyphicon-minus"></span>
                     </button>
                 </span>
-                <input type="text" name="pUsedTime" class="form-control hours amount" value="0.00" min="0">
+                <input type="text" name="pUsedTime" class="form-control hours amount newUsed" value="0.00" min="0">
                 <span class="input-group-btn">
                     <button type="button" class="btn btn-success btn-number btn-plus" @*data-type="plus" data-field="quant[1]"*@>
                         <span class="glyphicon glyphicon-plus"></span>
@@ -352,14 +398,14 @@
                 </span>
             </div>
             <div class="col externCom">
-                <input type="text" name="pExternComment" class="form-control comment" />
+                <input type="text" name="pExternComment" class="form-control comment newExtComment" />
             </div>
             <input type="checkbox" class="delayChk" />
             <input type="hidden" name="pDealyinvoice" class="pDealyinvoice" value="0" />
         </div>
         <div class="row">
             <div class="col col-full-insert">
-                <input type="text" name="pInternComment" class="form-control intComment comment" placeholder="Internal comment" />
+                <input type="text" name="pInternComment" class="form-control intComment comment newIntComment" placeholder="Internal comment" />
             </div>
             <div class="btn-group btn-group-sm">
                 <button type="submit" class="btn btn-primary btn2" title="Save">

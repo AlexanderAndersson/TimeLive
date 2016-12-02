@@ -183,9 +183,12 @@
     <Content Include="img\btnTime_PrevMonth.png" />
     <Content Include="img\btnTime_QV2.png" />
     <Content Include="img\btnTime_Week.png" />
+    <Content Include="img\btn_copy.png" />
     <Content Include="img\btn_Distance.png" />
     <Content Include="img\btn_Expenses.png" />
     <Content Include="img\btn_Time.png" />
+    <Content Include="img\delay_false.png" />
+    <Content Include="img\delay_true.png" />
     <Content Include="img\logo.png" />
     <Content Include="img\optivasys.png" />
     <Content Include="Models\Model1.Context.tt">

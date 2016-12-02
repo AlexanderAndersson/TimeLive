@@ -14,7 +14,7 @@ $(document).ready(function (date) {
         editable: true,
         defaultView: localStorage.View,
         defaultDate: localStorage.Date,
-        weekNumberCalculation: 'ISO',
+        weekNumberCalculation: "ISO",
         editable: false,
         allDaySlot: false,
         selectable: true,
@@ -96,11 +96,11 @@ $(document).ready(function (date) {
             }
         },//EventRender
         dayRender: function (date, cell) {
-            if (date > moment()) { //if date is after today, the background will have no color
-                var dateAfterToday = date.format("YYYY-MM-DD");
-                $('#month').find('.fc-day-top[data-date=' + dateAfterToday + ']').css('background', 'none', "!important");
-            }
-            if (date <= moment()) { //if there is no event on a day before today or today, the background will have a red color
+            //if (date.format("YYYY-MM-DD") >= moment().a.format("YYYY-MM-DD")) { //if date is after today, the background will have no color
+            //    var dateAfterToday = date.format("YYYY-MM-DD");
+            //    $('#month').find('.fc-day-top[data-date=' + dateAfterToday + ']').css('background', 'none', "!important");
+            //}
+            if (date < moment()) { //if there is no event on a day before today or today, the background will have a red color
                 var dateBeforeToday = date.format("YYYY-MM-DD");
                 $('#month').find('.fc-day-top[data-date=' + dateBeforeToday + ']').css('background', '#fe2d2d');
             }
@@ -137,6 +137,26 @@ $('#latest-container a').click(function () {
     $('.newProject').val(projectId).change();
     $('.newSubProject').val(subProjectId).change();
 });
+
+$('.copy').click(function () {
+    var row = $(this);
+    var companyId = row.find('input[name$=pCompanyId]').val();
+    var projectId = row.find('input[name$=pProjectId]').val();
+    var subProjectId = row.find('input[name$=pSubProjectId]').val();
+    var invoiced = row.find('input[name$=pInvoicedTime]').val();
+    var used = row.find('input[name$=pUsedTime]').val();
+    var extComment = row.find('input[name$=pExternComment]').val();
+    var IntComment = row.find('input[name$=pInternComment]').val();
+
+    $('.newCompany').val(companyId).change();
+    $('.newProject').val(projectId).change();
+    $('.newSubProject').val(subProjectId).change();
+    $('.newInvoice').val(invoiced).change();
+    $('.newUsed').val(used).change();
+    $('.newExtComment').val(extComment).change();
+    $('.newIntComment').val(IntComment).change();
+});
+
 
 //Increase/decrease numerics with arrow keys
 $('.amount').keydown(function (event) {
@@ -242,6 +262,15 @@ $('.reimChk').change(function () {
     $(this).siblings('.pReimburse').val(checked ? 1 : 0);
 });
 
+
+$('.input_class_checkbox').each(function () {
+    $(this).hide().after('<div class="class_checkbox" />');
+
+});
+
+$('.class_checkbox').on('click', function () {
+    $(this).toggleClass('checked').prev().prop('checked', $(this).is('.checked'))
+});
 
 //delay checkbox function
 $('.delayChk').change(function () {

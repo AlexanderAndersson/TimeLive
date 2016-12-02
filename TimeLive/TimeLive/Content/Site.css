@@ -2,6 +2,7 @@
     padding-top: 50px;
     padding-bottom: 20px;
     font-family: Arial;
+    background: #ebf8ff;
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -9,8 +10,8 @@
     padding-left: 30px;
     padding-right: 15px;
     margin-left: 20px !important;
-    width: 1500px;
-    /*background: red;*/
+    width: 1540px;
+    /*background-color: black;*/
 }
 
 /* Set width on the form input elements since they're 100% wide by default */
@@ -117,7 +118,7 @@ div {
 }
 
 .externCom {
-    width: 320px;
+    width: 300px;
 }
 
 .col-text{
@@ -235,11 +236,6 @@ div {
     padding-bottom: 20px;
 }
 
-.tHours {
-    font-size: large;
-    padding-left: 26px;
-}
-
 
 /*#hActionBar 
 {
@@ -249,11 +245,6 @@ div {
 	margin: 120px 0px 0px 5px;
 }*/
 
-
-#tableTitle {
-    padding-bottom: 5px;
-    font-size: x-large;
-}
 
 .navbar-left img {
     height: 46px;
@@ -276,10 +267,10 @@ div {
     margin-right: 4px;
 }
 
-.hej {
+/*.hej {
     border: solid 1px #9f9f9f;
     border-radius: 7px;
-}
+}*/
 
 .timerow {
     margin-bottom: 13px;
@@ -372,23 +363,25 @@ input[type=checkbox].glyphicon{
 }
 
 #latesReportsRow {
-    background-color: white;
+    background-color: #ebf8ff;
     position: fixed;
     z-index: 1000;
 }
 
-/************************************/
+/************ALERTS***************/
 
 .alert-info {
     width: 300px;
     position: fixed;
     right: 60px;
-    top: 84px;
+    top: 86px;
     text-align: center;
     padding: 2px;
     border-radius: 3px;
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;
+    background-color: #a6ddf9;
+    color: black;
 }
 
 .alert-danger {
@@ -400,5 +393,54 @@ input[type=checkbox].glyphicon{
     border-radius: 3px;
     border-top-right-radius: 0px;
     border-top-left-radius: 0px;
+    background-color: #ffbfbf;
+    color: black;
 }
 
+/***********TOTAL HOURS TABLE************/
+
+.CurrentFilterTitle {
+    background-color: #25849a;
+    color: #ffffff;
+    border: 1px solid #3d3d3d;
+    text-align: center;
+}
+
+.CurrentFilter
+{
+	padding: 0px;
+	border: 1px solid #3d3d3d;
+	font-family: arial, sans-serif;
+	font-size: 11pt;
+	font-weight: bold;
+	position: fixed;
+	width: 210px;
+    right: 107px;
+    top: 810px;
+}
+
+#tableTitle {
+    font-size: 13pt;
+}
+
+.tRow {
+    padding-left: 35px;
+    padding-top: 5px;
+    width: 127px;
+}
+
+.tRow2 {
+    padding-top: 5px;
+}
+
+.pTable {
+    width: 210px;
+}
+
+
+/*********DELAY AND COPY BUTTON*************/
+
+.copy img {
+    width: 24px;
+    height: auto;
+}
