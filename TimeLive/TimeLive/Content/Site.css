@@ -85,6 +85,18 @@ select,
     margin-right: 50px
 }
 
+/*.delayChk {
+    display: none;
+}*/
+
+#label:hover {
+    cursor: pointer;
+}
+
+.extCom {
+    margin-right: 80px
+}
+
 .supProjectT {
     margin-right: 40px;
 }
@@ -300,14 +312,14 @@ input[type=checkbox].glyphicon{
     width: 300px;
     position: fixed;
     right: 60px;
-    top: 200px;
+    top: 180px;
 }
 
 #week {
     width: 300px;
     position: fixed;
     right: 60px;
-    top: 580px;
+    top: 550px;
 }
 
 .fc-center h2 {
@@ -374,7 +386,7 @@ input[type=checkbox].glyphicon{
     width: 300px;
     position: fixed;
     right: 60px;
-    top: 86px;
+    top: 80px;
     text-align: center;
     padding: 2px;
     border-radius: 3px;
@@ -388,12 +400,27 @@ input[type=checkbox].glyphicon{
     width: 300px;
     position: fixed;
     right: 60px;
-    top: 110px;
+    top: 104px;
     text-align: center;
     border-radius: 3px;
     border-top-right-radius: 0px;
     border-top-left-radius: 0px;
+    border: 0px;
     background-color: #ffbfbf;
+    color: black;
+}
+
+.alert-success {
+    width: 300px;
+    position: fixed;
+    right: 60px;
+    top: 104px;
+    text-align: center;
+    border-radius: 3px;
+    border-top-right-radius: 0px;
+    border-top-left-radius: 0px;
+    border: 0px;
+    background-color: #9ce49c;
     color: black;
 }
 
@@ -415,8 +442,9 @@ input[type=checkbox].glyphicon{
 	font-weight: bold;
 	position: fixed;
 	width: 210px;
-    right: 107px;
-    top: 810px;
+    right: 100px;
+    top: 770px;
+    background-color: white;
 }
 
 #tableTitle {
@@ -443,4 +471,22 @@ input[type=checkbox].glyphicon{
 .copy img {
     width: 24px;
     height: auto;
+}
+
+.checkboxes img {
+    width: 24px;
+    height: auto;
+}
+
+.checkboxes img {
+    cursor: pointer;
+}
+
+/*.checkboxes input[type="checkbox"] {
+    background: url('/img/delay_false.png') no-repeat;
+    padding-left: 40px;
+    height:30px;
+}*/
+.checkboxes input:checked {
+    background: url('/img/delay_true.png') no-repeat;
 }

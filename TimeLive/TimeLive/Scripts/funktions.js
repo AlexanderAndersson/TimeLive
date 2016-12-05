@@ -268,15 +268,55 @@ $('.input_class_checkbox').each(function () {
 
 });
 
-$('.class_checkbox').on('click', function () {
+//Makes so that when you reload the page, the right image is showned on delays.
+$('.delayChk').each(function () {
+    var checked = $(this).is(':checked');
+    var image = $(this).siblings("img");
+    if (checked == true) {
+        image.attr('src', 'img/delay_true.png');
+    }
+    else {
+        image.attr('src', 'img/delay_false.png');
+    }
+});
+
+
+$('.delayChk').on('click', function () {
+    var checked = $(this).is(':checked');
+    var image = $(this).siblings("img");
+    var input = $(this).siblings('.pDealyinvoice');
     $(this).toggleClass('checked').prev().prop('checked', $(this).is('.checked'))
+    if (checked == true) {
+        image.attr('src', 'img/delay_false.png');
+       $(this).siblings('.pDealyinvoice').val(1);
+        //input.val(1);
+    }
+    else {
+        image.attr('src', 'img/delay_true.png');
+        //$(this).siblings('.pDealyinvoice').val() == 0;
+        input.val(0);
+    }
 });
 
 //delay checkbox function
-$('.delayChk').change(function () {
-    var checked = $(this).is(':checked');
-    $(this).siblings('.pDealyinvoice').val(checked ? 1 : 0);
-});
+//$('.delayChk').change(function () {
+//    var checked = $(this).is('checked');
+//    $(this).siblings('.pDealyinvoice').val(checked ? 1 : 0);
+//});
+
+
+//function ToggleFilterDelay(divObj) {
+//    var image = $(divObj).children("img");
+//    var input = $(divObj).children('input');
+//    if (input.val() == '0') {
+//        image.attr('src', 'img/delay_false.png');
+//        input.val(1);
+//    }
+//    else {
+//        image.attr('src', 'img/delay_true.png');
+//        input.val(0);
+//    }
+//};
 
 
 //Show internal comment and hide siblings

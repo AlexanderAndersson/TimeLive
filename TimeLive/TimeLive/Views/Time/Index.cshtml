@@ -138,12 +138,20 @@
             <b>@missingHours.Count()</b> alert
         </div>
     }
-
     <div class="alert alert-danger">
         Missing hours for <b>@item.ToShortDateString()</b>
     </div>
 }
 
+@if (missingHours.Count() == 0)
+{
+    <div class="alert alert-info">
+        0 alerts
+    </div>
+    <div class="alert alert-success">
+        There are no missing hours
+    </div>
+}
 
 <div id="month"></div>
 
@@ -196,8 +204,11 @@
         <div class="col amount-head usedT col-header">
             Used
         </div>
-        <div class="col col-text col-header">
+        <div class="col col-text extCom col-header">
             External comment
+        </div>
+        <div class="col-header">
+            Delay
         </div>
     </div>
 </div>
@@ -244,26 +255,26 @@
                         <input type="text" class="form-control amount hours" name="pUsedTime" value="@row.usedtime.ToString("0.00").Replace(",", ".")" />
                     </div>*@
                     <div class="input-group col amount">
-                        <span class="input-group-btn row toggle" style="display: none;">
+                        <span class="input-group-btn row toggle" style="display: none;"> <!--BUTTON MINUS-->
                             <button type="button" class="btn btn-danger btn-number btn-minus">
                                 <span class="glyphicon glyphicon-minus"></span>
                             </button>
                         </span>
-                        <input type="text" name="pInvoicedTime" class="form-control hours amount" value="@row.invoicedtime.ToString("0.00").Replace(",", ".")">
-                        <span class="input-group-btn row toggle" style="display: none;">
+                        <input type="text" name="pInvoicedTimeUpdate" class="form-control hours amount" value="@row.invoicedtime.ToString("0.00").Replace(",", ".")">
+                        <span class="input-group-btn row toggle" style="display: none;"> <!--BUTTON PLUS-->
                             <button type="button" class="btn btn-success btn-number btn-plus">
                                 <span class="glyphicon glyphicon-plus"></span>
                             </button>
                         </span>
                     </div>
                     <div class="input-group col amount">
-                        <span class="input-group-btn row toggle" style="display: none;">
+                        <span class="input-group-btn row toggle" style="display: none;"> <!--BUTTON MINUS-->
                             <button type="button" class="btn btn-danger btn-number btn-minus">
                                 <span class="glyphicon glyphicon-minus"></span>
                             </button>
                         </span>
-                        <input type="text" name="pUsedTime" class="form-control hours amount" value="@row.usedtime.ToString("0.00").Replace(",", ".")">
-                        <span class="input-group-btn row toggle" style="display: none;">
+                        <input type="text" name="pUsedTimeUpdate" class="form-control hours amount" value="@row.usedtime.ToString("0.00").Replace(",", ".")">
+                        <span class="input-group-btn row toggle" style="display: none;"> <!--BUTTON PLUS-->
                             <button type="button" class="btn btn-success btn-number btn-plus">
                                 <span class="glyphicon glyphicon-plus"></span>
                             </button>
@@ -272,12 +283,12 @@
                     <div class="col externCom">
                         <input type="text" class="form-control comment" name="pExternComment" value="@row.externtcomment" />
                     </div>
-                    @*<input type="checkbox" class="delayChk" @(row.dealyinvoice == 1 ? "checked" : "") />
-                    <input type="hidden" name="pDealyinvoice" class="pDealyinvoice" value="@row.dealyinvoice" />*@
-
-                    <img src="~/img/delay_true.png" onclick="" />
-
-                    <a href="#" class="copy">
+                    <label class="checkboxes">
+                        <input type="checkbox" class="delayChk" @(row.dealyinvoice == 1 ? "checked" : "") value="@row.dealyinvoice" />
+                        <input type="hidden" name="pDealyinvoice" class="pDealyinvoice" value="@row.dealyinvoice" />
+                        <img src="~/img/delay_false.png" class="image" />
+                    </label>
+                    <a href="#" class="copy" title="Copy">
                         <img src="~/img/btn_copy.png" />
                         <input type="hidden" class="companyId" name="pCompanyId" value="@row.companyid" />
                         <input type="hidden" class="projectId" name="pProjectId" value="@row.projectid" />
@@ -372,27 +383,27 @@
                 <input type="text" name="pUsedTime" class="form-control hours amount" value="0.00" />
             </div>*@
             <div class="input-group col amount">
-                <span class="input-group-btn">
-                    <button type="button" class="btn btn-danger btn-number btn-minus" @*disabled="disabled" data-type="minus" data-field="quant[1]"*@>
+                <span class="input-group-btn"> <!--BUTTON MINUS-->
+                    <button type="button" class="btn btn-danger btn-number btn-minus">
                         <span class="glyphicon glyphicon-minus"></span>
                     </button>
                 </span>
                 <input type="text" name="pInvoicedTime" class="form-control hours amount newInvoice" value="0.00" min="0">
-                <span class="input-group-btn">
-                    <button type="button" class="btn btn-success btn-number btn-plus" @*data-type="plus" data-field="quant[1]"*@>
+                <span class="input-group-btn"> <!--BUTTON PLUS-->
+                    <button type="button" class="btn btn-success btn-number btn-plus">
                         <span class="glyphicon glyphicon-plus"></span>
                     </button>
                 </span>
             </div>
             <div class="input-group col amount">
-                <span class="input-group-btn">
-                    <button type="button" class="btn btn-danger btn-number btn-minus" @*disabled="disabled" data-type="minus" data-field="quant[1]"*@>
+                <span class="input-group-btn"> <!--BUTTON MINUS-->
+                    <button type="button" class="btn btn-danger btn-number btn-minus">
                         <span class="glyphicon glyphicon-minus"></span>
                     </button>
-                </span>
+                </span> 
                 <input type="text" name="pUsedTime" class="form-control hours amount newUsed" value="0.00" min="0">
-                <span class="input-group-btn">
-                    <button type="button" class="btn btn-success btn-number btn-plus" @*data-type="plus" data-field="quant[1]"*@>
+                <span class="input-group-btn"> <!--BUTTON PLUS-->
+                    <button type="button" class="btn btn-success btn-number btn-plus"> 
                         <span class="glyphicon glyphicon-plus"></span>
                     </button>
                 </span>

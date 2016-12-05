@@ -393,13 +393,13 @@ namespace TimeLive.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Update(string q_hrp_guiid, string pCompanyId, int pProjectId, string pSubProjectId, DateTime pRegDate, double? pInvoicedTime, double pUsedTime, string pExternComment, string pInternComment, int pDealyinvoice)
+        public ActionResult Update(string q_hrp_guiid, string pCompanyId, int pProjectId, string pSubProjectId, DateTime pRegDate, double pInvoicedTimeUpdate, double pUsedTimeUpdate, string pExternComment, string pInternComment, int pDealyinvoice)
         {
             Session["User"] = (Classes.UserClass.User)Session["User"] ?? Classes.UserClass.GetUserByIdentity(WindowsIdentity.GetCurrent());
             var user = (Classes.UserClass.User)Session["User"];
 
             TimeLiveDB.q_UpdateRowTime(q_hrp_guiid, user.Username, pProjectId, pSubProjectId, pCompanyId, pRegDate, pExternComment, pInternComment,
-                pInvoicedTime, pUsedTime, pDealyinvoice, null, null, null, null);
+                pInvoicedTimeUpdate, pUsedTimeUpdate, pDealyinvoice, null, null, null, null);
 
             return RedirectToAction("Index");
         }
