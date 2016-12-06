@@ -55,7 +55,7 @@ namespace TimeLive.Controllers
             var fiveDaysAgo = date.AddDays(-5);
 
             // create an IEnumerable<DateTime> for all dates in the range
-            IEnumerable<DateTime> allDates = Enumerable.Range(0, 30)
+            IEnumerable<DateTime> allDates = Enumerable.Range(0, 60)
                 .Select(n => fromDay.AddDays(n));
 
             var datesMissing = allDates.Except(dates);
@@ -64,7 +64,7 @@ namespace TimeLive.Controllers
             {
                 if (item.DayOfWeek != DayOfWeek.Saturday)
                 {
-                    if (item.DayOfWeek != DayOfWeek.Sunday && item.Day < fiveDaysAgo.Day)
+                    if (item.DayOfWeek != DayOfWeek.Sunday && item <= fiveDaysAgo)
                     {
                         daysWithLessThan8H.Add(item);
                     }
@@ -110,7 +110,7 @@ namespace TimeLive.Controllers
 
             foreach (var duplicate in dub)
             {
-                if (duplicate.Hour < 9 && duplicate.Day < fiveDaysAgo.Day)
+                if (duplicate.Hour < 9 && duplicate < fiveDaysAgo)
                 {
                     daysWithLessThan8H.Add(duplicate);
                 }
@@ -118,7 +118,7 @@ namespace TimeLive.Controllers
 
             foreach (var unique in uni)
             {
-                if (unique.Hour < 9 && unique.Day < fiveDaysAgo.Day)
+                if (unique.Hour < 9 && unique < fiveDaysAgo)
                 {
                     daysWithLessThan8H.Add(unique);
                 }
@@ -466,7 +466,7 @@ namespace TimeLive.Controllers
             var fiveDaysAgo = date.AddDays(-5);
 
             // create an IEnumerable<DateTime> for all dates in the range
-            IEnumerable<DateTime> allDates = Enumerable.Range(0, 30)
+            IEnumerable<DateTime> allDates = Enumerable.Range(0, 60)
                 .Select(n => fromDay.AddDays(n));
 
             var datesMissing = allDates.Except(dates);
@@ -475,7 +475,7 @@ namespace TimeLive.Controllers
             {
                 if (item.DayOfWeek != DayOfWeek.Saturday)
                 {
-                    if (item.DayOfWeek != DayOfWeek.Sunday && item.Day < fiveDaysAgo.Day)
+                    if (item.DayOfWeek != DayOfWeek.Sunday && item <= fiveDaysAgo)
                     {
                         daysWithLessThan8H.Add(item);
                     }
@@ -521,7 +521,7 @@ namespace TimeLive.Controllers
 
             foreach (var duplicate in dub)
             {
-                if (duplicate.Hour < 9 && duplicate.Day < fiveDaysAgo.Day)
+                if (duplicate.Hour < 9 && duplicate < fiveDaysAgo)
                 {
                     daysWithLessThan8H.Add(duplicate);
                 }
@@ -529,7 +529,7 @@ namespace TimeLive.Controllers
 
             foreach (var unique in uni)
             {
-                if (unique.Hour < 9 && unique.Day < fiveDaysAgo.Day)
+                if (unique.Hour < 9 && unique < fiveDaysAgo)
                 {
                     daysWithLessThan8H.Add(unique);
                 }

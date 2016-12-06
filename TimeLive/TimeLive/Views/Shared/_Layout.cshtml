@@ -23,9 +23,10 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-left"><img src="~/img/logo.png"></a>
-                <a href="@Url.Action("Index", "Time")" class="btn-logos"><img id="logo-time" class="image Inactive" src="~/img/btn_Time.png"/></a>
-                <a href="@Url.Action("Index", "Expenses")" id="logo-expenses" class="btn-logos"><img class="image Inactive" src="~/img/btn_Expenses.png"/></a>
-                <a href="@Url.Action("Index", "Distance")" id="logo-distance" class="btn-logos"><img class="image Inactive" src="~/img/btn_Distance.png"/></a>
+                @Html.ActionLink("TIME", "Index", "Time");
+                <a href="@Url.Action("Index", "Time")" class="btn-logos"><img id="logo-time" class="image nav-img" src="~/img/btn_Time.png"/></a>
+                <a href="@Url.Action("Index", "Expenses")" id="logo-expenses" class="btn-logos"><img class="image nav-img" src="~/img/btn_Expenses.png"/></a>
+                <a href="@Url.Action("Index", "Distance")" id="logo-distance" class="btn-logos"><img class="image nav-img" src="~/img/btn_Distance.png"/></a>
                 @*@Html.ActionLink("Time", "Index", "Time", new { area = "" }, new { @class = "navbar-brand" })
                 @Html.ActionLink("Expenses", "Index", "Expenses", new { area = "" }, new { @class = "navbar-brand" })
                 @Html.ActionLink("Distance", "Index", "Distance", new { area = "" }, new { @class = "navbar-brand" })*@

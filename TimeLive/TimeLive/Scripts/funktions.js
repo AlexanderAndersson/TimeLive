@@ -100,7 +100,7 @@ $(document).ready(function (date) {
             //    var dateAfterToday = date.format("YYYY-MM-DD");
             //    $('#month').find('.fc-day-top[data-date=' + dateAfterToday + ']').css('background', 'none', "!important");
             //}
-            if (date < moment()) { //if there is no event on a day before today or today, the background will have a red color
+            if (date <= moment().day(1)) { //if there is no event on a day before today or today, the background will have a red color
                 var dateBeforeToday = date.format("YYYY-MM-DD");
                 $('#month').find('.fc-day-top[data-date=' + dateBeforeToday + ']').css('background', '#fe2d2d');
             }
@@ -123,9 +123,79 @@ $(document).ready(function (date) {
             $('#selectionTo').val(date.format('YYYY-MM-DD'));
             $('#selectionsApply').click();
         },//navLinkDayClick 
-        //viewRender with jQuert.ajax
+        viewRender: function (view) { //Takes the first and last date of month, and stores it in localstorage
+            localStorage.firstDay = view.intervalStart.format("YYYY-MM-DD"); //First day of the month
+            //localStorage.Date = view.intervalStart;
+            var newdate = new Date(view.intervalEnd);
+            newdate.setDate(newdate.getDate() - 1);
+            var nd = new Date(newdate);
+
+            localStorage.lastDay = nd.toLocaleDateString(); //Last day of the month
+        },//ViewRender
     });//Month
+
+    //Makes so that when you reload the page, the right image is showned on delays.
+    $('.delayChk').each(function () {
+        var checked = $(this).is(':checked');
+        var image = $(this).siblings("img");
+
+        if (checked == true) {
+            image.attr('src', '/img/delay_true.png');
+            $(this).addClass('check');        
+        }
+        else {
+            image.attr('src', '/img/delay_false.png');
+            $(this).removeClass('check');
+        }
+    });
+
+    $('.fc-center').on('click', function () {
+        //alert(localStorage.firstDay + " - " + localStorage.lastDay);
+        $('#selectionFrom').val(localStorage.firstDay);
+        $('#selectionTo').val(localStorage.lastDay);
+        $('#selectionsApply').click();
+    });
+
+    //if (typeof (Storage) !== "undefined") {
+
+    //    if (sessionStorage.selectedBox) {
+    //        $(".nav-img").siblings().eq(sessionStorage.selectedBox).addClass("active-nav");
+    //    }
+    //}
+
+    //$(".nav-img").on("click", function () {
+
+    //    $(this).siblings().removeClass("active-nav");
+    //    $(this).addClass("active-nav");
+
+    //    sessionStorage.selectedBox = $(".nav-img").siblings().index(this);
+
+    //});
 });//document.ready
+
+
+//$(".nav-img").on("click", function () {
+//    $(this).siblings().removeClass("active-nav");
+//    $(this).addClass("active-nav");
+//});
+
+
+$('.delayChk').on('click', function () {
+    var checked = $(this).is(':checked');
+    var image = $(this).siblings("img");
+    var input = $(this).siblings('.pDealyinvoice');
+
+    if (checked == false) {
+        image.attr('src', '/img/delay_false.png');
+        input.val(0);
+        $(this).removeClass('check');
+    }
+    else {
+        image.attr('src', '/img/delay_true.png');
+        input.val(1);
+        $(this).addClass('check');
+    }
+});
 
 $('#latest-container a').click(function () {
     var row = $(this);
@@ -261,62 +331,6 @@ $('.reimChk').change(function () {
     var checked = $(this).is(':checked');
     $(this).siblings('.pReimburse').val(checked ? 1 : 0);
 });
-
-
-$('.input_class_checkbox').each(function () {
-    $(this).hide().after('<div class="class_checkbox" />');
-
-});
-
-//Makes so that when you reload the page, the right image is showned on delays.
-$('.delayChk').each(function () {
-    var checked = $(this).is(':checked');
-    var image = $(this).siblings("img");
-    if (checked == true) {
-        image.attr('src', 'img/delay_true.png');
-    }
-    else {
-        image.attr('src', 'img/delay_false.png');
-    }
-});
-
-
-$('.delayChk').on('click', function () {
-    var checked = $(this).is(':checked');
-    var image = $(this).siblings("img");
-    var input = $(this).siblings('.pDealyinvoice');
-    $(this).toggleClass('checked').prev().prop('checked', $(this).is('.checked'))
-    if (checked == true) {
-        image.attr('src', 'img/delay_false.png');
-       $(this).siblings('.pDealyinvoice').val(1);
-        //input.val(1);
-    }
-    else {
-        image.attr('src', 'img/delay_true.png');
-        //$(this).siblings('.pDealyinvoice').val() == 0;
-        input.val(0);
-    }
-});
-
-//delay checkbox function
-//$('.delayChk').change(function () {
-//    var checked = $(this).is('checked');
-//    $(this).siblings('.pDealyinvoice').val(checked ? 1 : 0);
-//});
-
-
-//function ToggleFilterDelay(divObj) {
-//    var image = $(divObj).children("img");
-//    var input = $(divObj).children('input');
-//    if (input.val() == '0') {
-//        image.attr('src', 'img/delay_false.png');
-//        input.val(1);
-//    }
-//    else {
-//        image.attr('src', 'img/delay_true.png');
-//        input.val(0);
-//    }
-//};
 
 
 //Show internal comment and hide siblings

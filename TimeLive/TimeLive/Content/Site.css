@@ -85,10 +85,6 @@ select,
     margin-right: 50px
 }
 
-/*.delayChk {
-    display: none;
-}*/
-
 #label:hover {
     cursor: pointer;
 }
@@ -322,6 +318,11 @@ input[type=checkbox].glyphicon{
     top: 550px;
 }
 
+.fc-center h2:hover {
+    cursor: pointer;
+    font-weight: 600;
+}
+
 .fc-center h2 {
    font-size: 18px !important;
 }
@@ -482,11 +483,12 @@ input[type=checkbox].glyphicon{
     cursor: pointer;
 }
 
-/*.checkboxes input[type="checkbox"] {
-    background: url('/img/delay_false.png') no-repeat;
-    padding-left: 40px;
-    height:30px;
-}*/
-.checkboxes input:checked {
-    background: url('/img/delay_true.png') no-repeat;
+.delayChk {
+    display: none;
+}
+
+/****************NAVBAR*****************/
+
+.active-nav {
+    border: 1px solid yellow;
 }
