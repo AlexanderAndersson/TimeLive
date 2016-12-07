@@ -2,18 +2,17 @@
 /// <reference path="moment.js" />
 $(document).ready(function (date) {
 
-    if (localStorage.View === undefined) {
-        localStorage.View = "agendaWeek";
+    if (sessionStorage.View === undefined) {
+        sessionStorage.View = "agendaWeek";
     };
 
-    //alert(localStorage.first);
-
+    //Customizations for week calendar
     $('#week').fullCalendar({
         theme: true,
         header: false,
         editable: true,
-        defaultView: localStorage.View,
-        defaultDate: localStorage.Date,
+        defaultView: sessionStorage.View,
+        defaultDate: sessionStorage.Date,
         weekNumberCalculation: "ISO",
         editable: false,
         allDaySlot: false,
@@ -54,12 +53,11 @@ $(document).ready(function (date) {
         },
         eventMouseout: function (data, event, view) {
             $(this).css('z-index', 8);
-
             $('.tooltiptopicevent').remove();
-
         },//Mouseover
     });//Week
 
+    //Customizations for month calendar
     $('#month').fullCalendar({
         theme: true,
         header: {
@@ -70,7 +68,7 @@ $(document).ready(function (date) {
         },//header
         lazyFetching: true,
         defaultView: 'month',
-        defaultDate: localStorage.Date,
+        defaultDate: sessionStorage.Date,
         weekNumberCalculation: 'ISO',
         events: "/Time/GetMonthEvents/",
         //viewRender was here and events after that
@@ -108,29 +106,27 @@ $(document).ready(function (date) {
         navLinkWeekClick: function (date) {
             $('#week').fullCalendar('gotoDate', date);
             $('#week').fullCalendar('changeView', 'agendaWeek');
-            localStorage.View = "agendaWeek";
-            localStorage.Date = date;
+            sessionStorage.View = "agendaWeek";
+            sessionStorage.Date = date;
             $('#selectionFrom').val(date.format('YYYY-MM-DD'));
-            $('#selectionTo').val(date.isoWeekday(7).format('YYYY-MM-DD'));
+            $('#selectionTo').val(date.isoWeekday(5).format('YYYY-MM-DD'));
             $('#selectionsApply').click();
         },//navLinkWeekClick
         navLinkDayClick: function (date) {
             $('#week').fullCalendar('gotoDate', date);
             $('#week').fullCalendar('changeView', 'agenda');
-            localStorage.View = "agenda";
-            localStorage.Date = date;
+            sessionStorage.View = "agenda";
+            sessionStorage.Date = date;
             $('#selectionFrom').val(date.format('YYYY-MM-DD'));
             $('#selectionTo').val(date.format('YYYY-MM-DD'));
             $('#selectionsApply').click();
         },//navLinkDayClick 
         viewRender: function (view) { //Takes the first and last date of month, and stores it in localstorage
-            localStorage.firstDay = view.intervalStart.format("YYYY-MM-DD"); //First day of the month
-            //localStorage.Date = view.intervalStart;
+            sessionStorage.firstDay = view.intervalStart.format("YYYY-MM-DD"); //First day of the month
             var newdate = new Date(view.intervalEnd);
             newdate.setDate(newdate.getDate() - 1);
             var nd = new Date(newdate);
-
-            localStorage.lastDay = nd.toLocaleDateString(); //Last day of the month
+            sessionStorage.lastDay = nd.toLocaleDateString(); //Last day of the month
         },//ViewRender
     });//Month
 
@@ -149,37 +145,45 @@ $(document).ready(function (date) {
         }
     });
 
+    //Shows all the reports for the whole month
     $('.fc-center').on('click', function () {
-        //alert(localStorage.firstDay + " - " + localStorage.lastDay);
-        $('#selectionFrom').val(localStorage.firstDay);
-        $('#selectionTo').val(localStorage.lastDay);
+        $('#selectionFrom').val(sessionStorage.firstDay);
+        $('#selectionTo').val(sessionStorage.lastDay);
         $('#selectionsApply').click();
     });
 
-    //if (typeof (Storage) !== "undefined") {
+    //Script for active navbar
+    if (typeof (Storage) !== "undefined") {
+        if (sessionStorage.selectedNav) {
+            $(".navImg").siblings().eq(sessionStorage.selectedNav).
+            addClass("active");
+        }
+        else {
+            $(".navImg").siblings().eq(2).addClass("active");
+        }
+    }
+    $(".navImg").on("click", function () {
+        $(this).siblings().removeClass("active");
+        $(this).addClass("active");
 
-    //    if (sessionStorage.selectedBox) {
-    //        $(".nav-img").siblings().eq(sessionStorage.selectedBox).addClass("active-nav");
-    //    }
-    //}
+        sessionStorage.selectedNav = $(".navImg").siblings().index(this);
+    });
 
-    //$(".nav-img").on("click", function () {
+    //Clicking on a alert notification makes the page "focus" on that day
+    $('.alert-danger').click(function () {
+        var date = document.getElementById('missingReport').innerHTML;
+        sessionStorage.Date = date;
+        sessionStorage.View = "agenda";
+        $('#selectionFrom').val(date);
+        $('#selectionTo').val(date);
+        $('#selectionsApply').click();
+    });
 
-    //    $(this).siblings().removeClass("active-nav");
-    //    $(this).addClass("active-nav");
+    //$('#datesShowned').html(sessionStorage.From + " - " + sessionStorage.To)
 
-    //    sessionStorage.selectedBox = $(".nav-img").siblings().index(this);
-
-    //});
 });//document.ready
 
-
-//$(".nav-img").on("click", function () {
-//    $(this).siblings().removeClass("active-nav");
-//    $(this).addClass("active-nav");
-//});
-
-
+//Changes picture when clicking on delay img
 $('.delayChk').on('click', function () {
     var checked = $(this).is(':checked');
     var image = $(this).siblings("img");
@@ -197,6 +201,7 @@ $('.delayChk').on('click', function () {
     }
 });
 
+//Changes the value of a new report when clicking on one of the 5 latest reports
 $('#latest-container a').click(function () {
     var row = $(this);
     var companyId = row.find('input[name$=pCompanyId]').val();
@@ -208,6 +213,7 @@ $('#latest-container a').click(function () {
     $('.newSubProject').val(subProjectId).change();
 });
 
+//Copy button funtion
 $('.copy').click(function () {
     var row = $(this);
     var companyId = row.find('input[name$=pCompanyId]').val();
