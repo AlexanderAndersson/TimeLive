@@ -127,7 +127,6 @@
         }        
     </div>
 </div>
-
 @foreach (var item in missingHours.Take(1))
 {
     if (missingHours.Count() > 1)
@@ -142,7 +141,7 @@
             <b>@missingHours.Count()</b> alert
         </div>
     }
-    <div class="alert alert-danger">
+    <div class="alert alert-danger" id="missingRpt">
         <span>Missing hours for <b id="missingReport">@item.ToShortDateString()</b></span>
     </div>
 }
@@ -186,7 +185,26 @@
         </tr>
     </table>
 </div>
-
+<div class="row">
+    @if (TempData["error"] != null)
+    {
+        <div class="alert alert-danger" id="errorMsg">
+            <span id=""><b>@TempData["error"]</b> <i>Click for more info</i></span>
+        </div>
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <span class="close">×</span>
+                <h3 style="text-align: center"><b>Error Specification</b></h3><br/>
+                <h4>@TempData["errorMsg"]</h4><br/>
+                <h4><b>Inner exception</b></h4>
+                <h5>@TempData["errorInnerExp"]</h5>
+            </div>
+        </div>
+        <script>
+            $('#titles').css("margin-top", "300", "!important");
+        </script>
+    }
+</div>
 <br />
 <div id="titles">
     <div class="row row-header">
@@ -211,28 +229,29 @@
         <div class="col col-text extCom col-header">
             External comment
         </div>
-        <div class="col-header">
+        <div class="col col-delay col-header">
             Delay
         </div>
     </div>
 </div>
 
-@foreach (var row in selectRows)
-{
-    <div class="timerow">
-        @using (Html.BeginForm("Update", "Time", FormMethod.Post))
-        {
-            @Html.AntiForgeryToken()
-            <input type="hidden" name="q_hrp_guiid" class="q_hrp_guiid" value="@row.q_hrp_guiid" />
+<div class="rows">
+    @foreach (var row in selectRows)
+    {
+        <div class="timerow">
+            @using (Html.BeginForm("Update", "Time", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="q_hrp_guiid" class="q_hrp_guiid" value="@row.q_hrp_guiid" />
                 @*<input type="hidden" value="@row.RowStatus" />
-                <input type="hidden" value="@row.InvoiceStatus" />
-                <input type="hidden" value="@row.anstalld" />
-                <input type="hidden" value="@row.companyname" />
-                <input type="hidden" value="@row.customerresponsible" />
-                <input type="hidden" value="@row.externcomment_prio" />
-                <input type="hidden" value="@row.invoiceID" />
-                <input type="hidden" value="@row.prelinvoiceid" />
-                <input type="hidden" value="@row.subprojectname" />*@
+                    <input type="hidden" value="@row.InvoiceStatus" />
+                    <input type="hidden" value="@row.anstalld" />
+                    <input type="hidden" value="@row.companyname" />
+                    <input type="hidden" value="@row.customerresponsible" />
+                    <input type="hidden" value="@row.externcomment_prio" />
+                    <input type="hidden" value="@row.invoiceID" />
+                    <input type="hidden" value="@row.prelinvoiceid" />
+                    <input type="hidden" value="@row.subprojectname" />*@
 
                 @*<input type="hidden" name="dealyinvoice" value="@row.dealyinvoice" />*@
                 <input type="hidden" name="subprojectid_prio" value="@row.subprojectid_prio" />
@@ -253,32 +272,36 @@
                         <input type="text" class="form-control date-picker" name="pRegDate" value="@row.regdate.ToString("yyyy-MM-dd")" />
                     </div>
                     @*<div class="col amount">
-                        <input type="text" class="form-control amount hours" name="pInvoicedTime" value="@row.invoicedtime.ToString("0.00").Replace(",", ".")" />
-                    </div>
-                    <div class="col amount">
-                        <input type="text" class="form-control amount hours" name="pUsedTime" value="@row.usedtime.ToString("0.00").Replace(",", ".")" />
-                    </div>*@
+                            <input type="text" class="form-control amount hours" name="pInvoicedTime" value="@row.invoicedtime.ToString("0.00").Replace(",", ".")" />
+                        </div>
+                        <div class="col amount">
+                            <input type="text" class="form-control amount hours" name="pUsedTime" value="@row.usedtime.ToString("0.00").Replace(",", ".")" />
+                        </div>*@
                     <div class="input-group col amount">
-                        <span class="input-group-btn row toggle" style="display: none;"> <!--BUTTON MINUS-->
+                        <span class="input-group-btn row toggle" style="display: none;">
+                            <!--BUTTON MINUS-->
                             <button type="button" class="btn btn-danger btn-number btn-minus">
                                 <span class="glyphicon glyphicon-minus"></span>
                             </button>
                         </span>
                         <input type="text" name="pInvoicedTimeUpdate" class="form-control hours amount" value="@row.invoicedtime.ToString("0.00").Replace(",", ".")">
-                        <span class="input-group-btn row toggle" style="display: none;"> <!--BUTTON PLUS-->
+                        <span class="input-group-btn row toggle" style="display: none;">
+                            <!--BUTTON PLUS-->
                             <button type="button" class="btn btn-success btn-number btn-plus">
                                 <span class="glyphicon glyphicon-plus"></span>
                             </button>
                         </span>
                     </div>
                     <div class="input-group col amount">
-                        <span class="input-group-btn row toggle" style="display: none;"> <!--BUTTON MINUS-->
+                        <span class="input-group-btn row toggle" style="display: none;">
+                            <!--BUTTON MINUS-->
                             <button type="button" class="btn btn-danger btn-number btn-minus">
                                 <span class="glyphicon glyphicon-minus"></span>
                             </button>
                         </span>
                         <input type="text" name="pUsedTimeUpdate" class="form-control hours amount" value="@row.usedtime.ToString("0.00").Replace(",", ".")">
-                        <span class="input-group-btn row toggle" style="display: none;"> <!--BUTTON PLUS-->
+                        <span class="input-group-btn row toggle" style="display: none;">
+                            <!--BUTTON PLUS-->
                             <button type="button" class="btn btn-success btn-number btn-plus">
                                 <span class="glyphicon glyphicon-plus"></span>
                             </button>
@@ -326,36 +349,37 @@
                             </a>*@
                     </div>
                 </div>
-        }
+            }
 
-        <!--MODAL-->
-        @*@using (Html.BeginForm("Update", "Time", FormMethod.Post))
-            {*@
-        <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p>Are you sure you want to delete:</p><b><input type="text" name="bookId" id="bookId" value="" /></b>
-                    </div>
-                    <div class="modal-footer" style="background-color: rgb(241,241,241)">
-                        <button type="button" class="btn btn-success" data-dismiss="modal">Cancel</button>
-                        <button type="button" data-id="@row.q_hrp_guiid" class="btn btn-danger" id="modalDelete" title="Delete">Delete</button>
+            <!--MODAL-->
+            @*@using (Html.BeginForm("Update", "Time", FormMethod.Post))
+                {*@
+            <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure you want to delete:</p><b><input type="text" name="bookId" id="bookId" value="" /></b>
+                        </div>
+                        <div class="modal-footer" style="background-color: rgb(241,241,241)">
+                            <button type="button" class="btn btn-success" data-dismiss="modal">Cancel</button>
+                            <button type="button" data-id="@row.q_hrp_guiid" class="btn btn-danger" id="modalDelete" title="Delete">Delete</button>
+                        </div>
                     </div>
                 </div>
             </div>
+            @*}*@
         </div>
-        @*}*@
-    </div>
-}
+    }
+</div>
 @if (selectRows.Count() != 0)
 {
     <br />
-        <div class="row row-header">
-            <div class="col col-dropdown col-header">
+        <div class="row ">
+            <div class="col col-header">
                 New Report
         </div>
     </div>
@@ -367,12 +391,12 @@
         <div class="row">
             <div class="col col-dropdown">
                 @*<input type="hidden" class="pCompanyId" />*@
-                <select name="pCompanyId" class="form-control newCompany companyDropDown">
+                <select name="pCompanyId" required="required" class="form-control newCompany companyDropDown">
                     <option value="">Select Customer</option>
                 </select>
             </div>
             <div class="col col-dropdown">
-                <select name="pProjectId" class="form-control newProject projectDropDown"></select>
+                <select name="pProjectId" required="required" class="form-control newProject projectDropDown"></select>
             </div>
             <div class="col col-dropdown">
                 <select name="pSubProjectId" class="form-control newSubProject subProjectDropDown"></select>
@@ -413,7 +437,7 @@
                 </span>
             </div>
             <div class="col externCom">
-                <input type="text" name="pExternComment" class="form-control comment newExtComment" />
+                <input type="text" required name="pExternComment" class="form-control comment newExtComment" />
             </div>
             <label class="checkboxes">
                 <input type="checkbox" class="delayChk" />

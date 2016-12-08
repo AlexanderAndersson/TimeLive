@@ -170,13 +170,34 @@ $(document).ready(function (date) {
     });
 
     //Clicking on a alert notification makes the page "focus" on that day
-    $('.alert-danger').click(function () {
+    $('#missingRpt').click(function () {
         var date = document.getElementById('missingReport').innerHTML;
         sessionStorage.Date = date;
         sessionStorage.View = "agenda";
         $('#selectionFrom').val(date);
         $('#selectionTo').val(date);
         $('#selectionsApply').click();
+    });
+
+    var modal = document.getElementById('myModal');
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function () {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    $('#errorMsg').click(function () {
+        modal.style.display = "block";
     });
 
     //$('#datesShowned').html(sessionStorage.From + " - " + sessionStorage.To)
@@ -188,7 +209,6 @@ $('.delayChk').on('click', function () {
     var checked = $(this).is(':checked');
     var image = $(this).siblings("img");
     var input = $(this).siblings('.pDealyinvoice');
-
     if (checked == false) {
         image.attr('src', '/img/delay_false.png');
         input.val(0);

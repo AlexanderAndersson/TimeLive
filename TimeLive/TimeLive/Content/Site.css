@@ -45,6 +45,20 @@ select,
     margin-left: 0;
 }
 
+.rows {
+    margin-top: 186px;
+}
+
+.col-delay {
+    margin-right: 20px;
+}
+
+.row-header {
+    background: #ebf8ff;
+    z-index: 1;
+    position: fixed;
+}
+
 .col-dropdown {
     width: 240px;
 }
@@ -359,6 +373,7 @@ input[type=checkbox].glyphicon{
     margin-left: 255px;
     margin-top: 30px;
     margin-right: 255px;
+    margin-bottom: 40px;
 }
 
 .latestReports {
@@ -378,7 +393,8 @@ input[type=checkbox].glyphicon{
 #latesReportsRow {
     background-color: #ebf8ff;
     position: fixed;
-    z-index: 1000;
+    /*z-index: 500;*/
+    z-index: 1;
 }
 
 /************ALERTS***************/
@@ -397,7 +413,7 @@ input[type=checkbox].glyphicon{
     color: black;
 }
 
-.alert-danger {
+#missingRpt {
     width: 300px;
     position: fixed;
     right: 60px;
@@ -411,7 +427,7 @@ input[type=checkbox].glyphicon{
     color: black;
 }
 
-.alert-danger:hover {
+#missingRpt:hover {
     cursor: pointer;
     background-color: #ffa5a5;
 }
@@ -428,6 +444,29 @@ input[type=checkbox].glyphicon{
     border: 0px;
     background-color: #9ce49c;
     color: black;
+}
+
+#errorMsg {
+    width: 560px;
+    /*height: 55px;*/
+    margin-top: 160px;
+    margin-left: 442px;
+    position: fixed;
+    /*right: 100px;
+    top: 204px;*/
+    text-align: left;
+    border-radius: 7px;
+    /*border-top-right-radius: 0px;
+    border-top-left-radius: 0px;*/
+    /*border: 0px;*/
+    /*background-color: #ffbfbf;*/
+    z-index: 2;
+    /*color: black;*/
+}
+
+#errorMsg:hover {
+    cursor: pointer;
+    background-color: #ffa5a5;
 }
 
 /***********TOTAL HOURS TABLE************/
@@ -497,4 +536,41 @@ input[type=checkbox].glyphicon{
 .active img {
     border: 2px solid white;
     border-radius: 7px;
+}
+
+/**************ERROR MODAL***************/
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 2000; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+}
+
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover, .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
 }
