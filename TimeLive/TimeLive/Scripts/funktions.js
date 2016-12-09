@@ -98,7 +98,7 @@ $(document).ready(function (date) {
             //    var dateAfterToday = date.format("YYYY-MM-DD");
             //    $('#month').find('.fc-day-top[data-date=' + dateAfterToday + ']').css('background', 'none', "!important");
             //}
-            if (date <= moment().day(1)) { //if there is no event on a day before today or today, the background will have a red color
+            if (date.format("YYYY-MM-DD") < moment().format("YYYY-MM-DD")) { //if there is no event on a day before today, the background will have a red color
                 var dateBeforeToday = date.format("YYYY-MM-DD");
                 $('#month').find('.fc-day-top[data-date=' + dateBeforeToday + ']').css('background', '#fe2d2d');
             }
@@ -121,8 +121,14 @@ $(document).ready(function (date) {
             $('#selectionTo').val(date.format('YYYY-MM-DD'));
             $('#selectionsApply').click();
         },//navLinkDayClick 
-        viewRender: function (view) { //Takes the first and last date of month, and stores it in localstorage
+        viewRender: function (view) { //Takes the first and last date of month, and stores it in Sessionstorage
             sessionStorage.firstDay = view.intervalStart.format("YYYY-MM-DD"); //First day of the month
+
+            var newdate = new Date(view.start);
+            newdate.setDate(newdate.getDate() + 7);
+            var nd = new Date(newdate);
+            sessionStorage.secondWeek = nd.toLocaleDateString();//The second week of the month
+
             var newdate = new Date(view.intervalEnd);
             newdate.setDate(newdate.getDate() - 1);
             var nd = new Date(newdate);
@@ -147,6 +153,7 @@ $(document).ready(function (date) {
 
     //Shows all the reports for the whole month
     $('.fc-center').on('click', function () {
+        sessionStorage.Date = sessionStorage.secondWeek;
         $('#selectionFrom').val(sessionStorage.firstDay);
         $('#selectionTo').val(sessionStorage.lastDay);
         $('#selectionsApply').click();
@@ -181,28 +188,67 @@ $(document).ready(function (date) {
 
     var modal = document.getElementById('myModal');
 
-    // Get the <span> element that closes the modal
+    //Get the <span> element that closes the modal
     var span = document.getElementsByClassName("close")[0];
 
-    // When the user clicks on <span> (x), close the modal
+    //When the user clicks on <span> (x), close the modal
     span.onclick = function () {
         modal.style.display = "none";
     }
 
-    // When the user clicks anywhere outside of the modal, close it
+    //When the user clicks anywhere outside of the modal, close it
     window.onclick = function (event) {
         if (event.target == modal) {
             modal.style.display = "none";
         }
     }
 
+    //When clicking on error message the modal becomes visible
     $('#errorMsg').click(function () {
         modal.style.display = "block";
     });
 
+    function test() {
+        alert("hej");
+    };
+
     //$('#datesShowned').html(sessionStorage.From + " - " + sessionStorage.To)
 
 });//document.ready
+
+$('.newSubProject').change(function () {
+    var subprojectid = this.value;
+    var subProjectText = $(this).children(':selected').text();
+
+    var row = $(this).parents('div');
+    var buttons = row.find('.hideButton');
+    var regdate = row.find('.newRegDate');
+    var invoiced = row.find('.newInvoice');
+    var used = row.find('.newUsed');
+    var extComment = row.find('.newExtComment');
+    var vacationFrom = row.find('.vacationFrom');
+    var vacationTo = row.find('.vacationTo');
+
+
+    if (subprojectid === "20071225 15:44:01:967"/*Semester*/ || subprojectid === "20100817 21:08:28:873" /*Föräldrarledigt*/
+        || subprojectid === "20130130 08:07:17:807" /*Tjänstledigt*/ || subprojectid === "20110519 15:13:38:850" /*VAB*/) {
+        regdate.addClass('hide');
+        invoiced.addClass('hide');
+        buttons.addClass('hide');
+        vacationFrom.removeClass('hide');
+        vacationTo.removeClass('hide');
+        used.val(8);
+        extComment.val(subProjectText);
+    }
+    else {
+        regdate.removeClass('hide');
+        invoiced.removeClass('hide');
+        buttons.removeClass('hide');
+        vacationFrom.addClass('hide');
+        vacationTo.addClass('hide');
+    }
+});
+
 
 //Changes picture when clicking on delay img
 $('.delayChk').on('click', function () {

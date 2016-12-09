@@ -21,6 +21,12 @@ select,
 /*textarea {
     max-width: 280px;
 }*/
+
+.hide /* such as container for InternalComment */
+{
+	display: none;
+}
+
 .col {
     float: left;
     position: relative;
@@ -41,7 +47,7 @@ select,
 }
 
 #titles {
-    margin-top: 160px;
+    margin-top: 158px;
     margin-left: 0;
 }
 
@@ -448,19 +454,20 @@ input[type=checkbox].glyphicon{
 
 #errorMsg {
     width: 560px;
-    /*height: 55px;*/
     margin-top: 160px;
     margin-left: 442px;
     position: fixed;
-    /*right: 100px;
-    top: 204px;*/
+    z-index: 2;
     text-align: left;
     border-radius: 7px;
+    /*right: 100px;
+    top: 204px;*/
+    /*height: 55px;*/
     /*border-top-right-radius: 0px;
     border-top-left-radius: 0px;*/
     /*border: 0px;*/
     /*background-color: #ffbfbf;*/
-    z-index: 2;
+
     /*color: black;*/
 }
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using TimeLive.Models;
 using System.Security.Principal;
+using System.Data.Common;
 
 namespace TimeLive.Controllers
 {
@@ -380,22 +381,45 @@ namespace TimeLive.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Insert(string pCompanyId, int pProjectId, string pSubProjectId, DateTime pRegDate, double pInvoicedTime, double pUsedTime, string pExternComment, string pInternComment, int pDealyinvoice)
+        public ActionResult Insert(string pCompanyId, int pProjectId, string pSubProjectId, DateTime pRegDate, DateTime vacationFrom, DateTime vacationTo, double pInvoicedTime, double pUsedTime, string pExternComment, string pInternComment, int pDealyinvoice)
         {
             Session["User"] = (Classes.UserClass.User)Session["User"] ?? Classes.UserClass.GetUserByIdentity(WindowsIdentity.GetCurrent());
             var user = (Classes.UserClass.User)Session["User"];
-            try
+
+            if (pSubProjectId == "20071225 15:44:01:967"/*Semester*/ || pSubProjectId == "20100817 21:08:28:873" /*Föräldrarledigt*/ || pSubProjectId == "20130130 08:07:17:807" /*Tjänstledigt*/ || pSubProjectId == "20110519 15:13:38:850" /*VAB*/)
             {
-                TimeLiveDB.q_InsertRowTime(user.Username, pProjectId, pSubProjectId, pCompanyId, pRegDate, pExternComment, pInternComment,
-                pInvoicedTime, pUsedTime, pDealyinvoice, null, null);
+
             }
-            catch (Exception ex)
+            else
             {
-                TempData["error"] = ex.InnerException.Message;
-                TempData["errorMsg"] = ex.Message;
-                TempData["errorInnerExp"] = ex.InnerException;
+                try
+                {
+                    TimeLiveDB.q_InsertRowTime(user.Username, pProjectId, pSubProjectId, pCompanyId, pRegDate, pExternComment, pInternComment,
+                    pInvoicedTime, pUsedTime, pDealyinvoice, null, null);
+                }
+                catch (Exception ex)
+                {
+                    TempData["error"] = GetUserFriendlyErrorMsg(ex);
+                    TempData["errorMsg"] = ex.Message;
+                    TempData["errorInnerExp"] = ex.InnerException;
+                }
             }
             return RedirectToAction("Index");
+        }
+
+        private static string GetUserFriendlyErrorMsg(Exception ex)
+        {
+            //Making a simplified verison of the error message
+            var errorMsgDivider = "ERROR: ";
+            var errorMsg = ex.InnerException.Message.Contains(errorMsgDivider)
+                ? ex.InnerException.Message.Substring(ex.InnerException.Message.IndexOf(errorMsgDivider) + errorMsgDivider.Length)
+                : "An error occured";
+
+            //This code shouldn't even exist, this is pure laziness from the guy who made this string
+            if (errorMsg.Contains("Ngt"))
+                errorMsg = errorMsg.Replace("Ngt", "Något");
+
+            return errorMsg;
         }
 
         [HttpPost]
@@ -411,7 +435,7 @@ namespace TimeLive.Controllers
             }
             catch (Exception ex)
             {
-                TempData["error"] = ex.InnerException.Message;
+                TempData["error"] = GetUserFriendlyErrorMsg(ex);
                 TempData["errorMsg"] = ex.Message;
                 TempData["errorInnerExp"] = ex.InnerException;
             }

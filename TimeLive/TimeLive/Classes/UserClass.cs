@@ -19,7 +19,6 @@ namespace TimeLive.Classes
         {
             var newUser = new User();
             var userStrings = identity.Name.Split('\\');
-
             userStrings[0] = "OPTIVASYS";
             userStrings[1] = "joha";
             newUser.Domain = userStrings[0];

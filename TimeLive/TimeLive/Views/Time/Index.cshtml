@@ -200,9 +200,7 @@
                 <h5>@TempData["errorInnerExp"]</h5>
             </div>
         </div>
-        <script>
-            $('#titles').css("margin-top", "300", "!important");
-        </script>
+        <br /><br />
     }
 </div>
 <br />
@@ -402,51 +400,59 @@
                 <select name="pSubProjectId" class="form-control newSubProject subProjectDropDown"></select>
             </div>
             <div class="col date">
-                <input type="text" name="pRegDate" class="form-control date-picker" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                <input type="text" name="pRegDate" class="form-control newRegDate date-picker" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                <input type="text" name="vacationFrom" class="form-control hide vacationFrom date-picker" value="From" />                
             </div>
-            @*<div class="col amount">
+            <div class="col date">
+                <input type="text" name="vacationTo" class="form-control hide vacationTo date-picker" value="To" />
+            </div>
+                @*<div class="col amount">
                 <input type="text" name="pInvoicedTime" class="form-control hours amount" value="0.00" />
             </div>*@
-            @*<div class="col amount">
+                @*<div class="col amount">
                 <input type="text" name="pUsedTime" class="form-control hours amount" value="0.00" />
             </div>*@
-            <div class="input-group col amount">
-                <span class="input-group-btn"> <!--BUTTON MINUS-->
-                    <button type="button" class="btn btn-danger btn-number btn-minus">
-                        <span class="glyphicon glyphicon-minus"></span>
-                    </button>
-                </span>
-                <input type="text" name="pInvoicedTime" class="form-control hours amount newInvoice" value="0.00" min="0">
-                <span class="input-group-btn"> <!--BUTTON PLUS-->
-                    <button type="button" class="btn btn-success btn-number btn-plus">
-                        <span class="glyphicon glyphicon-plus"></span>
-                    </button>
-                </span>
-            </div>
-            <div class="input-group col amount">
-                <span class="input-group-btn"> <!--BUTTON MINUS-->
-                    <button type="button" class="btn btn-danger btn-number btn-minus">
-                        <span class="glyphicon glyphicon-minus"></span>
-                    </button>
-                </span> 
-                <input type="text" name="pUsedTime" class="form-control hours amount newUsed" value="0.00" min="0">
-                <span class="input-group-btn"> <!--BUTTON PLUS-->
-                    <button type="button" class="btn btn-success btn-number btn-plus"> 
-                        <span class="glyphicon glyphicon-plus"></span>
-                    </button>
-                </span>
-            </div>
-            <div class="col externCom">
-                <input type="text" required name="pExternComment" class="form-control comment newExtComment" />
-            </div>
-            <label class="checkboxes">
-                <input type="checkbox" class="delayChk" />
-                <input type="hidden" name="pDealyinvoice" class="pDealyinvoice" value="0" />
-                <img src="~/img/delay_false.png" class="image" />
-            </label>
-            @*<input type="checkbox" class="delayChk" />
+                <div class="input-group col amount">
+                    <span class="input-group-btn buttons">
+                        <!--BUTTON MINUS-->
+                        <button type="button" class="btn btn-danger hideButton btn-number btn-minus">
+                            <span class="glyphicon glyphicon-minus"></span>
+                        </button>
+                    </span>
+                    <input type="text" name="pInvoicedTime" class="form-control hours amount newInvoice" value="0.00" min="0">
+                    <span class="input-group-btn buttons">
+                        <!--BUTTON PLUS-->
+                        <button type="button" class="btn btn-success hideButton btn-number btn-plus">
+                            <span class="glyphicon glyphicon-plus"></span>
+                        </button>
+                    </span>
+                </div>
+                <div class="input-group col amount">
+                    <span class="input-group-btn">
+                        <!--BUTTON MINUS-->
+                        <button type="button" class="btn btn-danger btn-number btn-minus">
+                            <span class="glyphicon glyphicon-minus"></span>
+                        </button>
+                    </span>
+                    <input type="text" name="pUsedTime" class="form-control hours amount newUsed" value="0.00" min="0">
+                    <span class="input-group-btn">
+                        <!--BUTTON PLUS-->
+                        <button type="button" class="btn btn-success btn-number btn-plus">
+                            <span class="glyphicon glyphicon-plus"></span>
+                        </button>
+                    </span>
+                </div>
+                <div class="col externCom">
+                    <input type="text" required name="pExternComment" class="form-control comment newExtComment" />
+                </div>
+                <label class="checkboxes">
+                    <input type="checkbox" class="delayChk" />
+                    <input type="hidden" name="pDealyinvoice" class="pDealyinvoice" value="0" />
+                    <img src="~/img/delay_false.png" class="image" />
+                </label>
+                @*<input type="checkbox" class="delayChk" />
             <input type="hidden" name="pDealyinvoice" class="pDealyinvoice" value="0" />*@
-        </div>
+            </div>
         <div class="row">
             <div class="col col-full-insert">
                 <input type="text" name="pInternComment" class="form-control intComment comment newIntComment" placeholder="Internal comment" />
