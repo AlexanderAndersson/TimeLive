@@ -14,29 +14,48 @@
 
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container" id="navbarr">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+
+            <div class="nav navbar-nav">
                 <a class="navbar-left"><img src="~/img/logo.png"></a>
-                @*@Html.ActionLink("TIME", "Index", "Time");*@
-                <a href="@Url.Action("Index", "Time")" class="btn-logos navImg"><img class="" src="~/img/btn_Time.png"/></a>
-                <a href="@Url.Action("Index", "Expenses")" class="btn-logos navImg"><img class="" src="~/img/btn_Expenses.png"/></a>
-                <a href="@Url.Action("Index", "Distance")" class="btn-logos navImg"><img class="" src="~/img/btn_Distance.png"/></a>
-                @*@Html.ActionLink("Time", "Index", "Time", new { area = "" }, new { @class = "navbar-brand" })
-                @Html.ActionLink("Expenses", "Index", "Expenses", new { area = "" }, new { @class = "navbar-brand" })
-                @Html.ActionLink("Distance", "Index", "Distance", new { area = "" }, new { @class = "navbar-brand" })*@
+                <a href="@Url.Action("Index", "Time")" class="btn-logos navImg"><img class="" src="~/img/btn_Time.png" /></a>
+                <a href="@Url.Action("Index", "Expenses")" class="btn-logos navImg"><img class="" src="~/img/btn_Expenses.png" /></a>
+                <a href="@Url.Action("Index", "Distance")" class="btn-logos navImg"><img class="" src="~/img/btn_Distance.png" /></a>
+                <button type="submit" id="toggleMenu2" class="btn btn-block filterButton"><span class="glyphicon glyphicon-search"></span></button>
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                </ul>
+            <div class="col-sm-3 col-md-3 col-lg-3">
+                <div id="filter" style="display: none;">
+                    <form action="@Url.Action("Filter")" method="POST">
+                        @Html.AntiForgeryToken()
+                        <span class="filterTitle">Customer</span>
+                        <select id="selectionCompanyDropDown" class="form-control filterDropDown"></select>
+                        <input type="hidden" name="companyId" id="selectionCompany" value="@Model.Selections.CustomerId" />
+                        <select id="selectionProjectDropDown" class="form-control filterDropDown"><option value="">All</option></select>
+                        <input type="hidden" id="selectionProject" name="projectId" value="@Model.Selections.ProjectId" />
+                        <select name="subProjectId" id="selectionSubProjectDropDown" class="form-control filterDropDown"><option value="">All</option></select>
+                        <input type="hidden" id="selectionSubProject" name="subProjectId" value="@Model.Selections.SubProjectId" />
+                        <span class="filterTitle">From</span>
+                        <input type="text" id="selectionFrom" class="form-control date-picker filterDates" name="selectionFrom" value="@(Model.Selections.From?.ToString("yyyy-MM-dd") ?? "")" />
+                        <span class="filterTitle"> To</span>
+                        <input type="text" id="selectionTo" class="form-control date-picker filterDates" name="selectionTo" value="@(Model.Selections.To?.ToString("yyyy-MM-dd") ?? "")" />
+                        <button type="submit" id="selectionsApply" class="btn btn-block btn-success filterButton"><span class="glyphicon glyphicon-search"></span> Sort</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
+
     @*@RenderSection("sidebar", false)
     @RenderSection("siteLeft", false)*@
     <div class="container body-content">

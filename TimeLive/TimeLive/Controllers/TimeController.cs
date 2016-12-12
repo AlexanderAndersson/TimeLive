@@ -111,7 +111,7 @@ namespace TimeLive.Controllers
 
             foreach (var duplicate in dub)
             {
-                if (duplicate.Hour < 9 && duplicate < fiveDaysAgo)
+                if (duplicate.Hour < 9 && duplicate.Date <= fiveDaysAgo)
                 {
                     daysWithLessThan8H.Add(duplicate);
                 }
@@ -119,7 +119,7 @@ namespace TimeLive.Controllers
 
             foreach (var unique in uni)
             {
-                if (unique.Hour < 9 && unique < fiveDaysAgo)
+                if (unique.Hour < 9 && unique.Date <= fiveDaysAgo)
                 {
                     daysWithLessThan8H.Add(unique);
                 }
@@ -381,14 +381,43 @@ namespace TimeLive.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Insert(string pCompanyId, int pProjectId, string pSubProjectId, DateTime pRegDate, DateTime vacationFrom, DateTime vacationTo, double pInvoicedTime, double pUsedTime, string pExternComment, string pInternComment, int pDealyinvoice)
+        public ActionResult Insert(string pCompanyId, int pProjectId, string pSubProjectId, DateTime pRegDate, DateTime? vacationFrom, DateTime? vacationTo, double pInvoicedTime, double pUsedTime, string pExternComment, string pInternComment, int pDealyinvoice)
         {
             Session["User"] = (Classes.UserClass.User)Session["User"] ?? Classes.UserClass.GetUserByIdentity(WindowsIdentity.GetCurrent());
             var user = (Classes.UserClass.User)Session["User"];
 
             if (pSubProjectId == "20071225 15:44:01:967"/*Semester*/ || pSubProjectId == "20100817 21:08:28:873" /*Föräldrarledigt*/ || pSubProjectId == "20130130 08:07:17:807" /*Tjänstledigt*/ || pSubProjectId == "20110519 15:13:38:850" /*VAB*/)
             {
+                try
+                {
+                    List<DateTime> alldates = new List<DateTime>();
+                    for (DateTime date = vacationFrom.Value; date <= vacationTo; date = date.AddDays(1))
+                        if (date.DayOfWeek != DayOfWeek.Saturday && date.DayOfWeek != DayOfWeek.Sunday)
+                        {
+                            alldates.Add(date);
+                        }
 
+                    foreach (var date in alldates)
+                    {
+                        TimeLiveDB.q_InsertRowTime(user.Username, pProjectId, pSubProjectId, pCompanyId, date, pExternComment, pInternComment,
+                        pInvoicedTime, pUsedTime, pDealyinvoice, null, null);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    if (!ex.Message.Contains("ERROR: "))
+                    {
+                        TempData["error"] = "An error occured";
+                        TempData["errorMsg"] = ex.Message;
+                        TempData["errorInnerExp"] = ex.InnerException;
+                    }
+                    else
+                    {
+                        TempData["error"] = GetUserFriendlyErrorMsg(ex);
+                        TempData["errorMsg"] = ex.Message;
+                        TempData["errorInnerExp"] = ex.InnerException;
+                    }
+                }
             }
             else
             {
@@ -399,9 +428,18 @@ namespace TimeLive.Controllers
                 }
                 catch (Exception ex)
                 {
-                    TempData["error"] = GetUserFriendlyErrorMsg(ex);
-                    TempData["errorMsg"] = ex.Message;
-                    TempData["errorInnerExp"] = ex.InnerException;
+                    if (!ex.Message.Contains("ERROR: "))
+                    {
+                        TempData["error"] = "An error occured";
+                        TempData["errorMsg"] = ex.Message;
+                        TempData["errorInnerExp"] = ex.InnerException;
+                    }
+                    else
+                    {
+                        TempData["error"] = GetUserFriendlyErrorMsg(ex);
+                        TempData["errorMsg"] = ex.Message;
+                        TempData["errorInnerExp"] = ex.InnerException;
+                    }
                 }
             }
             return RedirectToAction("Index");
@@ -411,10 +449,10 @@ namespace TimeLive.Controllers
         {
             //Making a simplified verison of the error message
             var errorMsgDivider = "ERROR: ";
-            var errorMsg = ex.InnerException.Message.Contains(errorMsgDivider)
+                var errorMsg = ex.InnerException.Message.Contains(errorMsgDivider)
                 ? ex.InnerException.Message.Substring(ex.InnerException.Message.IndexOf(errorMsgDivider) + errorMsgDivider.Length)
                 : "An error occured";
-
+      
             //This code shouldn't even exist, this is pure laziness from the guy who made this string
             if (errorMsg.Contains("Ngt"))
                 errorMsg = errorMsg.Replace("Ngt", "Något");
@@ -560,7 +598,7 @@ namespace TimeLive.Controllers
 
             foreach (var duplicate in dub)
             {
-                if (duplicate.Hour < 9 && duplicate < fiveDaysAgo)
+                if (duplicate.Hour < 9 && duplicate.Date <= fiveDaysAgo)
                 {
                     daysWithLessThan8H.Add(duplicate);
                 }
@@ -568,7 +606,7 @@ namespace TimeLive.Controllers
 
             foreach (var unique in uni)
             {
-                if (unique.Hour < 9 && unique < fiveDaysAgo)
+                if (unique.Hour < 9 && unique.Date <= fiveDaysAgo)
                 {
                     daysWithLessThan8H.Add(unique);
                 }

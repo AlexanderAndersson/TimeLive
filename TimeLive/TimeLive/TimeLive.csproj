@@ -190,7 +190,9 @@
     <Content Include="img\delay_false.png" />
     <Content Include="img\delay_true.png" />
     <Content Include="img\logo.png" />
+    <Content Include="img\magnifying glass.png" />
     <Content Include="img\optivasys.png" />
+    <Content Include="img\plus.png" />
     <Content Include="Models\Model1.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Model1.edmx</DependentUpon>

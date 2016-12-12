@@ -154,6 +154,8 @@ $(document).ready(function (date) {
     //Shows all the reports for the whole month
     $('.fc-center').on('click', function () {
         sessionStorage.Date = sessionStorage.secondWeek;
+        //$('#week').fullCalendar('changeView', 'agendaWeek');
+        sessionStorage.View = "agendaWeek";
         $('#selectionFrom').val(sessionStorage.firstDay);
         $('#selectionTo').val(sessionStorage.lastDay);
         $('#selectionsApply').click();
@@ -208,10 +210,6 @@ $(document).ready(function (date) {
         modal.style.display = "block";
     });
 
-    function test() {
-        alert("hej");
-    };
-
     //$('#datesShowned').html(sessionStorage.From + " - " + sessionStorage.To)
 
 });//document.ready
@@ -231,7 +229,7 @@ $('.newSubProject').change(function () {
 
 
     if (subprojectid === "20071225 15:44:01:967"/*Semester*/ || subprojectid === "20100817 21:08:28:873" /*Föräldrarledigt*/
-        || subprojectid === "20130130 08:07:17:807" /*Tjänstledigt*/ || subprojectid === "20110519 15:13:38:850" /*VAB*/) {
+        || subprojectid === "20130130 08:07:17:807" /*Tjänstledigt*/) {
         regdate.addClass('hide');
         invoiced.addClass('hide');
         buttons.addClass('hide');
@@ -413,7 +411,15 @@ $('.col > input').focus(function () {
 });
 
 $('#toggleMenu').click(function () {
-    $('.sidebar').toggle("slide");
+    $('#filter2').slideToggle("slow");
+    //$('.sidebar').css("display", "block");
+    //var div = $(".sidebar");
+    //div.animate({ width: '280px' }, "slow");
+    //div.animate({ height: '670px' }, "slow");
+});
+
+$('#toggleMenu2').click(function () {
+    $('#filter').toggle("slide");
     //$('.sidebar').css("display", "block");
     //var div = $(".sidebar");
     //div.animate({ width: '280px' }, "slow");
