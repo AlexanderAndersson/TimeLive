@@ -405,7 +405,7 @@ namespace TimeLive.Controllers
                 }
                 catch (Exception ex)
                 {
-                    if (!ex.Message.Contains("ERROR: "))
+                    if (!ex.InnerException.Message.Contains("ERROR:"))
                     {
                         TempData["error"] = "An error occured";
                         TempData["errorMsg"] = ex.Message;
@@ -428,7 +428,7 @@ namespace TimeLive.Controllers
                 }
                 catch (Exception ex)
                 {
-                    if (!ex.Message.Contains("ERROR: "))
+                    if (!ex.InnerException.Message.Contains("ERROR:"))
                     {
                         TempData["error"] = "An error occured";
                         TempData["errorMsg"] = ex.Message;

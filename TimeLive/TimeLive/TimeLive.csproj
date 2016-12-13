@@ -122,10 +122,10 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\ExpensesIndex.css" />
     <Content Include="Content\fullcalendar.css" />
     <Content Include="Content\fullcalendar.min.css" />
     <Content Include="Content\fullcalendar.print.css" />
-    <Content Include="Content\Site.css" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
     <Content Include="Content\themes\base\autocomplete.css" />
@@ -167,6 +167,7 @@
     <Content Include="Content\themes\base\tabs.css" />
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="Content\TimeIndex.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -177,12 +178,6 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
-    <Content Include="img\btnTime_All2.png" />
-    <Content Include="img\btnTime_Dayy.png" />
-    <Content Include="img\btnTime_Month2.png" />
-    <Content Include="img\btnTime_PrevMonth.png" />
-    <Content Include="img\btnTime_QV2.png" />
-    <Content Include="img\btnTime_Week.png" />
     <Content Include="img\btn_copy.png" />
     <Content Include="img\btn_Distance.png" />
     <Content Include="img\btn_Expenses.png" />
@@ -193,6 +188,8 @@
     <Content Include="img\magnifying glass.png" />
     <Content Include="img\optivasys.png" />
     <Content Include="img\plus.png" />
+    <Content Include="img\reimburse_false.png" />
+    <Content Include="img\reimburse_true.png" />
     <Content Include="Models\Model1.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Model1.edmx</DependentUpon>
@@ -203,6 +200,7 @@
       <DependentUpon>Model1.edmx</DependentUpon>
       <LastGenOutput>Model1.cs</LastGenOutput>
     </Content>
+    <Content Include="Scripts\ExpensesFunctions.js" />
     <Content Include="Scripts\fullcalendar.js" />
     <Content Include="Scripts\fullcalendar.min.js" />
     <Content Include="Scripts\funktions.js" />
@@ -369,6 +367,7 @@
     <Content Include="Views\Distance\Index.cshtml" />
     <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.1.1.min.map" />
+    <Content Include="Views\Shared\_LayoutExpense.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -2,6 +2,7 @@
 @using Newtonsoft.Json
 @model TimeLive.Models.ExpensesModel
 @{
+    Layout = "~/Views/Shared/_LayoutExpense.cshtml";
     var selectRows = Model.SelectRows.OrderBy(x => x.regdate).ToArray();
     var dayDictionary = selectRows.Select(x => x.regdate).Distinct().ToDictionary(day => day, day => false);
     //var qty = selectRows.Sum(x => x.qty);
@@ -64,36 +65,39 @@
         <a href="#"><img id="quickCMonth" src="~/img/btnTime_Month2.png" /></a>
     </div>
 }*@
-<br />
-<div class="container">
-    <div class="row row-header">
-        <div class="col col-dropdown1 col-header">
-            Customer
-        </div>
-        <div class="col col-dropdown col-header">
-            Project
-        </div>
-        <div class="col col-dropdown col-header">
-            Type
-        </div>
-        <div class="col col-date1 col-header">
-            Date
-        </div>
-        <div class="col amount-head col-header">
-            Qty
-        </div>
-        <div class="col amount-head col-header">
-            Total
-        </div>
-        <div class="col amount-head col-header">
-            VAT
-        </div>
-        <div class="col col-text col-header">
-            External comment
-        </div>
+<div class="row" id="miniFilterRow">
+    <div id="miniFilter-container">
+        <a href="#" id="miniFilterAtag" style="text-decoration: none">
+            <div id="miniFilter">
+                <h2>TODAY</h2>
+            </div>
+        </a>
+        <a href="#" id="miniFilterAtag" style="text-decoration:none">
+            <div id="miniFilter">
+                <h2>WEEK</h2>
+            </div>
+        </a>
+        <a href="#" id="miniFilterAtag" style="text-decoration:none">
+            <div id="miniFilter">
+                <h2>MONTH</h2>
+            </div>
+        </a>
     </div>
 </div>
-
+<br />
+<div id="titles">
+    <div class="row row-header">
+        <div class="col col-dropdown1 col-header">Customer</div>
+        <div class="col col-dropdown col-header">Project</div>
+        <div class="col col-dropdown col-header">Type</div>
+        <div class="col col-date1 col-header">Date</div>
+        <div class="col amount-head col-header">Qty</div>
+        <div class="col amount-head col-header">Total</div>
+        <div class="col amount-head col-header">VAT</div>
+        <div class="col col-text col-header">External comment</div>
+    </div>
+</div>
+<div class="rows">
 @foreach (var row in selectRows)
 {
     <div class="timerow">
@@ -144,8 +148,11 @@
                 <div class="col col-text">
                     <input type="text" class="form-control comment" name="externComment" value="@row.comment_external" />
                 </div>
-                <input type="checkbox" class="reimChk" @(row.reimburse == 1 ? "checked" : "") />
-                <input type="hidden" name="reimburse" class="reimburse" value="@row.reimburse" />
+                <label class="checkboxes">
+                    <input type="checkbox" class="reimChk hide" name="chkDelay" @(row.reimburse == 1 ? "checked" : "") value="@row.reimburse" />
+                    <input type="hidden" name="reimburse" class="reimburse" value="@row.reimburse" />
+                    <img src="~/img/reimburse_false.png" class="image" />
+                </label>
             </div>
             <div class="row toggle" style="display: none;">
                 <div class="col col-full">
@@ -165,9 +172,10 @@
         }
     </div>
 }
+    </div>
 <br />
 <div class="timerow">
-    @using (@Html.BeginForm("Insert", "Expenses", FormMethod.Post))
+    @using (Html.BeginForm("Insert", "Expenses", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         <div class="row">
@@ -204,16 +212,21 @@
                 <input type="text" class="form-control amount-ints qty" name="qty" value="0" />
             </div>
             <div class="col amount">
-                <input type="text" class="form-control amount" name="amount_excl_Vat" value="0" />
+                <input type="text" class="form-control amount" name="amount_excl_Vat" value="0.00" />
             </div>
             <div class="col amount">
-                <input type="text" class="form-control amount" name="vat_amount" value="0" />
+                <input type="text" class="form-control amount" name="vat_amount" value="0.00" />
             </div>
             <div class="col col-text">
                 <input type="text" class="form-control comment" name="externComment" />
             </div>
-            <input type="checkbox" class="reimChk" />
-            <input type="hidden" name="reimburse" class="reimburse" value="0" />
+            <label class="checkboxes">
+                <input type="checkbox" class="reimChk hide" />
+                <input type="hidden" name="reimburse" class="reimburse" value="0" />
+                <img src="~/img/reimburse_false.png" class="image" />
+            </label>
+            @*<input type="checkbox" class="reimChk" />
+            <input type="hidden" name="reimburse" class="reimburse" value="0" />*@
         </div>
         <div class="row">
             <div class="col col-full">
@@ -227,6 +240,8 @@
     }
 </div>
 
+<link href="~/Content/ExpensesIndex.css" rel="stylesheet" />
+<script src="~/Scripts/ExpensesFunctions.js"></script>
 <script src="~/Scripts/funktions.js"></script>
 
 <script type="text/javascript">

@@ -30,9 +30,13 @@ namespace TimeLive.App_Start
                       "~/Scripts/moment.min.js",
                       "~/Scripts/fullcalendar.min.js"));
 
-            bundles.Add(new StyleBundle("~/Content/css").Include(
+            bundles.Add(new StyleBundle("~/Content/Timecss").Include(
                       "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+                      "~/Content/TimeIndex.css"));
+
+            bundles.Add(new StyleBundle("~/Content/Expensescss").Include(
+                      "~/Content/bootstrap.css",
+                      "~/Content/ExpensesIndex.css"));
         }
     }
 }

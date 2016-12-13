@@ -2,7 +2,7 @@
     padding-top: 50px;
     padding-bottom: 20px;
     font-family: Arial;
-    background: #ebf8ff;
+    background: #f4fbff;
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -15,12 +15,37 @@
 }
 
 /* Set width on the form input elements since they're 100% wide by default */
-input,
-select,
+/*input,
+select,*/
 
-/*textarea {
-    max-width: 280px;
-}*/
+/************NAVBAR***************/
+
+.btn-logos img {
+    width: 105px;
+    margin-top: 6px;
+    margin-right: 4px;
+}
+
+.navbar-left img {
+    height: 46px;
+    margin-top: 7px;
+    padding-right: 50px;
+}
+
+.navbar-left {
+    min-height: 60px
+}
+
+.navbar-fixed-top {
+    padding-left: 40px;
+}
+
+.active img {
+    border: 2px solid white;
+    border-radius: 7px;
+}
+
+/******************************/
 
 .hide /* such as container for InternalComment */
 {
@@ -60,7 +85,7 @@ select,
 }
 
 .row-header {
-    background: #ebf8ff;
+    background: #f4fbff;
     z-index: 1;
     position: fixed;
 }
@@ -273,33 +298,6 @@ div {
 	margin: 120px 0px 0px 5px;
 }*/
 
-
-.navbar-left img {
-    height: 46px;
-    margin-top: 7px;
-    padding-right: 50px;
-}
-
-.navbar-left {
-    min-height: 60px
-}
-
-#navbarr {
-    padding-left: 0px;
-    margin-left: 20px
-}
-
-.btn-logos img {
-    width: 105px;
-    margin-top: 7px;
-    margin-right: 4px;
-}
-
-/*.hej {
-    border: solid 1px #9f9f9f;
-    border-radius: 7px;
-}*/
-
 .timerow {
     margin-bottom: 13px;
 }
@@ -313,14 +311,6 @@ div {
 input[type=checkbox].glyphicon{
     visibility: hidden;    
 }
-
-/*.Active {
-    border: solid 1px orange;
-}
-
-.Inactive {
-    border: solid 1px red;
-}*/
 
 /*********CALANDER STUFF************/
 
@@ -336,6 +326,20 @@ input[type=checkbox].glyphicon{
     position: fixed;
     right: 60px;
     top: 550px;
+}
+
+.fc-row .fc-content-skeleton td, .fc-row .fc-helper-skeleton td {
+    text-align: center !important;
+    vertical-align: middle !important;
+    font-size: larger;
+}
+
+.fc-helper-skeleton td {
+    padding-top: 15px;
+}
+
+.fc-ltr .fc-basic-view .fc-day-top .fc-day-number {
+    float: none !important;
 }
 
 .fc-center h2:hover {
@@ -372,12 +376,7 @@ input[type=checkbox].glyphicon{
     color: #000000 !important;
 }
 
-/**********LATEST REPORTS & Filter**************/
-
-.latestReports > h2 {
-    text-align: center;
-    vertical-align: middle;
-}
+/**********LATEST REPORTS & FILTER**************/
 
 #latestPlus {
     width: 130px;
@@ -386,7 +385,8 @@ input[type=checkbox].glyphicon{
 
 #latest-container {
     display: flex;
-    margin-left: 140px;
+    /*margin-left: 140px;*/
+    margin-left: 240px;
     margin-top: 30px;
     /*margin-right: px;*/
     margin-bottom: 40px;
@@ -406,15 +406,19 @@ input[type=checkbox].glyphicon{
     margin-right: 40px;
 }
 
+.latest > :first-child {
+    padding-top: 7px;
+}
+
 #latesReportsRow {
-    background-color: #ebf8ff;
+    background-color: #f4fbff;
     /*background-color: green;*/
     position: fixed;
     /*z-index: 500;*/
     z-index: 1;
 }
 
-#toggleMenu{
+#toggleMenu2 {
     position: fixed;
     width: 155px;
     height: 115px;
@@ -426,7 +430,7 @@ input[type=checkbox].glyphicon{
     border-radius: 5px;
 }
 
-#toggleMenu2 {
+#toggleMenu {
     margin-top: 8px;
     background: #026f88;
     color: white;
@@ -455,10 +459,10 @@ input[type=checkbox].glyphicon{
 #filter {
     /*display: inline-block;*/
     position: fixed;
-    padding-top: 10px;
+    padding-top: 12px;
     padding-right: 20px;
     margin-left: 10px;
-    margin-top: 3px;
+    /*margin-top: 3px;*/
     height: 55px;
     width: auto;
     color: white;
@@ -631,17 +635,6 @@ input[type=checkbox].glyphicon{
 
 .delayChk {
     display: none;
-}
-
-/****************NAVBAR*****************/
-
-.active img {
-    border: 2px solid white;
-    border-radius: 7px;
-}
-
-.navbar-fixed-top {
-    padding-left: 40px;
 }
 
 /**************ERROR MODAL***************/

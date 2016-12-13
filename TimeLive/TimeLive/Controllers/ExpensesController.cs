@@ -13,7 +13,6 @@ namespace TimeLive.Controllers
 
         private static IEnumerable<Customer> customers;
         private static IEnumerable<Project> projects;
-        //private static IEnumerable<Typee> types;
         //private static IEnumerable<SubProject> subProjects;
 
         private static DateTime lastUpdate = DateTime.FromFileTime(0);

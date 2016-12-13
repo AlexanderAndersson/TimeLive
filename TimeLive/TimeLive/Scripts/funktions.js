@@ -86,11 +86,11 @@ $(document).ready(function (date) {
             var eventEnd = event.end.format("HH:mm");
             if (eventEnd >= "09:00" || eventStart >= "09:00") { //if there is atleast 8 hours reported that day, the color is green   
                 var dateEnd = event.end.format("YYYY-MM-DD");
-                $('#month').find('.fc-day-top[data-date=' + dateEnd + ']').css('background', '#128f12', "!important");
+                $('#month').find('.ui-widget-content[data-date=' + dateEnd + ']').css('background', '#128f12', "!important");
             }
             else { //if there is less than 8 hours reported that day, the color is red  
                 var dateStart = event.start.format("YYYY-MM-DD");
-                $('#month').find('.fc-day-top[data-date=' + dateStart + ']').css('background', '#fe2d2d', "!important");
+                $('#month').find('.ui-widget-content[data-date=' + dateStart + ']').css('background', '#f23636', "!important");
             }
         },//EventRender
         dayRender: function (date, cell) {
@@ -100,7 +100,7 @@ $(document).ready(function (date) {
             //}
             if (date.format("YYYY-MM-DD") < moment().format("YYYY-MM-DD")) { //if there is no event on a day before today, the background will have a red color
                 var dateBeforeToday = date.format("YYYY-MM-DD");
-                $('#month').find('.fc-day-top[data-date=' + dateBeforeToday + ']').css('background', '#fe2d2d');
+                $('#month').find('.ui-widget-content[data-date=' + dateBeforeToday + ']').css('background', '#f23636');
             }
         },//DayRender
         navLinkWeekClick: function (date) {
@@ -143,7 +143,7 @@ $(document).ready(function (date) {
 
         if (checked == true) {
             image.attr('src', '/img/delay_true.png');
-            $(this).addClass('check');        
+            $(this).addClass('check');
         }
         else {
             image.attr('src', '/img/delay_false.png');
@@ -194,16 +194,16 @@ $(document).ready(function (date) {
     var span = document.getElementsByClassName("close")[0];
 
     //When the user clicks on <span> (x), close the modal
-    span.onclick = function () {
+    $(span).click(function () {
         modal.style.display = "none";
-    }
+    });
 
     //When the user clicks anywhere outside of the modal, close it
     window.onclick = function (event) {
         if (event.target == modal) {
             modal.style.display = "none";
         }
-    }
+    };
 
     //When clicking on error message the modal becomes visible
     $('#errorMsg').click(function () {
@@ -337,25 +337,6 @@ $('.btn-minus').on('click', function () {
         $(field).css("background-color", "#cbefb8"); //green
 });
 
-//Increase/decrease numerics with arrow keys
-$('.amount-ints').keydown(function (event) {
-    var currentNumber = Number($(this).val());
-    if (event.which === 38)//up
-    {
-        if (currentNumber % 1 == 0)
-            $(this).val(Math.max(0, currentNumber + 1).toFixed(0)); //Plus 1
-        else
-            $(this).val(Math.max(0, Math.ceil(currentNumber))) //Rounds up to nearest int
-    }
-    else if (event.which === 40)//down
-    {
-        if (currentNumber % 1 == 0)
-            $(this).val(Math.max(0, currentNumber - 1).toFixed(0)); //Minus 1
-        else
-            $(this).val(Math.floor(currentNumber)); //Rounds down to nearest int
-    }
-});
-
 
 //if invoice or used are more than 8, make backgound-color "red" otherwise "green"
 $('.hours').keydown(function () {
@@ -396,13 +377,6 @@ $('.comment').keyup(function () {
 });
 
 
-//reimbuse checkbox function
-$('.reimChk').change(function () {
-    var checked = $(this).is(':checked');
-    $(this).siblings('.pReimburse').val(checked ? 1 : 0);
-});
-
-
 //Show internal comment and hide siblings
 $('.col > input').focus(function () {
     var timerow = $(this).parents('.timerow');
@@ -410,7 +384,7 @@ $('.col > input').focus(function () {
     timerow.siblings().find('.toggle').hide(200);
 });
 
-$('#toggleMenu').click(function () {
+$('#toggleMenu2').click(function () {
     $('#filter2').slideToggle("slow");
     //$('.sidebar').css("display", "block");
     //var div = $(".sidebar");
@@ -418,13 +392,10 @@ $('#toggleMenu').click(function () {
     //div.animate({ height: '670px' }, "slow");
 });
 
-$('#toggleMenu2').click(function () {
+$('#toggleMenu').click(function () { //Toggle filter in navbar
     $('#filter').toggle("slide");
-    //$('.sidebar').css("display", "block");
-    //var div = $(".sidebar");
-    //div.animate({ width: '280px' }, "slow");
-    //div.animate({ height: '670px' }, "slow");
 });
+
 
 $('#toggleMenu').click(function () {
     $('.sidebarDistance').toggle("slide");

@@ -1,0 +1,172 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+    font-family: Arial;
+    background: #f4fbff;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 30px;
+    padding-right: 15px;
+    margin-left: 20px !important;
+    width: 1540px;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+/*input,
+select,*/
+
+/************NAVBAR***************/
+
+.btn-logos img {
+    width: 105px;
+    margin-top: 6px;
+    margin-right: 4px;
+}
+
+.navbar-left img {
+    height: 46px;
+    margin-top: 7px;
+    padding-right: 50px;
+}
+
+.navbar-left {
+    min-height: 60px
+}
+
+.navbar-fixed-top {
+    padding-left: 40px;
+}
+
+.active img {
+    border: 2px solid white;
+    border-radius: 7px;
+}
+
+/*************MINIFILTER***************/
+
+#miniFilter-container {
+    display: flex;
+    margin-left: 140px;
+    margin-top: 30px;
+    margin-bottom: 40px;
+}
+
+#miniFilter {
+    width: 155px;
+    height: 115px;
+    border: 3px solid black;
+    border-radius: 5px;
+    text-align:center !important;
+    background-color: #25849a;
+    color: white;
+}
+
+#miniFilter h2 {
+    padding-top: 13px;
+}
+
+#miniFilterAtag {
+    margin-right: 40px;
+}
+
+#miniFilterRow {
+    background-color: #f4fbff;
+    position: fixed;
+    z-index: 1;
+}
+
+/***********TITLES*************/
+
+.row-header {
+    background: #f4fbff;
+    z-index: 1;
+    position: fixed;
+}
+
+#titles {
+    margin-top: 158px;
+    margin-left: 0;
+}
+
+.col {
+    float: left;
+    position: relative;
+    margin-right:5px
+}
+
+.col-header {
+    font-weight: bold;
+    font-size: large;
+}
+
+/*******ROWS*********/
+
+.hide /* such as container for InternalComment */
+{
+	display: none;
+}
+
+.col-dropdown {
+    width: 240px;
+}
+
+.rows {
+    margin-top: 186px;
+}
+
+.checkboxes img {
+    cursor: pointer;
+    width: 25px;
+}
+
+/***********MINI*FILTER***********/
+
+#toggleMenu {
+    margin-top: 8px;
+    background: #026f88;
+    color: white;
+}
+
+.filterDropDown {
+    display: inline-block;
+    width: 160px;
+}
+
+.filterDates {
+    display: inline-block;
+    width: 100px;
+}
+
+.filterButton {
+    display: inline-block;
+    width: auto;
+}
+
+.filterSort {
+    display: inline-block;
+    width: auto;
+    margin-top: 0px;
+}
+
+#delayTitle {
+    cursor: pointer;
+    margin-left: 10px
+}
+
+#filter {
+    position: fixed;
+    padding-top: 12px;
+    padding-right: 20px;
+    margin-left: 10px;
+    height: 55px;
+    width: auto;
+    color: white;
+}
+
+.filterTitle {
+    margin-right: 10px;
+    margin-left: 10px;
+    white-space: nowrap;
+}
