@@ -37,6 +37,10 @@ namespace TimeLive.App_Start
             bundles.Add(new StyleBundle("~/Content/Expensescss").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/ExpensesIndex.css"));
+
+            bundles.Add(new StyleBundle("~/Content/Dinstancecss").Include(
+                      "~/Content/bootstrap.css",
+                      "~/Content/DistanceIndex.css"));
         }
     }
 }

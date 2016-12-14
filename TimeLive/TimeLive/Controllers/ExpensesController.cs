@@ -49,16 +49,13 @@ namespace TimeLive.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Insert(string companyId, int projectId,string artnr, DateTime regDate, int reimburse, double qty, decimal amount_excl_Vat, decimal? vat_amount, string externComment, string internComment)
+        public ActionResult Insert(string pCompanyId, int pProjectId,string pArtnr, DateTime pRegDate, int? pReimburse, double? pQty, decimal? pAmount_excl_Vat, decimal? pVat_amount, string pExternComment, string pInternComment)
         {
-            //var artnr = (int)Types;
-
             Session["User"] = (Classes.UserClass.User)Session["User"] ?? Classes.UserClass.GetUserByIdentity(WindowsIdentity.GetCurrent());
-            //Session["User"] = Session["User"] as AdUser ?? new AdUser { Domain = "OPTIVASYS", FullName = "Rasmus Jansson", Username = "raja" };
             var user = (Classes.UserClass.User)Session["User"];
 
-            TimeLiveDB.q_InsertRowExpense(user.Username, projectId, companyId, artnr, regDate, reimburse, amount_excl_Vat, vat_amount, externComment, internComment,
-                 qty, null, null, null);
+            TimeLiveDB.q_InsertRowExpense(user.Username, pProjectId, pCompanyId, pArtnr, pRegDate, pReimburse,
+                pAmount_excl_Vat, pVat_amount, pExternComment, pInternComment, pQty, null, null, null);
 
             return RedirectToAction("Index");
         }
@@ -73,15 +70,13 @@ namespace TimeLive.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Update(string q_ex_guuid, int projectId, string companyId, string artnr, DateTime regDate, int reimburse, double qty, decimal amount_excl_Vat, decimal vat_amount, string externComment, string internComment)
+        public ActionResult Update(string q_ex_guuid, int pProjectId, string pCompanyId, string pArtnr, DateTime? pRegDate, int? pReimburse, double? pQty, decimal? pAmount_excl_Vat, decimal? pVat_amount, string pExternComment, string pInternComment)
         {
-            //var artnr = (int)Types;
-
             Session["User"] = (Classes.UserClass.User)Session["User"] ?? Classes.UserClass.GetUserByIdentity(WindowsIdentity.GetCurrent());
-            //Session["User"] = Session["User"] as AdUser ?? new AdUser { Domain = "OPTIVASYS", FullName = "Rasmus Jansson", Username = "raja" };
             var user = (Classes.UserClass.User)Session["User"];
 
-            TimeLiveDB.q_UpdateRowExpense(q_ex_guuid, user.Username, projectId, companyId, artnr, regDate, reimburse, amount_excl_Vat, vat_amount, externComment, internComment, qty, null, null, null);
+            TimeLiveDB.q_UpdateRowExpense(q_ex_guuid, user.Username, pProjectId, pCompanyId, pArtnr, pRegDate, pReimburse,
+                pAmount_excl_Vat, pVat_amount, pExternComment, pInternComment, pQty, null, null, null);
 
             //return Json(new { Result = true });
 
@@ -93,17 +88,30 @@ namespace TimeLive.Controllers
         public ActionResult Filter(DateTime selectionFrom, DateTime selectionTo, string companyId, int? projectId, int? pReimburse)
         {
             Session["User"] = Session["User"] ?? Classes.UserClass.GetUserByIdentity(WindowsIdentity.GetCurrent());
-            //Session["User"] = Session["User"] as AdUser ?? new AdUser { Domain = "OPTIVASYS", FullName = "Rasmus Jansson", Username = "raja" };
             if (DateTime.Now - lastUpdate >= updateFrequency) UpdateStatics();
             if (pReimburse == 0)
                 pReimburse = null;
 
             companyId = string.IsNullOrEmpty(companyId) ? null : companyId;
 
+            var customerList = from c in customers
+                           where c.Code == companyId
+                           select c.Name;
+
+            string customerName = customerList.FirstOrDefault();
+
+            var projectList = from p in projects
+                              where p.CustomerCode == projectId.ToString()
+                              select p.Description;
+
+            string projectName = projectList.FirstOrDefault();
+
             var selections = new ExpensesSelection
             {
                 CustomerId = companyId,
+                CustomerName = customerName,
                 ProjectId = projectId,
+                ProjectName = projectName,
                 From = selectionFrom,
                 To = selectionTo,
                 reimburse = pReimburse,
@@ -124,7 +132,8 @@ namespace TimeLive.Controllers
                 //Types = selections.types,
             };
 
-            ViewBag.User = ((Classes.UserClass.User)Session["User"]).FullName;
+            //ViewBag.User = ((Classes.UserClass.User)Session["User"]).FullName;
+
             return View("Index", model);
         }
 

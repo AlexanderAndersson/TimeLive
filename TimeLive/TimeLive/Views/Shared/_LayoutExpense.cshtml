@@ -47,12 +47,12 @@
                             <input type="text" id="selectionFrom" class="form-control date-picker filterDates" name="selectionFrom" value="@(Model.Selections.From?.ToString("yyyy-MM-dd") ?? "")" />
                             <span class="filterTitle"> To</span>
                             <input type="text" id="selectionTo" class="form-control date-picker filterDates" name="selectionTo" value="@(Model.Selections.To?.ToString("yyyy-MM-dd") ?? "")" />
-                            @*<label class="checkboxes">
-                                <span id="delayTitle">Delay</span>
-                                <input type="checkbox" class="delayChk" name="chkDelay" @(Model.Selections.Delayed == 1 ? "checked" : "") value="@Model.Selections.Delayed" />
-                                <input type="hidden" name="pDealyinvoice" class="pDealyinvoice" value="@Model.Selections.Delayed" />
-                                <img src="~/img/delay_false.png" class="image" />
-                            </label>*@
+                            <label class="checkboxes">
+                                <span id="delayTitle">Reimburse</span>
+                                <input type="checkbox" class="reimChk hide" name="reimChk" @(Model.Selections.reimburse == 1 ? "checked" : "") value="@Model.Selections.reimburse" />
+                                <input type="hidden" name="pReimburse" class="pReimburse" value="@Model.Selections.reimburse" />
+                                <img src="~/img/reimburse_false.png" class="image" />
+                            </label>
                             <button type="submit" id="selectionsApply" class="btn btn-block btn-success filterSort"><span class="glyphicon glyphicon-search"></span> Sort</button>
                         </form>
                     </div>

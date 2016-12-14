@@ -84,11 +84,11 @@ $(document).ready(function (date) {
         eventRender: function (event) {
             var eventStart = event.start.format("HH:mm");
             var eventEnd = event.end.format("HH:mm");
-            if (eventEnd >= "09:00" || eventStart >= "09:00") { //if there is atleast 8 hours reported that day, the color is green   
+            if (eventEnd >= "09:00" || eventStart >= "09:00") { //if there's atleast 8 hours reported that day, the color is green   
                 var dateEnd = event.end.format("YYYY-MM-DD");
                 $('#month').find('.ui-widget-content[data-date=' + dateEnd + ']').css('background', '#128f12', "!important");
             }
-            else { //if there is less than 8 hours reported that day, the color is red  
+            else { //if there's less than 8 hours reported that day, the color is red  
                 var dateStart = event.start.format("YYYY-MM-DD");
                 $('#month').find('.ui-widget-content[data-date=' + dateStart + ']').css('background', '#f23636', "!important");
             }
@@ -186,6 +186,11 @@ $(document).ready(function (date) {
         $('#selectionFrom').val(date);
         $('#selectionTo').val(date);
         $('#selectionsApply').click();
+    });
+
+    //Clicking on sort button will change view to selected date
+    $('#selectionsApply').click(function () {
+        sessionStorage.Date = $('#selectionFrom').val();
     });
 
     var modal = document.getElementById('myModal');
@@ -397,13 +402,13 @@ $('#toggleMenu').click(function () { //Toggle filter in navbar
 });
 
 
-$('#toggleMenu').click(function () {
-    $('.sidebarDistance').toggle("slide");
-});
+//$('#toggleMenu').click(function () {
+//    $('.sidebarDistance').toggle("slide");
+//});
 
-$('#toggleMenu').click(function () {
-    $('.sidebarExpense').toggle("slide");
-});
+//$('#toggleMenu').click(function () {
+//    $('.sidebarExpense').toggle("slide");
+//});
 
 
 //$(document).click(function () {

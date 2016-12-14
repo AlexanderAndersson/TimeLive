@@ -1,6 +1,6 @@
-﻿$('#toggleMenu').click(function () { //Toggle filter in navbar
-    $('#filter').toggle("slide");
-});
+﻿//$('#toggleMenu').click(function () { //Toggle filter in navbar
+//    $('#filter').toggle("slide");
+//});
 
 //reimbuse checkbox function
 $('.reimChk').change(function () {
@@ -57,4 +57,31 @@ $('.reimChk').each(function () {
         image.attr('src', '/img/reimburse_false.png');
         $(this).removeClass('check');
     }
+});
+
+//Show internal comment and hide siblings
+$('.col > input').focus(function () {
+    var timerow = $(this).parents('.expenseRow');
+    timerow.find('.toggle').show(200);
+    timerow.siblings().find('.toggle').hide(200);
+});
+
+//Increase numerics with (plus button)
+$('.btn-plusInt').on('click', function () {
+    var currentNumber = $(this).parent().siblings('input').val();
+    var field = $(this).parent().siblings('input');
+    $(this).parent().siblings('input').val(Math.max(0, parseFloat($(this).parent().siblings('input').val()) + 1))
+    if (currentNumber > 7.50)
+        $(field).css("background-color", "#febcbc"); //red
+    else
+        $(field).css("background-color", "#cbefb8"); //green
+});
+
+//Decrease numerics with (minus button)
+$('.btn-minusInt').on('click', function () {
+    var currentNumber = $(this).parent().siblings('input').val();
+    var field = $(this).parent().siblings('input');
+    $(this).parent().siblings('input').val(Math.max(0, parseFloat($(this).parent().siblings('input').val()) - 1))
+    if (currentNumber <= 8.50)
+        $(field).css("background-color", "#cbefb8"); //green
 });

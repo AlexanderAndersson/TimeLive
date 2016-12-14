@@ -48,7 +48,7 @@ select,*/
 
 #miniFilter-container {
     display: flex;
-    margin-left: 140px;
+    margin-left: 240px;
     margin-top: 30px;
     margin-bottom: 40px;
 }
@@ -63,11 +63,22 @@ select,*/
     color: white;
 }
 
-#miniFilter h2 {
-    padding-top: 13px;
+#miniFilter-container div h2:first-child {
+    padding-top: 35px !important;
+    margin: 0px;
 }
 
-#miniFilterAtag {
+#miniFilter-container h2 {
+    padding-top: 0px !important;
+    margin: 0px;
+}
+
+#miniFilter-container h6 {
+    padding-top: 25px !important;
+    margin: 0px
+}
+
+.miniFilterAtag {
     margin-right: 40px;
 }
 
@@ -101,15 +112,29 @@ select,*/
     font-size: large;
 }
 
+.col-date {
+    width: 100px;
+    margin-right: 37px;
+}
+
+.amount-head {
+    margin-right: 105px;
+}
+
+
 /*******ROWS*********/
+
+.col-dropdown {
+    width: 240px;
+}
+
+.expenseRow {
+    margin-bottom: 13px;
+}
 
 .hide /* such as container for InternalComment */
 {
 	display: none;
-}
-
-.col-dropdown {
-    width: 240px;
 }
 
 .rows {
@@ -121,7 +146,43 @@ select,*/
     width: 25px;
 }
 
-/***********MINI*FILTER***********/
+.amount {
+    text-align: center;
+    width: 139px;
+    border-radius: 4px !important;
+}
+
+.amount-ints {
+    text-align: center;
+    width: 139px;
+    border-radius: 4px !important;
+}
+
+.date {
+    width: 100px;
+}
+
+.col-type {
+    width: 214px;
+}
+
+.col-full {
+    width: 1270px;
+}
+
+.col-full2 {
+    width: 1360px;
+}
+
+.intComment {
+    margin-top: 7px;
+}
+
+.btn2 {
+    margin-top: 8px;
+}
+
+/***********FILTER***********/
 
 #toggleMenu {
     margin-top: 8px;

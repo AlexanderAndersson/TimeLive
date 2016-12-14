@@ -26,35 +26,37 @@ namespace TimeLive.Models
     //}
 
     public class ExpensesSelection
+    {
+    //public Typee types { get; set;}
+        public string CustomerId { get; set; }
+        public string CustomerName { get; set; }
+        public int? ProjectId { get; set; }
+        public string ProjectName { get; set; }
+        public DateTime? From { get; set; }
+        public DateTime? To { get; set; }
+        public int? reimburse { get; set; }
+
+        public static ExpensesSelection ThisWeek
         {
-            //public Typee types { get; set;}
-            public int? ProjectId { get; set; }
-            public string CustomerId { get; set; }
-            public DateTime? From { get; set; }
-            public DateTime? To { get; set; }
-            public int? reimburse { get; set; }
-
-            public static ExpensesSelection ThisWeek
+            get
             {
-                get
-                {
-                    var delta = DayOfWeek.Monday - DateTime.Today.DayOfWeek;
-                    delta = delta > 0 ? -6 : delta;
-                    var from = (DateTime.Today.AddDays(delta));
+                var delta = DayOfWeek.Monday - DateTime.Today.DayOfWeek;
+                delta = delta > 0 ? -6 : delta;
+                var from = (DateTime.Today.AddDays(delta));
 
-                    return new ExpensesSelection { From = from, To = DateTime.Today };
-                }
-            }
-
-            public static ExpensesSelection ThisMonth
-            {
-                get
-                {
-                    var from = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
-                    return new ExpensesSelection { From = from, To = DateTime.Today };
-                }
+                return new ExpensesSelection { From = from, To = DateTime.Today };
             }
         }
+
+        public static ExpensesSelection ThisMonth
+        {
+            get
+            {
+                var from = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+                return new ExpensesSelection { From = from, To = DateTime.Today };
+            }
+        }
+    }
 
         //public class Typee
         //{

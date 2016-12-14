@@ -2,6 +2,7 @@
 @using Newtonsoft.Json
 @model TimeLive.Models.DistanceModel
 @{
+    Layout = "~/Views/Shared/_LayoutDistance.cshtml";
     var selectRows = Model.SelectRows.OrderBy(x => x.regdate).ToArray();
     //var dayDictionary = selectRows.Select(x => x.regdate).Distinct().ToDictionary(day => day, day => false);
 

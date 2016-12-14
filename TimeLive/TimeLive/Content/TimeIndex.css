@@ -94,15 +94,11 @@ select,*/
     width: 240px;
 }
 
-.col-type {
-    width: 214px;
-}
-
 .date {
     width: 100px;
 }
 
-.col-date1 {
+.col-date {
     width: 90px;
     margin-right: 37px;
 }
@@ -577,14 +573,14 @@ input[type=checkbox].glyphicon{
 
 /***********TOTAL HOURS TABLE************/
 
-.CurrentFilterTitle {
+.TotalHoursTitle {
     background-color: #25849a;
     color: #ffffff;
     border: 1px solid #3d3d3d;
     text-align: center;
 }
 
-.CurrentFilter
+.TotalHours
 {
 	padding: 0px;
 	border: 1px solid #3d3d3d;
@@ -592,7 +588,7 @@ input[type=checkbox].glyphicon{
 	font-size: 11pt;
 	font-weight: bold;
 	position: fixed;
-	width: 210px;
+	width: 211px;
     right: 100px;
     top: 770px;
     background-color: white;

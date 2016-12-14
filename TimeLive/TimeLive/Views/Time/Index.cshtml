@@ -143,8 +143,8 @@
 @*<div class="row">
         <h4 id="datesShowned"></h4>
     </div>*@
-
-<input type="hidden" name="pDealyinvoice" class="pDealyinvoice" value="@(Model.Selections.Delayed)" /><br />
+<br />
+<input type="hidden" name="pDealyinvoice" class="pDealyinvoice" value="@(Model.Selections.Delayed)" />
 <div class="row" id="latesReportsRow">
     <div id="latest-container">
         @*<img id="latestPlus" src="~/img/plus.png" />*@
@@ -210,10 +210,10 @@
     <div id="week"></div>
 </div>
 
-<div class="CurrentFilter">
+<div class="TotalHours">
     <table class="pTable">
         <tr id="tableTitle">
-            <th colspan="2" class="CurrentFilterTitle"><b>Total hours</b></th>
+            <th colspan="2" class="TotalHoursTitle"><b>Total hours</b></th>
         </tr>
         <tr>
             <td class="tRow"><b>Invoiced</b></td>
@@ -257,7 +257,7 @@
         <div class="col col-dropdown col-header">Customer</div>
         <div class="col col-dropdown col-header">Project</div>
         <div class="col col-dropdown supProjectT col-header">Sub-project</div>
-        <div class="col col-date1 col-header">Date</div>
+        <div class="col col-date col-header">Date</div>
         <div class="col amount-head invT col-header">Inv</div>
         <div class="col amount-head usedT col-header">Used</div>
         <div class="col col-text extCom col-header">External comment</div>
@@ -287,18 +287,18 @@
                 <div class="row">
                     <div class="col col-dropdown">
                         <input type="hidden" class="companyId" name="pCompanyId" value="@row.companyid" />
-                        <select class="form-control nopadding companyDropDown"></select>
+                        <select required class="form-control nopadding companyDropDown"></select>
                     </div>
                     <div class="col col-dropdown">
                         <input type="hidden" class="projectId" name="pProjectId" value="@row.projectid" />
-                        <select class="form-control nopadding projectDropDown"></select>
+                        <select required class="form-control nopadding projectDropDown"></select>
                     </div>
                     <div class="col col-dropdown">
                         <input type="hidden" class="subProjectId" name="pSubProjectId" value="@row.subprojectid" />
                         <select class="form-control subProjectDropDown"></select>
                     </div>
                     <div class="col date">
-                        <input type="text" class="form-control date-picker" name="pRegDate" value="@row.regdate.ToString("yyyy-MM-dd")" />
+                        <input type="text" required class="form-control date-picker" name="pRegDate" value="@row.regdate.ToString("yyyy-MM-dd")" />
                     </div>
                     @*<div class="col amount">
                             <input type="text" class="form-control amount hours" name="pInvoicedTime" value="@row.invoicedtime.ToString("0.00").Replace(",", ".")" />
@@ -337,7 +337,7 @@
                         </span>
                     </div>
                     <div class="col externCom">
-                        <input type="text" class="form-control comment" name="pExternComment" value="@row.externtcomment" />
+                        <input type="text" required class="form-control comment" name="pExternComment" value="@row.externtcomment" />
                     </div>
                     <label class="checkboxes">
                         <input type="checkbox" class="delayChk" name="chkDelay" @(row.dealyinvoice == 1 ? "checked" : "") value="@row.dealyinvoice" />

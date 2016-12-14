@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    @using System.Web.Optimization
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TimeLive 2.0</title>
+    <link rel="shortcut icon" href="~/img/optivasys.png" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/start/jquery-ui.css">
+    @Styles.Render("~/Content/Dinstancecss")
+    @Styles.Render("~/Content/fullcalendarcss")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+
+            <div class="nav navbar-nav">
+                <a class="navbar-left"><img src="~/img/logo.png"></a>
+                <a href="@Url.Action("Index", "Time")" class="btn-logos navImg"><img class="" src="~/img/btn_Time.png" /></a>
+                <a href="@Url.Action("Index", "Expenses")" class="btn-logos navImg"><img class="" src="~/img/btn_Expenses.png" /></a>
+                <a href="@Url.Action("Index", "Distance")" class="btn-logos navImg"><img class="" src="~/img/btn_Distance.png" /></a>
+                <button type="submit" id="toggleMenu" class="btn btn-block filterButton"><span class="glyphicon glyphicon-search"></span></button>
+            </div>
+            <div class="col-sm-3 col-md-3 col-lg-3">
+                <div id="filter" style="display: none;">
+                    <form action="@Url.Action("Filter")" method="POST">
+                        @Html.AntiForgeryToken()
+                        <span class="filterTitle">From</span>
+                        <input type="text" id="selectionFrom" class="form-control date-picker filterDates" name="selectionFrom" value="@(Model.Selections.From?.ToString("yyyy-MM-dd") ?? "")" />
+                        <span class="filterTitle"> To</span>
+                        <input type="text" id="selectionTo" class="form-control date-picker filterDates" name="selectionTo" value="@(Model.Selections.To?.ToString("yyyy-MM-dd") ?? "")" />
+                        <button type="submit" id="selectionsApply" class="btn btn-block btn-success filterSort"><span class="glyphicon glyphicon-search"></span> Sort</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*@RenderSection("sidebar", false)
+        @RenderSection("siteLeft", false)*@
+    <div class="container body-content">
+        @RenderBody()
+    </div>
+    @Scripts.Render("~/bundles/fullcalendarjs")
+    @Scripts.Render("~/bundles/bootstrap")
+    @*@RenderSection("scripts", required: false)*@
+</body>
+</html>

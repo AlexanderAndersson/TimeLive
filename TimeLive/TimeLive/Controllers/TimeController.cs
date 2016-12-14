@@ -175,7 +175,7 @@ namespace TimeLive.Controllers
                 Selections = selections,
             };
 
-            ViewBag.User = ((Classes.UserClass.User)Session["User"]).FullName;
+            //ViewBag.User = ((Classes.UserClass.User)Session["User"]).FullName;
 
             return View(model);
         }
