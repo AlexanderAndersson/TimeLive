@@ -11,11 +11,9 @@
     @Styles.Render("~/Content/fullcalendarcss")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
-
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                 <span class="sr-only">Toggle navigation</span>
@@ -24,9 +22,7 @@
                 <span class="icon-bar"></span>
             </button>
         </div>
-
         <div class="collapse navbar-collapse navbar-ex1-collapse">
-
             <div class="nav navbar-nav">
                 <a class="navbar-left"><img src="~/img/logo.png"></a>
                 <a href="@Url.Action("Index", "Time")" class="btn-logos navImg"><img class="" src="~/img/btn_Time.png" /></a>
@@ -61,14 +57,10 @@
             </div>
         </div>
     </div>
-
-    @*@RenderSection("sidebar", false)
-    @RenderSection("siteLeft", false)*@
     <div class="container body-content">
         @RenderBody()
     </div>
     @Scripts.Render("~/bundles/fullcalendarjs")
     @Scripts.Render("~/bundles/bootstrap")
-    @*@RenderSection("scripts", required: false)*@
 </body>
 </html>

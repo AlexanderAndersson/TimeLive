@@ -11,146 +11,15 @@
     var totalInvoiced = selectRows.Sum(x => x.invoicedtime);
     var totalAbsence = selectRows.Where(x => x.projectid == "1019").Sum(x => x.usedtime); //1019 is the projectid for Frånvaro, which is under the customer OPT
 }
-@*@section sidebar
-{
-    <div class="sidebar" style="display: none;">
-        <form action="@Url.Action("Filter")" method="POST">
-            @Html.AntiForgeryToken()
-            <h4>Customer</h4>
-            <select id="selectionCompanyDropDown" class="form-control"></select>
-            <input type="hidden" name="companyId" id="selectionCompany" value="@Model.Selections.CustomerId" />
-            <br /><br />
-            <h4>Project</h4>
-            <select id="selectionProjectDropDown" class="form-control"><option value="">All</option></select>
-            <input type="hidden" id="selectionProject" name="projectId" value="@Model.Selections.ProjectId" />
-            <br /><br />
-            <h4>Sub-project</h4>
-            <select name="subProjectId" id="selectionSubProjectDropDown" class="form-control"><option value="">All</option></select>
-            <input type="hidden" id="selectionSubProject" name="subProjectId" value="@Model.Selections.SubProjectId" />
-            <br /><br />
-            <h4>From</h4>
-            <input type="text" id="selectionFrom" class="form-control date-picker" name="selectionFrom" value="@(Model.Selections.From?.ToString("yyyy-MM-dd") ?? "")" />
-            <br /><br />
-            <h4>To</h4>
-            <input type="text" id="selectionTo" class="form-control date-picker" name="selectionTo" value="@(Model.Selections.To?.ToString("yyyy-MM-dd") ?? "")" />
-            <br /><br />
-            @if (Model.Selections.Delayed == 1)
-            {
-                <input type="checkbox" class="delayChk" checked/><label> Delayed</label>
-            }
-            else
-            {
-                <input type="checkbox" class="delayChk"/><label> Delayed</label>
-            }
-            <input type="hidden" name="pDealyinvoice" class="pDealyinvoice" value="@(Model.Selections.Delayed)" /><br />
-            <button type="submit" id="selectionsApply" class="btn btn-block btn-success">Apply</button>
-        </form>
-    <br/><br/>
-    <div class="tHours">
-        <table>
-            <tr>
-                <th id="tableTitle"><u>Total hours</u></th>
-            </tr>
-            <tr>
-                <td><b>Invoiced</b></td>
-                <td>@totalInvoiced.ToString("N1").Replace(",", ".")h</td>
-            </tr>
-            <tr>
-                <td><b>Used</b></td>
-                <td>@totalUsed.ToString("N1").Replace(",", ".")h</td>
-            </tr>
-            <tr>
-                <td><b>Inv/Used</b></td>
-                <td>@(totalUsed != 0 ? (totalInvoiced / totalUsed).ToString("P0") : "0%")</td>
-            </tr>
-            <tr>
-                <td><b>Absence</b></td>
-                <td>@totalAbsence.ToString("N1").Replace(",", ".")h</td>
-            </tr>
-        </table>
-    </div>
-    </div>
-}
-@section siteLeft
-{
-    <div class="hSiteLeft">
-        <a href="#"><img id="toggleMenu" src="~/img/btnTime_All2.png" title="Show filter"/></a>
-        <a href="#"><img id="QlikView" src="~/img/btnTime_QV2.png" title="Go to QlikView" /></a>
-        <a href="#"><img id="quickToday" src="~/img/btnTime_Dayy.png" title="Show today" /></a>
-        <a href="#"><img id="quickCWeek" src="~/img/btnTime_Week.png" title="Show this week" /></a>
-        <a href="#"><img id="quickCMonth" src="~/img/btnTime_Month2.png" title="Show this month" /></a>
-        <a href="#"><img id="quickLMonth" src="~/img/btnTime_PrevMonth.png" title="Show last month" /></a>
-    </div>
-}*@
-
-<div class="container">
-<div class="row" id="filter2" style="display: none;">
-    <form action="@Url.Action("Filter")" method="POST">
-        @Html.AntiForgeryToken()
-        <span class="filterTitle">Customer</span>
-        <select id="selectionCompanyDropDown" class="form-control filterDropDown"></select>
-        <input type="hidden" name="companyId" id="selectionCompany" value="@Model.Selections.CustomerId" />
-        <select id="selectionProjectDropDown" class="form-control filterDropDown"><option value="">All</option></select>
-        <input type="hidden" id="selectionProject" name="projectId" value="@Model.Selections.ProjectId" />
-        <select name="subProjectId" id="selectionSubProjectDropDown" class="form-control filterDropDown"><option value="">All</option></select>
-        <input type="hidden" id="selectionSubProject" name="subProjectId" value="@Model.Selections.SubProjectId" />
-        <span class="filterTitle">From</span>
-        <input type="text" id="selectionFrom" class="form-control date-picker filterDates" name="selectionFrom" value="@(Model.Selections.From?.ToString("yyyy-MM-dd") ?? "")" />
-        <span class="filterTitle"> To</span>
-        <input type="text" id="selectionTo" class="form-control date-picker filterDates" name="selectionTo" value="@(Model.Selections.To?.ToString("yyyy-MM-dd") ?? "")" />
-        <label class="checkboxes">
-            <span id="delayTitle">Delay</span>
-            <input type="checkbox" class="delayChk" name="chkDelay" @(Model.Selections.Delayed == 1 ? "checked" : "") value="@Model.Selections.Delayed" />
-            <input type="hidden" name="pDealyinvoice" class="pDealyinvoice" value="@Model.Selections.Delayed" />
-            <img src="~/img/delay_false.png" class="image" />
-        </label>
-        <button type="submit" id="selectionsApply" class="btn btn-block btn-success filterButton"><span class="glyphicon glyphicon-search"></span> Sort</button>
-    </form>
-</div>
-</div>
-
-@*<div class="navbar navbar-inverse" role="navigation">
-<div class="collapse navbar-collapse navbar-ex1-collapse">
-
-    <div class="nav navbar-nav">
-        <button type="submit" id="toggleMenu2" class="btn btn-block filterButton"><span class="glyphicon glyphicon-search"></span></button>
-    </div>
-    <div class="col-sm-3 col-md-3 col-lg-3">
-        <div id="filter" style="display: none;">
-            <form action="@Url.Action("Filter")" method="POST">
-                @Html.AntiForgeryToken()
-                <span class="filterTitle">Customer</span>
-                <select id="selectionCompanyDropDown" class="form-control filterDropDown"></select>
-                <input type="hidden" name="companyId" id="selectionCompany" value="@Model.Selections.CustomerId" />
-                <select id="selectionProjectDropDown" class="form-control filterDropDown"><option value="">All</option></select>
-                <input type="hidden" id="selectionProject" name="projectId" value="@Model.Selections.ProjectId" />
-                <select name="subProjectId" id="selectionSubProjectDropDown" class="form-control filterDropDown"><option value="">All</option></select>
-                <input type="hidden" id="selectionSubProject" name="subProjectId" value="@Model.Selections.SubProjectId" />
-                <span class="filterTitle">From</span>
-                <input type="text" id="selectionFrom" class="form-control date-picker filterDates" name="selectionFrom" value="@(Model.Selections.From?.ToString("yyyy-MM-dd") ?? "")" />
-                <span class="filterTitle"> To</span>
-                <input type="text" id="selectionTo" class="form-control date-picker filterDates" name="selectionTo" value="@(Model.Selections.To?.ToString("yyyy-MM-dd") ?? "")" />
-                <button type="submit" id="selectionsApply" class="btn btn-block btn-success filterButton"><span class="glyphicon glyphicon-search"></span> Sort</button>
-            </form>
-        </div>
-    </div>
-</div>
-</div>*@
-
-
-
-
 @*<div class="row">
         <h4 id="datesShowned"></h4>
     </div>*@
-<br />
-<input type="hidden" name="pDealyinvoice" class="pDealyinvoice" value="@(Model.Selections.Delayed)" />
+@*<input type="hidden" name="pDealyinvoice" class="pDealyinvoice" value="@(Model.Selections.Delayed)" />*@
 <div class="row" id="latesReportsRow">
     <div id="latest-container">
-        @*<img id="latestPlus" src="~/img/plus.png" />*@
         @foreach (var row in latestReports)
         {
-            <a href="#" class="latest" style="text-decoration:none">
+            <a href="#" class="latest" style="text-decoration:none"> <!--LATEST REPORTS-->
                 <div class="latestReports">
                     <input type="hidden" class="companyId" name="pCompanyId" value="@row.companyid" />
                     <h5>@row.companyname</h5>
@@ -163,23 +32,20 @@
         }
         @if (latestReports.Count() < 5)
         {
-            for (int i = latestReports.Count(); i < 5; i++)
+            for (int i = latestReports.Count(); i < 5; i++) 
             {
-                <div class="latest" @*style="text-decoration:none"*@>
-                    <div class="latestReports" @*style="background-color:#71797b"*@></div>
+                <div class="latest"> <!--IF NOT ENOUGH LATEST REPORTS GRAY OUT MISSING SLOTS-->
+                    <div class="latestReports" style="background-color:#71797b"></div>
                 </div>
             }
         }
     </div>
 </div>
-@*<div>
-    <img id="toggleMenu2" src="~/img/magnifying glass.png" />
-</div>*@
-@foreach (var item in missingHours.Take(1))
+@foreach (var item in missingHours.Take(1))  
 {
     if (missingHours.Count() > 1)
     {
-        <div class="alert alert-info">
+        <div class="alert alert-info"> <!--ALERT FOR MISSING HOURS-->
             <b>@missingHours.Count()</b> alerts
         </div>
     }
@@ -194,9 +60,9 @@
     </div>
 }
 
-@if (missingHours.Count() == 0)
+@if (missingHours.Count() == 0) 
 {
-    <div class="alert alert-info">
+    <div class="alert alert-info"> <!--IF THERE IS NO MISSING HOURS, SHOW THIS-->
         0 alerts
     </div>
     <div class="alert alert-success">
@@ -204,13 +70,13 @@
     </div>
 }
 
-<div id="month"></div>
+<div id="month"></div> <!--MONTH CALANDER-->
 
 <div class="row">
-    <div id="week"></div>
+    <div id="week"></div> <!--WEEK CALANDER-->
 </div>
 
-<div class="TotalHours">
+<div class="TotalHours"> <!--TOTAL HOURS STATS WINDOW-->
     <table class="pTable">
         <tr id="tableTitle">
             <th colspan="2" class="TotalHoursTitle"><b>Total hours</b></th>
@@ -233,7 +99,7 @@
         </tr>
     </table>
 </div>
-<div class="row">
+<div class="row"> <!--ERROR MESSAGE MODAL-->
     @if (TempData["error"] != null)
     {
         <div class="alert alert-danger" id="errorMsg">
@@ -252,7 +118,7 @@
     }
 </div>
 <br />
-<div id="titles">
+<div id="titles"> <!--TITLES FOR REPORTS-->
     <div class="row row-header">
         <div class="col col-dropdown col-header">Customer</div>
         <div class="col col-dropdown col-header">Project</div>
@@ -264,7 +130,7 @@
         <div class="col col-delay col-header">Delay</div>
     </div>
 </div>
-<div class="rows">
+<div class="rows"> <!--ALL CREATED REPORTS-->
     @foreach (var row in selectRows)
     {
         <div class="timerow">
@@ -285,27 +151,21 @@
                 @*<input type="hidden" name="dealyinvoice" value="@row.dealyinvoice" />*@
                 <input type="hidden" name="subprojectid_prio" value="@row.subprojectid_prio" />
                 <div class="row">
-                    <div class="col col-dropdown">
+                    <div class="col col-dropdown"> <!--CUSTOMER-->
                         <input type="hidden" class="companyId" name="pCompanyId" value="@row.companyid" />
                         <select required class="form-control nopadding companyDropDown"></select>
                     </div>
-                    <div class="col col-dropdown">
+                    <div class="col col-dropdown"> <!--PROJECT-->
                         <input type="hidden" class="projectId" name="pProjectId" value="@row.projectid" />
                         <select required class="form-control nopadding projectDropDown"></select>
                     </div>
-                    <div class="col col-dropdown">
+                    <div class="col col-dropdown"> <!--SUBPROJECT-->
                         <input type="hidden" class="subProjectId" name="pSubProjectId" value="@row.subprojectid" />
                         <select class="form-control subProjectDropDown"></select>
                     </div>
-                    <div class="col date">
+                    <div class="col date"> <!--DATE-->
                         <input type="text" required class="form-control date-picker" name="pRegDate" value="@row.regdate.ToString("yyyy-MM-dd")" />
                     </div>
-                    @*<div class="col amount">
-                            <input type="text" class="form-control amount hours" name="pInvoicedTime" value="@row.invoicedtime.ToString("0.00").Replace(",", ".")" />
-                        </div>
-                        <div class="col amount">
-                            <input type="text" class="form-control amount hours" name="pUsedTime" value="@row.usedtime.ToString("0.00").Replace(",", ".")" />
-                        </div>*@
                     <div class="input-group col amount">
                         <span class="input-group-btn row toggle" style="display: none;">
                             <!--BUTTON MINUS-->
@@ -313,7 +173,7 @@
                                 <span class="glyphicon glyphicon-minus"></span>
                             </button>
                         </span>
-                        <input type="text" name="pInvoicedTimeUpdate" class="form-control hours amount" value="@row.invoicedtime.ToString("0.00").Replace(",", ".")">
+                        <input type="text" name="pInvoicedTimeUpdate" class="form-control hours amount" value="@row.invoicedtime.ToString("0.00").Replace(",", ".")"> <!--INVOICE-->
                         <span class="input-group-btn row toggle" style="display: none;">
                             <!--BUTTON PLUS-->
                             <button type="button" class="btn btn-success btn-number btn-plus">
@@ -328,7 +188,7 @@
                                 <span class="glyphicon glyphicon-minus"></span>
                             </button>
                         </span>
-                        <input type="text" name="pUsedTimeUpdate" class="form-control hours amount" value="@row.usedtime.ToString("0.00").Replace(",", ".")">
+                        <input type="text" name="pUsedTimeUpdate" class="form-control hours amount" value="@row.usedtime.ToString("0.00").Replace(",", ".")"> <!--USED-->
                         <span class="input-group-btn row toggle" style="display: none;">
                             <!--BUTTON PLUS-->
                             <button type="button" class="btn btn-success btn-number btn-plus">
@@ -336,15 +196,15 @@
                             </button>
                         </span>
                     </div>
-                    <div class="col externCom">
-                        <input type="text" required class="form-control comment" name="pExternComment" value="@row.externtcomment" />
+                    <div class="col externCom"> <!--EXTERN COMMENT-->
+                        <input type="text" required class="form-control comment" name="pExternCommentUpdate" value="@row.externtcomment" />
                     </div>
-                    <label class="checkboxes">
+                    <label class="checkboxes"> <!--DELAY-->
                         <input type="checkbox" class="delayChk" name="chkDelay" @(row.dealyinvoice == 1 ? "checked" : "") value="@row.dealyinvoice" />
                         <input type="hidden" name="pDealyinvoice" class="pDealyinvoice" value="@row.dealyinvoice" />
                         <img src="~/img/delay_false.png" class="image" />
                     </label>
-                    <a href="#" class="copy" title="Copy">
+                    <a href="#" class="copy" title="Copy"> <!--COPY BUTTON-->
                         <img src="~/img/btn_copy.png" />
                         <input type="hidden" class="companyId" name="pCompanyId" value="@row.companyid" />
                         <input type="hidden" class="projectId" name="pProjectId" value="@row.projectid" />
@@ -355,11 +215,11 @@
                         <input type="hidden" class="form-control intComment comment" name="pInternComment" value="@row.interncomment" />
                     </a>
                 </div>
-                <div class="row toggle" style="display: none;">
-                    <div class="col col-full">
-                        <input type="text" class="form-control intComment comment" name="pInternComment" value="@row.interncomment" />
+                <div class="row toggle" style="display: none;"> 
+                    <div class="col col-full"> <!--INTERNAT COMMENT-->
+                        <input type="text" class="form-control intComment comment" name="pInternCommentUpdate" value="@row.interncomment" />
                     </div>
-                    <div class="btn-group-sm">
+                    <div class="btn-group-sm"> <!--UPDATE AND DELETE BUTTON-->
                         <button type="submit" id="btnSave" class="btn btn-success btn2" title="Update">
                             <span class="glyphicon glyphicon-floppy-disk"></span>
                             Update
@@ -368,81 +228,44 @@
                             <span class="glyphicon glyphicon-remove"></span>
                             Delete
                         </button>
-
-                        @*<button type="button" class="btn btn-warning" data-toggle="modal" data-id="@row.q_hrp_guiid" data-target="#confirm-delete">
-                                <span class="glyphicon glyphicon-remove"></span>
-                            </button>*@
-
-                        @*<a data-toggle="modal" data-id="@row.q_hrp_guiid" title="Add this item" class="myModal btn btn-warning" href="#confirm-delete">
-                                <span class="glyphicon glyphicon-remove"></span>
-                            </a>*@
                     </div>
                 </div>
             }
-
-            <!--MODAL-->
-            @*@using (Html.BeginForm("Update", "Time", FormMethod.Post))
-                {*@
-            <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                            <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
-                        </div>
-                        <div class="modal-body">
-                            <p>Are you sure you want to delete:</p><b><input type="text" name="bookId" id="bookId" value="" /></b>
-                        </div>
-                        <div class="modal-footer" style="background-color: rgb(241,241,241)">
-                            <button type="button" class="btn btn-success" data-dismiss="modal">Cancel</button>
-                            <button type="button" data-id="@row.q_hrp_guiid" class="btn btn-danger" id="modalDelete" title="Delete">Delete</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            @*}*@
         </div>
     }
 </div>
-@if (selectRows.Count() != 0)
+@if (selectRows.Count() != 0) 
 {
     <br />
-    <div class="row ">
-        <div class="col col-header">
+    <div class="row "> 
+        <div class="col col-header"> <!--NEW REPORT TITLE IF THERE IS EXISTING REPORTS ALREADY-->
             New Report
         </div>
     </div>
 }
 <div class="timerow">
-    @using (Html.BeginForm("Insert", "Time", FormMethod.Post))
+    @using (Html.BeginForm("Insert", "Time", FormMethod.Post)) 
     {
         @Html.AntiForgeryToken()
         <div class="row">
-            <div class="col col-dropdown">
-                @*<input type="hidden" class="pCompanyId" />*@
+            <div class="col col-dropdown"> <!--CUSTOMER-->
                 <select name="pCompanyId" required="required" class="form-control newCompany companyDropDown">
                     <option value="">Select Customer</option>
                 </select>
             </div>
-            <div class="col col-dropdown">
+            <div class="col col-dropdown"> <!--PROJECT-->
                 <select name="pProjectId" required="required" class="form-control newProject projectDropDown"></select>
             </div>
-            <div class="col col-dropdown">
+            <div class="col col-dropdown"> <!--SUBPROJECT-->
                 <select name="pSubProjectId" class="form-control newSubProject subProjectDropDown"></select>
             </div>
-            <div class="col date">
+            <div class="col date"> <!--DATE AND FROM-DATE-->
                 <input type="text" name="pRegDate" class="form-control newRegDate date-picker" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
                 <input type="text" required name="vacationFrom" class="form-control hide vacationFrom date-picker" value="From" />
             </div>
-            <div class="col date">
+            <div class="col date"> <!--TO-DATE-->
                 <input type="text" required name="vacationTo" class="form-control hide vacationTo date-picker" value="To" />
             </div>
-            @*<div class="col amount">
-                    <input type="text" name="pInvoicedTime" class="form-control hours amount" value="0.00" />
-                </div>*@
-            @*<div class="col amount">
-                    <input type="text" name="pUsedTime" class="form-control hours amount" value="0.00" />
-                </div>*@
             <div class="input-group col amount">
                 <span class="input-group-btn buttons">
                     <!--BUTTON MINUS-->
@@ -450,7 +273,7 @@
                         <span class="glyphicon glyphicon-minus"></span>
                     </button>
                 </span>
-                <input type="text" name="pInvoicedTime" class="form-control hours amount newInvoice" value="0.00" min="0">
+                <input type="text" name="pInvoicedTime" class="form-control hours amount newInvoice" value="0.00" min="0"> <!--INVOICE-->
                 <span class="input-group-btn buttons">
                     <!--BUTTON PLUS-->
                     <button type="button" class="btn btn-success hideButton btn-number btn-plus">
@@ -465,7 +288,7 @@
                         <span class="glyphicon glyphicon-minus"></span>
                     </button>
                 </span>
-                <input type="text" name="pUsedTime" class="form-control hours amount newUsed" value="0.00" min="0">
+                <input type="text" name="pUsedTime" class="form-control hours amount newUsed" value="0.00" min="0"> <!--USED-->
                 <span class="input-group-btn">
                     <!--BUTTON PLUS-->
                     <button type="button" class="btn btn-success btn-number btn-plus">
@@ -473,22 +296,20 @@
                     </button>
                 </span>
             </div>
-            <div class="col externCom">
+            <div class="col externCom"> <!--EXTERN COMMENT-->
                 <input type="text" required name="pExternComment" class="form-control comment newExtComment" />
             </div>
-            <label class="checkboxes">
+            <label class="checkboxes"> <!--DELAY-->
                 <input type="checkbox" class="delayChk" />
                 <input type="hidden" name="pDealyinvoice" class="pDealyinvoice" value="0" />
                 <img src="~/img/delay_false.png" class="image" />
             </label>
-            @*<input type="checkbox" class="delayChk" />
-                <input type="hidden" name="pDealyinvoice" class="pDealyinvoice" value="0" />*@
         </div>
         <div class="row">
-            <div class="col col-full-insert">
+            <div class="col col-full-insert"> <!--INTERNAL COMMENT-->
                 <input type="text" name="pInternComment" class="form-control intComment comment newIntComment" placeholder="Internal comment" />
             </div>
-            <div class="btn-group btn-group-sm">
+            <div class="btn-group btn-group-sm"> <!--SAVE BUTTOM-->
                 <button type="submit" class="btn btn-primary btn2" title="Save">
                     <span class="glyphicon glyphicon-floppy-disk"></span>
                     Save
@@ -501,51 +322,6 @@
 <link href="~/Content/TimeIndex.css" rel="stylesheet" />
 <script src="~/Scripts/funktions.js"></script>
 <script type="text/javascript">
-
-    var globalId;
-    var globalToken;
-
-    $(document).on("click", ".myModal", function () {
-        globalId = $(this).data('id');
-        $(".modal-body #bookId").val( globalId );
-    });
-
-    //Deleting
-    $('#modalDelete').click(function() {
-        var row = $(this).parents('.timerow');
-        //__RequestVerificationToken
-        var guiid = globalId;
-        alert(guiid);
-        var token = row.find('input[name=__RequestVerificationToken]').val();
-        alert(token);
-        $.post('@Url.Action("Delete")', { '__RequestVerificationToken': token, 'q_hrp_guiid': guiid },
-            function(data) {
-                alert(guiid)
-                if (data.Result) {
-                    guiid.hide(150);
-                } else {
-                    //Todo: Display error message
-                }
-            }, 'json');
-    });
-
-    //Delete function
-    $('.delete').click(function() {
-        var row = $(this).parents('.timerow');
-        //__RequestVerificationToken
-        var guiid = row.find('.q_hrp_guiid').val();
-        var token = row.find('input[name=__RequestVerificationToken]').val();
-        $.post('@Url.Action("Delete")', { '__RequestVerificationToken': token, 'q_hrp_guiid': guiid },
-            function(data) {
-                if (data.Result) {
-                    row.hide(150);
-                    $('#week').fullCalendar('refetchEvents');
-                    $('#month').fullCalendar('refetchEvents');
-                } else {
-                    //Todo: Display error message
-                }
-            }, 'json');
-    });
 
     var customers = @Html.Raw(JsonConvert.SerializeObject(Model.Customers));
 
@@ -611,6 +387,25 @@
                 $(companyDropDown).append('<option value="'+val.Code +'"'+ (val.Code === companyId ? ' selected' : '') +'>' + val.Name +'</option>');
             });
         }
+
+        //Delete function
+        $('.delete').click(function() {
+            var row = $(this).parents('.timerow');
+            //__RequestVerificationToken
+            var guiid = row.find('.q_hrp_guiid').val();
+            var token = row.find('input[name=__RequestVerificationToken]').val();
+            $.post('@Url.Action("Delete")', { '__RequestVerificationToken': token, 'q_hrp_guiid': guiid },
+                function(data) {
+                    if (data.Result) {
+                        row.hide(150);
+                        $('#week').fullCalendar('refetchEvents');
+                        $('#month').fullCalendar('refetchEvents');
+                    } else {
+                        //Todo: Display error message
+                    }
+                }, 'json');
+        });
+
         $('.timerow').each(function(k,v) {
             var companyId = $(v).find('.companyId').val();
             var companyDropDown = $(v).find('.companyDropDown');
@@ -655,11 +450,5 @@
             updateSubProjectDropDown($('#selectionSubProjectDropDown'));
             $('#selectionSubProjectDropDown').prepend('<option value="" selected>All</option>');
         });
-
-
-
-        //$('#selectionsApply').click(function() {
-        //    Todo: Fetch time rows and render.
-        //});
     });
 </script>

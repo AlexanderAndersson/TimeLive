@@ -8,6 +8,7 @@ namespace TimeLive.Models
 {
     public class ExpensesModel
     {
+        public decimal Reimbursed { get; set; }
         public IEnumerable<q_SelectRowsExpense_Result> SelectRows { get; set; }
         public IEnumerable<Customer> Customers { get; set; }
         public IEnumerable<Project> Projects { get; set; }

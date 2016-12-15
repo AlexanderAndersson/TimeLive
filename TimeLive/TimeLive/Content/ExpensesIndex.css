@@ -44,11 +44,143 @@ select,*/
     border-radius: 7px;
 }
 
+/*****************CURRENT FILTER******************/
+
+.CurrentFilterTitle {
+    background-color: #25849a;
+    color: #ffffff;
+    border: 1px solid #3d3d3d;
+    text-align: center;
+}
+
+.CurrentFilter
+{
+	padding: 0px;
+	border: 1px solid #3d3d3d;
+	font-family: arial, sans-serif;
+	font-size: 11pt;
+	font-weight: bold;
+	position: fixed;
+	width: 212px;
+    right: 100px;
+    top: 180px;
+    background-color: white;
+}
+
+#tableCurrentFilter{
+    font-size: 13pt;
+}
+
+.tRow {
+    padding-left: 15px;
+    padding-top: 5px;
+    width: 110px;
+}
+
+.tRow2 {
+    padding-top: 5px;
+}
+
+.pTable {
+    width: 210px;
+}
+
+/******************INFORMATION******************/
+
+.InformationTitle {
+    background-color: #25849a;
+    color: #ffffff;
+    border: 1px solid #3d3d3d;
+    text-align: center;
+}
+
+.Information
+{
+	padding: 0px;
+	border: 1px solid #3d3d3d;
+	font-family: arial, sans-serif;
+	font-size: 11pt;
+	/*font-weight: bold;*/
+	position: fixed;
+	width: 212px;
+    right: 100px;
+    top: 330px;
+    background-color: white;
+}
+
+#tableInformation {
+    font-size: 13pt;
+}
+
+.tRow {
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 5px;
+    width: 110px;
+}
+
+.tRow2 {
+    padding-top: 5px;
+}
+
+.pTable {
+    width: 210px;
+}
+
+/**********OUTSTANDING AMOUNT***********/
+
+.alert-info {
+    width: 250px;
+    position: fixed;
+    right: 80px;
+    top: 80px;
+    text-align: center;
+    padding: 2px;
+    border-radius: 3px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    background-color: #a6ddf9;
+    color: black;
+}
+
+#outAmount {
+    width: 250px;
+    position: fixed;
+    right: 80px;
+    top: 104px;
+    text-align: center;
+    border-radius: 3px;
+    border-top-right-radius: 0px;
+    border-top-left-radius: 0px;
+    border: 0px;
+    background-color: #ffbfbf;
+    color: black;
+}
+
+#outAmount:hover {
+    cursor: pointer;
+    background-color: #ffa5a5;
+}
+
+.alert-success {
+    width: 250px;
+    position: fixed;
+    right: 80px;
+    top: 104px;
+    text-align: center;
+    border-radius: 3px;
+    border-top-right-radius: 0px;
+    border-top-left-radius: 0px;
+    border: 0px;
+    background-color: #9ce49c;
+    color: black;
+}
+
 /*************MINIFILTER***************/
 
 #miniFilter-container {
     display: flex;
-    margin-left: 240px;
+    margin-left: 340px;
     margin-top: 30px;
     margin-bottom: 40px;
 }
@@ -85,14 +217,14 @@ select,*/
 #miniFilterRow {
     background-color: #f4fbff;
     position: fixed;
-    z-index: 1;
+    /*z-index: 1;*/
 }
 
 /***********TITLES*************/
 
 .row-header {
     background: #f4fbff;
-    z-index: 1;
+    /*z-index: 1;*/
     position: fixed;
 }
 
@@ -118,7 +250,7 @@ select,*/
 }
 
 .amount-head {
-    margin-right: 105px;
+    margin-right: 55px;
 }
 
 
@@ -148,7 +280,7 @@ select,*/
 
 .amount {
     text-align: center;
-    width: 139px;
+    width: 90px;
     border-radius: 4px !important;
 }
 
@@ -163,15 +295,19 @@ select,*/
 }
 
 .col-type {
-    width: 214px;
+    width: 240px;
 }
 
 .col-full {
-    width: 1270px;
+    width: 1320px;
 }
 
 .col-full2 {
-    width: 1360px;
+    width: 1410px;
+}
+
+.externCom {
+    width: 360px;
 }
 
 .intComment {
@@ -180,6 +316,10 @@ select,*/
 
 .btn2 {
     margin-top: 8px;
+}
+
+.input-group {
+    z-index: 0 !important;
 }
 
 /***********FILTER***********/

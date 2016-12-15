@@ -11,11 +11,9 @@
     @Styles.Render("~/Content/fullcalendarcss")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
-
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                 <span class="sr-only">Toggle navigation</span>
@@ -24,9 +22,7 @@
                 <span class="icon-bar"></span>
             </button>
         </div>
-
         <div class="collapse navbar-collapse navbar-ex1-collapse">
-
             <div class="nav navbar-nav">
                 <a class="navbar-left"><img src="~/img/logo.png"></a>
                 <a href="@Url.Action("Index", "Time")" class="btn-logos navImg"><img class="" src="~/img/btn_Time.png" /></a>
@@ -35,38 +31,34 @@
                 <button type="submit" id="toggleMenu" class="btn btn-block filterButton"><span class="glyphicon glyphicon-search"></span></button>
             </div>
             <div class="col-sm-3 col-md-3 col-lg-3">
-                    <div id="filter" style="display: none;">
-                        <form action="@Url.Action("Filter")" method="POST">
-                            @Html.AntiForgeryToken()
-                            <span class="filterTitle">Customer</span>
-                            <select id="selectionCompanyDropDown" class="form-control filterDropDown"></select>
-                            <input type="hidden" name="companyId" id="selectionCompany" value="@Model.Selections.CustomerId" />
-                            <select id="selectionProjectDropDown" class="form-control filterDropDown"><option value="">All</option></select>
-                            <input type="hidden" id="selectionProject" name="projectId" value="@Model.Selections.ProjectId" />
-                            <span class="filterTitle">From</span>
-                            <input type="text" id="selectionFrom" class="form-control date-picker filterDates" name="selectionFrom" value="@(Model.Selections.From?.ToString("yyyy-MM-dd") ?? "")" />
-                            <span class="filterTitle"> To</span>
-                            <input type="text" id="selectionTo" class="form-control date-picker filterDates" name="selectionTo" value="@(Model.Selections.To?.ToString("yyyy-MM-dd") ?? "")" />
-                            <label class="checkboxes">
-                                <span id="delayTitle">Reimburse</span>
-                                <input type="checkbox" class="reimChk hide" name="reimChk" @(Model.Selections.reimburse == 1 ? "checked" : "") value="@Model.Selections.reimburse" />
-                                <input type="hidden" name="pReimburse" class="pReimburse" value="@Model.Selections.reimburse" />
-                                <img src="~/img/reimburse_false.png" class="image" />
-                            </label>
-                            <button type="submit" id="selectionsApply" class="btn btn-block btn-success filterSort"><span class="glyphicon glyphicon-search"></span> Sort</button>
-                        </form>
-                    </div>
+                <div id="filter" style="display: none;">
+                    <form action="@Url.Action("Filter")" method="POST">
+                        @Html.AntiForgeryToken()
+                        <span class="filterTitle">Customer</span>
+                        <select id="selectionCompanyDropDown" class="form-control filterDropDown"></select>
+                        <input type="hidden" name="companyId" id="selectionCompany" value="@Model.Selections.CustomerId" />
+                        @*<select id="selectionProjectDropDown" class="form-control filterDropDown"><option value="">All</option></select>
+                        <input type="hidden" id="selectionProject" name="projectId" value="@Model.Selections.ProjectId" />*@
+                        <span class="filterTitle">From</span>
+                        <input type="text" id="selectionFrom" class="form-control date-picker filterDates" name="selectionFrom" value="@(Model.Selections.From?.ToString("yyyy-MM-dd") ?? "")" />
+                        <span class="filterTitle"> To</span>
+                        <input type="text" id="selectionTo" class="form-control date-picker filterDates" name="selectionTo" value="@(Model.Selections.To?.ToString("yyyy-MM-dd") ?? "")" />
+                        <label class="checkboxes">
+                            <span id="delayTitle">Reimburse</span>
+                            <input type="checkbox" class="reimChk hide" name="reimChk" @(Model.Selections.reimburse == 1 ? "checked" : "") value="@Model.Selections.reimburse" />
+                            <input type="hidden" name="pReimburse" class="pReimburse" value="@Model.Selections.reimburse" />
+                            <img src="~/img/reimburse_false.png" class="image" />
+                        </label>
+                        <button type="submit" id="selectionsApply" class="btn btn-block btn-success filterSort"><span class="glyphicon glyphicon-search"></span> Sort</button>
+                    </form>
                 </div>
+            </div>
         </div>
     </div>
-
-    @*@RenderSection("sidebar", false)
-        @RenderSection("siteLeft", false)*@
     <div class="container body-content">
         @RenderBody()
     </div>
     @Scripts.Render("~/bundles/fullcalendarjs")
     @Scripts.Render("~/bundles/bootstrap")
-    @*@RenderSection("scripts", required: false)*@
 </body>
 </html>

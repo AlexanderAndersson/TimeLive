@@ -3,71 +3,25 @@
 @model TimeLive.Models.ExpensesModel
 @{
     Layout = "~/Views/Shared/_LayoutExpense.cshtml";
+    var outstandingAmount = Model.Reimbursed;
     var selectRows = Model.SelectRows.OrderBy(x => x.regdate).ToArray();
     var dayDictionary = selectRows.Select(x => x.regdate).Distinct().ToDictionary(day => day, day => false);
-    //var qty = selectRows.Sum(x => x.qty);
-    //var total = selectRows.Sum(x => x.);
-    var vat = selectRows.Sum(x => x.amount_excl_Vat);
-    var total = selectRows.Sum(x => x.vat_amount + x.amount_excl_Vat);
-
-    //var totalUsed = selectRows.Sum(x => x.usedtime);
-    //var totalInvoiced = selectRows.Sum(x => x.invoicedtime);
-    //var totalAbsence = selectRows.Where(x => x.projectid == "1019").Sum(x => x.usedtime);
+    //var reimbursedStatus = selectRows.Select(x => x.ReimbursedStatus);
+    //var reimbursedVoucherNo = selectRows.Select(x => x.ReimbursedVoucherNo);
+    //var openOutAmount = selectRows.Select(x => x.ReimbursedStatus == "Open");
 }
-@*@section sidebar
-{
-    <div class="sidebarExpense" style="display: none;">
-        <form action="@Url.Action("Filter")" method="POST">
-            @Html.AntiForgeryToken()
-            <h4>Customer</h4>
-            <select id="selectionCompanyDropDown" class="form-control"></select>
-            <input type="hidden" name="companyId" id="selectionCompany" value="@Model.Selections.CustomerId" />
-            <br /><br />
-            <h4>From</h4>
-            <input type="text" id="selectionFrom" class="form-control date-picker" name="selectionFrom" value="@(Model.Selections.From?.ToString("yyyy-MM-dd") ?? "")" />
-            <br /><br />
-            <h4>To</h4>
-            <input type="text" id="selectionTo" class="form-control date-picker" name="selectionTo" value="@(Model.Selections.To?.ToString("yyyy-MM-dd") ?? "")" />
-            <br /><br />
-            @if (Model.Selections.reimburse == 1)
-            {
-                <input type="checkbox" class="reimChk" checked /><label> Reimburse</label>
-            }
-            else
-            {
-                <input type="checkbox" class="reimChk" /><label> Reimburse</label>
-            }
-            <input type="hidden" name="pReimburse" class="pReimburse" value="@(Model.Selections.reimburse)" /><br />
-            <button type="submit" id="selectionsApply" class="btn btn-block btn-success">Apply</button>
-        </form>
-        <br /><br />
-        <div class="tHours">
-            <table>
-                <tr>
-                    <th id="tableTitle"><u>Information</u></th>
-                </tr>
-                <tr>
-                    <td>Alla belopp skall anges i SEK. Är det utländsk valuta, ange totalbeloppet, valutakod samt växelkurs i interna kommentaren
-                    </td>
-                </tr>
 
-            </table>
-        </div>
-    </div>
-}*@
-@*@section siteLeft
+@*@foreach (var item in reimbursedStatus)
 {
-    <div class="hSiteLeft">
-        <a href="#"><img id="toggleMenu" src="~/img/btnTime_All2.png" /></a>
-        <a href="#"><img id="QlikView" src="~/img/btnTime_QV2.png" title="Go to QlikView" /></a>
-        <a href="#"><img id="quickToday" src="~/img/btnTime_Dayy.png" title="Go to QlikView" /></a>
-        <a href="#"><img id="quickCWeek" src="~/img/btnTime_Week.png" /></a>
-        <a href="#"><img id="quickCMonth" src="~/img/btnTime_Month2.png" /></a>
-    </div>
+
+}
+
+@foreach (var item in reimbursedVoucherNo)
+{
+
 }*@
 
-<br />
-<div class="row" id="miniFilterRow">
+<div class="row" id="miniFilterRow"> <!--FILTER FOR CHOOSING BETWEEN, TODAY, WEEK, MONTH & PMONTH-->
     <div id="miniFilter-container">
         <a href="#" id="quickToday" class="miniFilterAtag" style="text-decoration: none">
             <div id="miniFilter">
@@ -94,8 +48,68 @@
         </a>
     </div>
 </div>
+<div class="alert alert-info"><!--IF THERE IS NO MISSING HOURS, SHOW THIS-->
+    <b>Outstanding amount</b>
+</div>
+@if (outstandingAmount > 0)
+{
+    <div class="alert alert-danger" id="outAmount">
+        <p><b>@outstandingAmount.ToString("0.00")</b> SEK</p>
+    </div>
+}
+else
+{
+    <div class="alert alert-success">
+        There are no outstanding amount
+    </div>
+}
+<div class="CurrentFilter"> <!--CURRENT FILTER WINDOW-->
+    <table class="pTable">
+        <tr id="tableCurrentFilter">
+            <th colspan="2" class="CurrentFilterTitle"><b>Current Filter</b></th>
+        </tr>
+        <tr>
+            <td class="tRow"><b>Customer</b></td>
+            @if (Model.Selections.CustomerName == null) {
+                <td class="tRow2">All</td>
+            }
+            else {
+                <td class="tRow2">@Model.Selections.CustomerName</td>
+            }
+
+        </tr>
+        <tr>
+            <td class="tRow"><b>From</b></td>
+            <td class="tRow2">@Model.Selections.From.Value.ToShortDateString()</td>
+        </tr>
+        <tr>
+            <td class="tRow"><b>To</b></td>
+            <td class="tRow2">@Model.Selections.To.Value.ToShortDateString()</td>
+        </tr>
+        <tr>
+            <td class="tRow"><b>Reimburse</b></td>
+            @if (Model.Selections.reimburse == null) {
+                <td class="tRow2">All</td>
+            }
+            else {
+                <td class="tRow2">Reimbursed</td>
+            }
+        </tr>
+    </table>
+</div>
+<div class="Information"><!--INFORMATION WINDOW-->
+    <table class="pTable">
+        <tr id="tableInformation">
+            <th colspan="2" class="InformationTitle"><b>Information</b></th>
+        </tr>
+        <tr>
+            <td class="tRow">Alla belopp skall anges i <b>SEK.</b><br />
+            Är det utländsk valuta, ange totalbeloppet, valutakod samt växelkurs i interna kommentaren.</td>
+        </tr>
+    </table>
+</div>
 <br />
-<div id="titles">
+<div id="titles"> <!--TITLES FOR REPORTS-->
     <div class="row row-header">
         <div class="col col-dropdown col-header">Customer</div>
         <div class="col col-dropdown col-header">Project</div>
@@ -107,136 +121,105 @@
         <div class="col col-text col-header">External comment</div>
     </div>
 </div>
-<div class="rows">
-@foreach (var row in selectRows)
+<div class="rows"> <!--CREATED REPORTS-->
+    @foreach (var row in selectRows)
+    {
+        <div class="expenseRow">
+            @using (Html.BeginForm("Update", "Expenses", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="q_ex_guuid" class="q_ex_guuid" value="@row.q_ex_guuid" />
+                @*<input type="hidden" name="valutakurs" value="@row.valutakurs" />*@
+                <input type="hidden" name="reimburse" value="@row.ReimbursedStatus" />
+                <div class="row">
+                    <div class="col col-dropdown"> <!--CUSTOMER-->
+                        <input type="hidden" class="companyId" name="pCompanyId" value="@row.companyid" />
+                        <select class="form-control nopadding companyDropDown"></select>
+                    </div>
+                    <div class="col col-dropdown"> <!--PROJECT-->
+                        <input type="hidden" class="projectId" value="@row.projectid" />
+                        <select name="pProjectId" class="form-control projectDropDown"></select>
+                    </div>
+                    <div class="col col-type"> <!--TYPES-->
+                        <input type="hidden" class="inputType" name="inputType" value="@row.artnr" />
+                        <select name="pArtnr" class="form-control typeDropDown" value="@row.artnr">
+                            <option value="100">Milersättning</option>
+                            <option value="200">Boende</option>
+                            <option value="300">Transporter</option>
+                            <option value="400">Representation avdragsgill</option>
+                            <option value="500">Mtrl kontoret</option>
+                            <option value="505">Mtrl konsult</option>
+                            <option value="510">Frukt etc</option>
+                            <option value="515">Internet</option>
+                            <option value="520">Porto</option>
+                            <option value="530">Trängselskatt</option>
+                            <option value="590">Övrigt</option>
+                        </select>
+                    </div>
+                    <div class="col date"> <!--DATE-->
+                        <input type="text" class="form-control date-picker date" name="pRegDate" value="@row.regdate.ToString("yyyy-MM-dd")" />
+                    </div>
+                    <div class="input-group col amount"> <!--QTY-->
+                        <input type="text" class="form-control qty amount-ints" name="pQty" value="@row.qty" /> 
+                    </div>
+                    <div class="input-group col amount"> <!--TOTAL-->
+                        <input type="text" class="form-control amount" name="pAmount_excl_Vat" value="@row.amount_excl_Vat.ToString("0.00").Replace(",",".")" /> 
+                    </div>
+                    <div class="input-group col amount"> <!--VAT-->
+                        <input type="text" class="form-control amount" name="pVat_amount" value="@row.vat_amount.Value.ToString("0.00").Replace(",",".")" /> 
+                    </div>
+                    <div class="col externCom"> <!--EXTERNAL COMMENT-->
+                        <input type="text" class="form-control comment" name="pExternComment" value="@row.comment_external" />
+                    </div>
+                    <label class="checkboxes"> <!--REIMBURSE-->
+                        <input type="checkbox" class="reimChk hide" name="chkImb" @(row.reimburse == 1 ? "checked" : "") value="@row.reimburse" />
+                        <input type="hidden" name="pReimburse" class="pReimburse" value="@row.reimburse" />
+                        <img src="~/img/reimburse_false.png" class="image" />
+                    </label>
+                </div>
+                <div class="row toggle" style="display: none;"> 
+                    <div class="col col-full"> <!--INTERNAL COMMENT-->
+                        <input type="text" class="form-control intComment comment" name="pInternComment" value="@row.comment_internal" />
+                    </div>
+                    <div class="btn-group-sm"> <!--UPDATE AND DELETE BUTTON-->
+                        <button type="submit" id="btnSave" class="btn btn-success btn2" title="Update">
+                            <span class="glyphicon glyphicon-floppy-disk"></span>
+                            Update
+                        </button>
+                        <button type="button" class="btn btn-danger delete btn2" title="Delete">
+                            <span class="glyphicon glyphicon-remove"></span>
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+@if (selectRows.Count() != 0)
 {
-    <div class="expenseRow">
-        @using (Html.BeginForm("Update", "Expenses", FormMethod.Post))
-        {
-            @Html.AntiForgeryToken()
-            <input type="hidden" name="q_ex_guuid" class="q_ex_guuid" value="@row.q_ex_guuid" />
-            @*<input type="hidden" name="valutakurs" value="@row.valutakurs" />*@
-            @*<input type="hidden" name="reimburse" value="@row.ReimbursedStatus" />*@
-            <div class="row">
-                <div class="col col-dropdown">
-                    <input type="hidden" class="companyId" name="pCompanyId" value="@row.companyid" />
-                    <select class="form-control nopadding companyDropDown"></select>
-                </div>
-                <div class="col col-dropdown">
-                    <input type="hidden" class="projectId" value="@row.projectid" />
-                    <select name="pProjectId" class="form-control projectDropDown"></select>
-                </div>
-                <div class="col col-type">
-                    @*@Html.EnumDropDownListFor(model => model.Types, row.artnr, htmlAttributes: new { @class = "form-control", @value = row.artnr })*@
-                    <input type="hidden" class="inputType" name="inputType" value="@row.artnr" />
-                    <select name="pArtnr" class="form-control typeDropDown" value="@row.artnr">
-                        <option value="100">Milersättning</option>
-                        <option value="200">Boende</option>
-                        <option value="300">Transporter</option>
-                        <option value="400">Representation avdragsgill</option>
-                        <option value="500">Mtrl kontoret</option>
-                        <option value="505">Mtrl konsult</option>
-                        <option value="510">Frukt etc</option>
-                        <option value="515">Internet</option>
-                        <option value="520">Porto</option>
-                        <option value="530">Trängselskatt</option>
-                        <option value="590">Övrigt</option>
-                    </select>
-                </div>
-                <div class="col date">
-                    <input type="text" class="form-control date-picker date" name="pRegDate" value="@row.regdate.ToString("yyyy-MM-dd")" />
-                </div>
-                <div class="input-group col amount">
-                    <span class="input-group-btn row toggle" style="display: none;">
-                        <!--BUTTON MINUS-->
-                        <button type="button" class="btn btn-danger btn-number btn-minusInt">
-                            <span class="glyphicon glyphicon-minus"></span>
-                        </button>
-                    </span>
-                    @*<input type="text" name="pInvoicedTimeUpdate" class="form-control hours amount" value="@row.qty">*@
-                    <input type="text" class="form-control qty amount-ints" name="pQty" value="@row.qty" />
-                    <span class="input-group-btn row toggle" style="display: none;">
-                        <!--BUTTON PLUS-->
-                        <button type="button" class="btn btn-success btn-number btn-plusInt">
-                            <span class="glyphicon glyphicon-plus"></span>
-                        </button>
-                    </span>
-                </div>
-                <div class="input-group col amount">
-                    <span class="input-group-btn row toggle" style="display: none;">
-                        <!--BUTTON MINUS-->
-                        <button type="button" class="btn btn-danger btn-number btn-minus">
-                            <span class="glyphicon glyphicon-minus"></span>
-                        </button>
-                    </span>
-                    <input type="text" class="form-control amount" name="pAmount_excl_Vat" value="@row.amount_excl_Vat.ToString("0.00").Replace(",",".")" />
-                    <span class="input-group-btn row toggle" style="display: none;">
-                        <!--BUTTON PLUS-->
-                        <button type="button" class="btn btn-success btn-number btn-plus">
-                            <span class="glyphicon glyphicon-plus"></span>
-                        </button>
-                    </span>
-                </div>
-                <div class="input-group col amount">
-                    <span class="input-group-btn row toggle" style="display: none;">
-                        <!--BUTTON MINUS-->
-                        <button type="button" class="btn btn-danger btn-number btn-minus">
-                            <span class="glyphicon glyphicon-minus"></span>
-                        </button>
-                    </span>
-                    <input type="text" class="form-control amount" name="pVat_amount" value="@row.vat_amount.Value.ToString("0.00").Replace(",",".")" />
-                    <span class="input-group-btn row toggle" style="display: none;">
-                        <!--BUTTON PLUS-->
-                        <button type="button" class="btn btn-success btn-number btn-plus">
-                            <span class="glyphicon glyphicon-plus"></span>
-                        </button>
-                    </span>
-                </div>
-                <div class="col col-text">
-                    <input type="text" class="form-control comment" name="pExternComment" value="@row.comment_external" />
-                </div>
-                <label class="checkboxes">
-                    <input type="checkbox" class="reimChk hide" name="chkImb" @(row.reimburse == 1 ? "checked" : "") value="@row.reimburse" />
-                    <input type="hidden" name="pReimburse" class="pReimburse" value="@row.reimburse" />
-                    <img src="~/img/reimburse_false.png" class="image" />
-                </label>
-            </div>
-            <div class="row toggle" style="display: none;">
-                <div class="col col-full">
-                    <input type="text" class="form-control intComment comment" name="pInternComment" value="@row.comment_internal" />
-                </div>
-                <div class="btn-group-sm">
-                    <button type="submit" id="btnSave" class="btn btn-success btn2" title="Update">
-                        <span class="glyphicon glyphicon-floppy-disk"></span>
-                        Update
-                    </button>
-                    <button type="button" class="btn btn-danger delete btn2" title="Delete">
-                        <span class="glyphicon glyphicon-remove"></span>
-                        Delete
-                    </button>
-                </div>
-            </div>
-        }
+    <br />
+    <div class="row ">
+        <div class="col col-header"> <!--NEW REPORT TITLE IF THERE IS EXISTING REPORTS ALREADY-->
+            New Report
+        </div>
     </div>
 }
-    </div>
-<br />
 <div class="expenseRow">
     @using (Html.BeginForm("Insert", "Expenses", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         <div class="row">
-            <div class="col col-dropdown">
+            <div class="col col-dropdown"> <!--COMPANY-->
                 <input type="hidden" class="companyId" />
-                <select name="pCompanyId" class="form-control companyDropDown">
+                <select name="pCompanyId" required class="form-control companyDropDown">
                     <option value="">Select Customer</option>
                 </select>
             </div>
-            <div class="col col-dropdown">
-                <select name="pProjectId" class="form-control projectDropDown"></select>
+            <div class="col col-dropdown"> <!--PROJECT-->
+                <select name="pProjectId" required class="form-control projectDropDown"></select>
             </div>
-            <div class="col col-type">
-                @*@Html.EnumDropDownListFor(model => model.Types, htmlAttributes: new { @class = "form-control"})*@
+            <div class="col col-type"> <!--TYPE-->
                 <select name="pArtnr" class="form-control">
                     <option value="100">Milersättning</option>
                     <option value="200">Boende</option>
@@ -250,73 +233,33 @@
                     <option value="530">Trängselskatt</option>
                     <option value="590">Övrigt</option>
                 </select>
-                @*@Html.EnumDropDownListFor(model => model.Types, "Select a type", new { @class = "form-control" })*@
             </div>
-            <div class="col date">
+            <div class="col date"> <!--DATE-->
                 <input type="text" class="form-control date-picker" name="pRegDate" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
             </div>
-            <div class="input-group col amount">
-                <span class="input-group-btn row toggle">
-                    <!--BUTTON MINUS-->
-                    <button type="button" class="btn btn-danger btn-number btn-minusInt">
-                        <span class="glyphicon glyphicon-minus"></span>
-                    </button>
-                </span>
-                @*<input type="text" name="pInvoicedTimeUpdate" class="form-control hours amount" value="@row.qty">*@
-                <input type="text" class="form-control qty amount-ints" name="pQty" value="0" />
-                <span class="input-group-btn row toggle">
-                    <!--BUTTON PLUS-->
-                    <button type="button" class="btn btn-success btn-number btn-plusInt">
-                        <span class="glyphicon glyphicon-plus"></span>
-                    </button>
-                </span>
+            <div class="input-group col amount"> <!--QTY-->
+                <input type="text" class="form-control qty amount-ints" name="pQty" value="0" /> 
             </div>
-            <div class="input-group col amount">
-                <span class="input-group-btn row toggle">
-                    <!--BUTTON MINUS-->
-                    <button type="button" class="btn btn-danger btn-number btn-minus">
-                        <span class="glyphicon glyphicon-minus"></span>
-                    </button>
-                </span>
-                <input type="text" class="form-control amount" name="pAmount_excl_Vat" value="0.00" />
-                <span class="input-group-btn row toggle">
-                    <!--BUTTON PLUS-->
-                    <button type="button" class="btn btn-success btn-number btn-plus">
-                        <span class="glyphicon glyphicon-plus"></span>
-                    </button>
-                </span>
+            <div class="input-group col amount"> <!--TOTAL-->
+                <input type="text" class="form-control amount" name="pAmount_excl_Vat" value="0.00" /> 
             </div>
-            <div class="input-group col amount">
-                <span class="input-group-btn row toggle">
-                    <!--BUTTON MINUS-->
-                    <button type="button" class="btn btn-danger btn-number btn-minus">
-                        <span class="glyphicon glyphicon-minus"></span>
-                    </button>
-                </span>
-                <input type="text" class="form-control amount" name="pVat_amount" value="0.00" />
-                <span class="input-group-btn row toggle">
-                    <!--BUTTON PLUS-->
-                    <button type="button" class="btn btn-success btn-number btn-plus">
-                        <span class="glyphicon glyphicon-plus"></span>
-                    </button>
-                </span>
+            <div class="input-group col amount"> <!--VAT-->
+                <input type="text" class="form-control amount" name="pVat_amount" value="0.00" /> 
             </div>
-            <div class="col col-text">
-                <input type="text" class="form-control comment" name="pExternComment" />
+            <div class="col externCom"> <!--EXTERNAL COMMENT-->
+                <input type="text" required class="form-control comment" name="pExternComment" />
             </div>
-            <label class="checkboxes">
-                <input type="checkbox" class="reimChk hide" />
-                <input type="hidden" name="pReimburse" class="pReimburse" value="0" />
-                <img src="~/img/reimburse_false.png" class="image" />
+            <label class="checkboxes"> <!--REIMBURSE-->
+                <input type="checkbox" class="reimChk hide" checked />
+                <input type="hidden" name="pReimburse" class="pReimburse" value="1" />
+                <img src="~/img/reimburse_true.png" class="image" />
             </label>
-            @*<input type="checkbox" class="reimChk" />
-            <input type="hidden" name="reimburse" class="reimburse" value="0" />*@
         </div>
         <div class="row">
-            <div class="col col-full2">
+            <div class="col col-full2"> <!--INTERNAL COMMENT-->
                 <input type="text" class="form-control intComment comment" name="pInternComment" placeholder="Internal comment" />
             </div>
-            <div class="btn-group btn-group-sm">
+            <div class="btn-group btn-group-sm"> <!--SAVE BUTTON-->
                 <button type="submit" class="btn btn-primary btn2" title="Save">
                     <span class="glyphicon glyphicon-floppy-disk"></span>
                     Save
@@ -430,8 +373,6 @@
                 $('#selectionCompany').val($(this).val());
                 updateProjectDropDown($('#selectionProjectDropDown'), $(this).val());
                 $('#selectionProjectDropDown').prepend('<option value="" selected>All</option>');
-                //updateSubProjectDropDown($('#selectionSubProjectDropDown'));
-                //$('#selectionSubProjectDropDown').prepend('<option value="" selected>All</option>');
             });
 
         });

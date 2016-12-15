@@ -23,14 +23,29 @@ namespace TimeLive.Controllers
         {
 
             Session["User"] = Session["User"] ?? Classes.UserClass.GetUserByIdentity(WindowsIdentity.GetCurrent());
-            //Session["User"] = Session["User"] as AdUser ?? new AdUser { Domain = "OPTIVASYS", FullName = "Rasmus Jansson", Username = "raja" };
 
             if (DateTime.Now - lastUpdate >= updateFrequency) UpdateStatics();
             // var selections = TimeSelection.ThisWeek;
             var selections = Session["selection"] as ExpensesSelection ?? ExpensesSelection.ThisWeek;
-            
+            decimal outstandingAmount = 0;
+
+            var selectRows = TimeLiveDB.q_SelectRowsExpense(
+                    ((Classes.UserClass.User)Session["User"]).Username,
+                    selections.ProjectId, selections.CustomerId, null,
+                    null, selections.From, selections.To, null, null);
+
+            foreach (var item in selectRows)
+            {
+                if (item.ReimbursedStatus == "Open")
+                {
+                    outstandingAmount += item.amount_excl_Vat;
+                }
+            }
+
             var model = new ExpensesModel
             {
+                Reimbursed = outstandingAmount,
+
                 SelectRows = TimeLiveDB.q_SelectRowsExpense(
                     ((Classes.UserClass.User)Session["User"]).Username,
                     selections.ProjectId, selections.CustomerId, null,
@@ -41,8 +56,6 @@ namespace TimeLive.Controllers
                 Selections = selections,
                 //Types = selections.types,
             };
-
-            //ViewBag.User = ((Classes.UserClass.User)Session["User"]).FullName;
 
             return View(model);
         }
@@ -119,8 +132,26 @@ namespace TimeLive.Controllers
 
             Session["selection"] = selections;
 
+            decimal outstandingAmount = 0;
+
+            var selectRows = TimeLiveDB.q_SelectRowsExpense(
+                    ((Classes.UserClass.User)Session["User"]).Username,
+                    selections.ProjectId, selections.CustomerId, null,
+                    null, selections.From, selections.To, null, null);
+
+            foreach (var item in selectRows)
+            {
+                if (item.ReimbursedStatus == "Open")
+                {
+                    outstandingAmount += item.amount_excl_Vat;
+                }
+            }
+
+
             var model = new ExpensesModel
             {
+                Reimbursed = outstandingAmount,
+
                 SelectRows = TimeLiveDB.q_SelectRowsExpense(
                     ((Classes.UserClass.User)Session["User"]).Username,
                     selections.ProjectId, selections.CustomerId, null,
